@@ -10,6 +10,20 @@ The following tutorial will teach you how to use basic tools with Eclipse.
 ### Eclipse
 
 [Eclipse](https://eclipse.org) is an open source IDE for Java's technologies.
+
+#### Ubuntu
+
+To install the last version of eclipse on Ubuntu and derivate, you can use ubuntu-make tool:
+
+        umake ide eclipse
+
+You may need to install ubuntu-make first
+        
+        sudo apt-get install ubuntu-make
+
+
+#### Windows
+
 You can download the latest version [here](https://eclipse.org/downloads/).
 
 To develop in Java, you'll need a JDK.
