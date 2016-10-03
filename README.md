@@ -2,6 +2,8 @@
 
 Java app developed using SCRUM - Delivery helper
 
+Please note that this project is for educational purposes.
+
 ## DEV - Setting up the project
 
 Regarding the project's constraints, a good choice is to develop using Eclipse.
