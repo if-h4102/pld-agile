@@ -1,11 +1,16 @@
 package exec;
 
+import com.google.java.contract.Requires;
+
 public class Main {
-    public static void main(String[] arg) {
+    public static void main(String[] args) {
         System.out.println("Hello world");
+        double result = Main.sqrt(9);
+        System.out.println(result);
     }
 
-    public static int doubleInput(int a) {
-        return a + a;
+    @Requires("x >= 0")
+    public static double sqrt(double x) {
+        return Math.sqrt(x);
     }
 }

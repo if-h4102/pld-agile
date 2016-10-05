@@ -6,8 +6,12 @@ import static org.junit.Assert.*;
 
 public class MainTest {
     @Test
-    public void doubleInput() throws Exception {
-        assertEquals(6, Main.doubleInput(3));
+    public void doubleThree() throws Exception {
+        assertEquals(3, Main.sqrt(9), 1e-2);
     }
 
+    @Test
+    public void breakContract() throws Exception {
+        assertEquals(3, Main.sqrt(-9), 1e-2);
+    }
 }
