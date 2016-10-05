@@ -90,9 +90,9 @@ Let's explain to you how to use CoFoJa using an example.
     
 **Here comes the configuration part**
     
-3. Download CoFoJa from [the official repository](https://github.com/nhatminhle/cofoja/releases).
+3. Download **cofoja.asm-version.jar** from [the official repository](https://github.com/nhatminhle/cofoja/releases).
 
-    Be sure to take the latest version, and the one bundled with asm
+    **Be sure to take the latest version, and the one bundled with asm**
     (i.e., the one named cofoja.asm-version.jar).
     
 4. Put in next to your `/src` folder, let's say under `/lib`.
