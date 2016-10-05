@@ -37,6 +37,8 @@ extract it and add its `bin` directory to your `PATH`.
    ```shell
    setx path "%path%;<program>\Apache\Maven\bin\"
    ```
+   
+   Example: `setx path "%path%;C:\Program Files (x86)\Apache\Maven\bin\"`
 
 ### Check the installation
 
@@ -46,7 +48,52 @@ The following command should return the installed version:
 mvn --version
 ```
 
+Currently (2016-10-04), the stable version is `3.3.9`.
+
 ## Getting started
+
+### Compile a project
+
+```shell
+mvn compile
+```
+
+### Test
+
+```
+mvn test
+```
+
+### Execute the main target
+
+```shell
+mvn exec:java 
+```
+
+**This will not rebuild the project, even if changes occurred.**
+Use the following command if you want to ensure that you run the latest version:
+
+```shell
+mvn compile && mvn exec:java
+```
+
+### Build a Java ARchive (JAR)
+
+```shell
+mvn jar:jar
+```
+
+### Clean
+
+```
+mvn clean
+```
+
+### Generate project files for Eclipse
+
+```
+mvn eclipse:eclipse
+```
 
 ## Editor integration
 
@@ -54,9 +101,11 @@ mvn --version
 
 The following IDE offer support for Maven:
 
-- **Eclipse**: Requires [the M2Eclipse plugin][m2eclipse].
+- **Eclipse**: Native support in newer versions (confirmed for _Neon_), else
+  requires the _m2e_ plugin.
 - **IntelliJ IDEA**: Native support.
 - **Netbeans**: Native support.
+
 
 [maven]: https://maven.apache.org/index.html
 [maven-download]: https://maven.apache.org/download.cgi
