@@ -101,14 +101,10 @@
                     </executions>
                     <configuration>
                         <mainClass>exec.Main</mainClass>
-                        <arguments>
-                            <argument>-javaagent:${com.google.java.contract:cofoja:jar}</argument>
-                            <!-- <argument>-Dexec.args="-javaagent:${com.google.java.contract:cofoja:jar}"</argument> -->
-                        </arguments>
                     </configuration>
                 </plugin>
                 <plugin>
-                    <!-- Ensure that the dependencies are copied to target/lib -->
+                    <!-- Ensure that the dependencies are copied to target/lib and populate properties -->
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
                     <version>2.10</version>
