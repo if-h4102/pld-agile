@@ -89,116 +89,84 @@ Half of 11:
 
 ### Maven
 
-[Maven](./apache-maven.md) should install and configure everything
-automatically when you run `mvn test`.
+[Maven](./apache-maven.md) is already configured to compile with Cofoja and
+enable contract checks during the tests (`mvn test`).
 
 ### Intellij IDEA
 
-1. Download the latest version of the Cofoja JAR
-    
-   - **Automatically (Maven)**: Run `mvn test` once, this will download the
-     latest version of _Cofoja_ to your local Maven repository.
-     
-     By default, its path will be:
-     ```text
-     $HOME/.m2/repository/com/google/java/contract/cofoja/1.3/cofoja-1.3.jar
-     ```
-   
-   - Manually: Download it from [the latest release page][cofoja-latest]. There
-     are multiple versions (`cofoja`, `cofoja.asm`, `cofoja.contracts`, etc.),
-     chose `cofoja` (simple). Place it in the `lib/` directory.
+_IntelliJ IDEA_ imports the configuration from _Maven_, you do not need to
+configure anything: **it just works**.
 
-2. In the `Run/Debug Configurations` menu (button in the top-right area),
-   edit of the `VM options` of the configurations that you want to run with
-   _Cofoja_ enabled. Add the switch `-javaagent:<path-to-cofoja-jar>`, replace
-   `<path-to-cofoja-jar>` by the path to the JAR you previously downloaded.
-   
-   **If you downloaded it with Maven**, use:
-   
-   ```text
-   -javaagent:"$MAVEN_REPOSITORY$/com/google/java/contract/cofoja/1.3/cofoja-1.3.jar"
-   ```
+Just like Maven, it only enables contract checks for tests. Normally, this
+should be enough. If you want to enforce these checks in other run
+configurations, add the VM option `-javaagent:lib/cofoja.asm-1.3.jar` (in
+the `Run/Debug Configurations` menu).
 
 ### Eclipse
 
-Let's explain to you how to use CoFoJa using an example.
+You need to enable Annotation Processing (to generate the contracts during the
+compilation) and then configure the execution to enable runtime verification of
+the contracts.
 
-1. Create a basic console Java project in Eclipse, and add the following main class:
-    
-    ```java
-    public class Main {
-      public static void main(String[] args) {
-        // Let's see how CoFoJa works
-        System.out.println(squareRoot(-7));
-      }
+If you encounter an error, display the logs with **Window | Show View
+| Error Log**.
 
-      public static double squareRoot(double number) {
-        return Math.sqrt(number);
-      }
-    }
-    ```
-    
-2. Run it. Of course it will throw a nice error, cause you tried to compute the square root of -7
-    (you're probably bad at maths).
-    
-    But hey, after all, who said you need to be good at maths ?
-    Why people who coded the `Math` library haven't prevented you from doing such an heresy ?
-    
-    That's where CoFoJa comes in.
-    
-3. Download **cofoja.asm-version.jar** from [the official repository](https://github.com/nhatminhle/cofoja/releases).
+#### Compilation configuration
 
-    **Be sure to take the latest version, and the one bundled with asm**
-    (i.e., the one named cofoja.asm-version.jar).
-    
-4. Put in next to your `/src` folder, let's say under `/lib`.
+You need to enable Annotation processing.
 
-5. Go under `Project > Properties > Java build path > Libraries > Add external JARs` and add the previously downloaded jar.
+1. Open the _Annotation Processing_ menu: **Project | Properties
+   | Java Compiler | Annotation Processing**.
 
-6. Go under `Project > Properties > Java compiler > Annotation processing > Factory path > Add external JARs` and add the previously dowloaded jar.
+2. Check **Enable project specific settings**.
 
-    You'll need to check *Enable project specific settings* first.
+3. Check **Enable annotation processing**.
 
-7. Go under `Project > Properties > Java compiler > Annotation processing` and add the following keys - values:
+4. Check **Enable processing in editor**.
 
-        com.google.java.contract.classoutput  : %PROJECT.DIR%/bin
-        com.google.java.contract.classpath    : %PROJECT.DIR%/lib/cofoja.asm-version.jar
-        com.google.java.contract.sourcepath   : %PROJECT.DIR%/src
-        
-    Of course, correct the values with the right ones if needed.
-    
-    You'll need to check *Enable project specific settings* first,
-    as well as *Enable annotation processing* and *Enable processing in editor*.
-    
-8. Then, you can import CoFoJa annotations and add some, so the example class looks like this:
+5. Set the value of **Generated source directory** to:
+   `target/generated-sources/annotations`.
 
-    ```java
-    import com.google.java.contract.Requires;
-    
-    public class Main {
-      public static void main(String[] args) {
-        // Let's see how CoFoJa works
-        System.out.println(squareRoot(-7));
-      }
+6. Use the `New` button to add the following properties:
 
-      @Requires("number > 0 && a <3")
-      public static double squareRoot(double number) {
-        return Math.sqrt(number);
-      }
-    }
-    ```
-    
-9. Eclipse should now tell you that there's an error with your contract, because a is undefined.
+   | Key                                    | Value                                  |
+   | -------------------------------------- | -------------------------------------- |
+   | `com.google.java.contract.classoutput` | `%PROJECT.DIR%/target/classes`         |
+   | `com.google.java.contract.classpath`   | `%PROJECT.DIR%/lib/cofoja.asm-1.3.jar` |
+   | `com.google.java.contract.sourcepath`  | `%PROJECT.DIR%/src`                    |
 
-    Congratulation, you've successfully added CoFoJa to the Eclipse project! 
+7. Apply changes with the `Apply` button.
 
-10. When running, you still see an error, but related to the contract.
+8. Open the _Annotation Factory Path_ menu: **Project | Properties
+   | Java Compiler | Annotation Processing | Factory Path**.
 
-**Pro tip**: if CoFoJa still doesn't work, you can see what's wrong when building / cleaning the project
-by showing the error log window: `Window > Show View > Error Log`.
+9. Check **Enable project specific settings**.
+
+10. Use the `Add JAR` button to add `cofoja.asm-1.3.jar` (located in the `lib`
+   directory of this project).
+
+11. Apply changes with the `Apply` button.
+
+12. Configure the execution (see next section).
+
+#### Execution configuration
+
+To enable the runtime evaluation of Cofoja contracts, you have to add a
+VM options.
+
+1. Open the _Run configurations_ menu: **Run | Run configurations...**
+
+2. Select or create a configuration.
+
+3. Open the **Arguments** tab.
+
+4. Add the following parameter to the **VM options** text box:
+
+   ```text
+   -javaagent:lib/cofoja.asm-1.3.jar
+   ```
 
 
 [cofoja]: https://github.com/nhatminhle/cofoja
-[cofoja-latest]: https://github.com/nhatminhle/cofoja/releases/latest
+[cofoja-v1.3]: https://github.com/nhatminhle/cofoja/releases/tag/v1.3
 [wiki-design-by-contract]: https://en.wikipedia.org/wiki/Design_by_contract
-

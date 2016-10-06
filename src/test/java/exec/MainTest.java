@@ -6,7 +6,7 @@ import static org.junit.Assert.*;
 
 public class MainTest {
     @Test
-    public void doubleThree() throws Exception {
+    public void halfOfEight() throws Exception {
         assertEquals(4, Main.half(8));
     }
 
