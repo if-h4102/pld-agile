@@ -10,6 +10,81 @@
 Check [the Wikipedia page about _Design by Contract_][wiki-design-by-contract]
 to learn more about it.
 
+## Example
+
+The following example demonstrate how Cofoja can perform runtime checks for a
+pre-condition.
+
+Directory structure:
+```text
+.
+├── cofoja.asm.jar
+└── Main.java
+```
+
+`Main.java`:
+```java
+import com.google.java.contract.Ensures;
+import com.google.java.contract.Requires;
+
+public class Main {
+    public static void main(String[] args) {
+        // 4 is even, it is a valid argument
+        System.out.println("Half of 4:");
+        System.out.println(half(4));
+
+        // 11 is odd, it breaks the pre-condition "n is even"
+        System.out.println("Half of 11:");
+        System.out.println(half(11)); // This should throw an Exception
+    }
+
+    /**
+     * Returns the half of the even integer n.
+     *
+     * @param n The input integer. It must be even.
+     * @return The integer k such that `n = 2k`
+     */
+    @Requires("n % 2 == 0") // Check the pre-condition "n is even"
+    @Ensures("n == 2 * result") // Check the post-condition "n = 2k"
+    public static int half (int n) {
+        return n / 2;
+    }
+}
+
+```
+
+Compile and run it with the Cofoja agent:
+```shell
+javac -classpath cofoja.asm.jar Main.java
+java -javaagent:cofoja.asm.jar -classpath . Main
+```
+
+Expected output (prints `half(4)` but breaks on `half(11)`):
+```text
+Half of 4:
+2
+Half of 11:
+Exception in thread "main" com.google.java.contract.PreconditionError: n % 2 == 0
+        at Main.half.<pre>(Main.java:21)
+        at Main.half(Main.java)
+        at Main.main(Main.java:12)
+```
+
+Note that Cofoja is a debugging tool, the pre-conditions will not be checked if
+you do a _normal_ execution of your Code (without the special _java agent_):
+
+The following execution:
+```shell
+java -classpath . Main
+```
+Leads to an output with an invalid statement:
+```text
+Half of 4:
+2
+Half of 11:
+5
+```
+
 ## Installation
 
 ### Maven
