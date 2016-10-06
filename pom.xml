@@ -81,10 +81,9 @@
                         <showWarnings>true</showWarnings>
                         <compilerArgs>
                             <arg>-Acom.google.java.contract.classoutput=${basedir}/target/classes</arg>
-                            <arg>-Acom.google.java.contract.classpath=${project.basedir}/lib/cofoja-1.3-20160207.jar</arg>
+                            <arg>-Acom.google.java.contract.classpath=${com.google.java.contract:cofoja:jar}</arg>
                             <arg>-Acom.google.java.contract.sourcepath=${basedir}/src/main/java</arg>
                         </compilerArgs>
-                        <compilerArgument>-Acom.google.java.contract.classoutput=${basedir}/target/classes" "-Acom.google.java.contract.classpath=${project.basedir}/lib/cofoja-1.3-20160207.jar" "-Acom.google.java.contract.sourcepath=${basedir}/src/main/java</compilerArgument>
                     </configuration>
                 </plugin>
                 <plugin>
