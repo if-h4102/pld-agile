@@ -1,0 +1,48 @@
+@startuml
+skinparam nodesep 200
+skinparam ranksep 100
+
+object Rue {
+}
+object Tronçon {
+}
+object Plan {
+}
+object Intersection {
+}
+object Entrepôt {
+}
+object HoraireDePassage {
+}
+object Tournée {
+}
+object AdresseDeLivraison {
+}
+object Trajet {
+}
+object Livreur {
+}
+object DemandeDeLivraison {
+}
+
+
+Tournée "0,n" -- "0,n" HoraireDePassage
+Tournée "0,n" -up- "0,n" AdresseDeLivraison
+Tournée "0,n" -- "0,n" Trajet
+Tournée "0,n" -- "1" Livreur
+Tournée "1,n" -- "1 (précise)" DemandeDeLivraison
+
+Plan "1" -down- "0,n" Intersection
+Plan "1" -down- "0,n" Tronçon
+
+Tronçon "1,n (Sortant)" -right- "1 (arrivée)" Intersection
+Tronçon "1,n (Entrant)" -right- "1 (départ)" Intersection
+Tronçon "1 (situe)" -- "0,1" Entrepôt
+Tronçon "1,n" -- "1" Rue
+Tronçon "0,n (contigüs)" -- "0,n" Trajet
+
+DemandeDeLivraison "0,n" -right- "0,n (doit livrer)" AdresseDeLivraison
+DemandeDeLivraison "0,n" -- "1 (début/fin)" Entrepôt
+Intersection "1 (situe)" -- "0,1" AdresseDeLivraison
+HoraireDePassage "0,n" -- "1" AdresseDeLivraison
+@enduml
