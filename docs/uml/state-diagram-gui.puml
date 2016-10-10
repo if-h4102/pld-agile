@@ -1,0 +1,19 @@
+@startuml
+
+[*] --> Init
+Init --> LoadedStreetMap: loadStreetMap
+LoadedStreetMap --> LoadedRequest: loadRequest
+LoadedRequest --> ComputePath: computePathRequest
+ComputePath --> ComputedPath: finishComputation
+
+ComputePath --> LoadedRequest: computationError
+ComputePath --> LoadedRequest: cancelComputation
+
+LoadedStreetMap --> LoadedStreetMap: loadStreetMap
+LoadedRequest --> LoadedStreetMap: loadStreetMap
+ComputedPath --> LoadedStreetMap: loadStreetMap
+
+LoadedRequest --> LoadedRequest: loadRequest
+ComputedPath --> LoadedRequest: loadRequest
+
+@enduml
