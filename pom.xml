@@ -53,6 +53,9 @@
     </dependencies>
 
     <build>
+        <sourceDirectory>src/main</sourceDirectory>
+        <testSourceDirectory>src/test</testSourceDirectory>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -73,6 +76,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
             </plugin>
         </plugins>
 
@@ -108,7 +115,7 @@
                         </execution>
                     </executions>
                     <configuration>
-                        <mainClass>exec.Main</mainClass>
+                        <mainClass>main.Application</mainClass>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -141,7 +148,7 @@
                         <archive>
                             <manifest>
                                 <addClasspath>true</addClasspath>
-                                <mainClass>exec.Main</mainClass>
+                                <mainClass>main.Main</mainClass>
                             </manifest>
                         </archive>
                     </configuration>
@@ -154,6 +161,30 @@
                     <configuration>
                         <argLine>-javaagent:${basedir}/lib/cofoja.asm-1.3.jar</argLine>
                     </configuration>
+                </plugin>
+                <!-- Copy resources -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.0.1</version>
+                    <executions>
+                        <execution>
+                            <id>copy-resources</id>
+                            <phase>process-resources</phase>
+                            <goals>
+                                <goal>copy-resources</goal>
+                            </goals>
+                            <configuration>
+                                <outputDirectory>target/classes</outputDirectory>
+                                <resources>
+                                    <resource>
+                                        <directory>src/main</directory>
+                                        <filtering>true</filtering>
+                                    </resource>
+                                </resources>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>

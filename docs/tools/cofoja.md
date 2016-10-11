@@ -315,7 +315,7 @@ After many hours of searching I was able to set it while running tests but I
 couldn't figure out how to set it for a standard execution (with
 `mvn exec:java`, using the `exec` plugin). The closest I could get was manually
 specifying the command-line ([example of how to use
-`<arguments>`][maven-exec-exec-vm-options]) but I had to hard code the path
+`<arguments>`][maven-exec-vm-options]) but I had to hard code the path
 because it did not interpolate `${com.google.java.contract:cofoja:jar}` all of
 a sudden...
 
@@ -427,5 +427,5 @@ java -javaagent:cofoja.jar -classpath . Main
 [maven-central-cofoja]: https://mvnrepository.com/artifact/com.google.java.contract/cofoja/1.1-r150
 [maven-central-asm-all]: https://mvnrepository.com/artifact/org.ow2.asm/asm-all
 [maven-dependency-properties]: http://maven.apache.org/plugins/maven-dependency-plugin/properties-mojo.html
-[maven-exec-exec-vm-options]: http://stackoverflow.com/questions/5396749/pass-command-line-params-in-mvn-execexec
+[maven-exec-vm-options]: http://stackoverflow.com/questions/5396749/pass-command-line-params-in-mvn-execexec
 [idea-path-variables]: https://www.jetbrains.com/help/idea/2016.2/path-variables.html
