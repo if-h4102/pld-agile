@@ -1,0 +1,37 @@
+@startuml
+participant "Controller" as Ctrl
+participant "GraphFactory" as GF
+participant "TSPSolver" as TSPS
+
+
+[-> Ctrl: computePlanning()
+activate Ctrl
+
+'Instanciate with a strategy
+create GF
+Ctrl -> GF: <<create(GraphFactoryStrategy)>>
+'Instanciate with a strategy
+create TSPS
+Ctrl -> TSPS: <<create(BranchStrategy, BoundStrategy)>>
+
+
+Ctrl -> GF: computeDeliveryGraph(CityMap, DeliveryRequest)
+activate GF
+Ctrl <<-- GF: deliveryGraph: DeliveryGraph
+deactivate GF
+
+
+Ctrl -> TSPS: computePlanning(deliveryGraph, DeliveryRequest)
+activate TSPS
+Ctrl <<-- TSPS: Planning
+deactivate TSPS
+
+
+
+Ctrl -> Ctrl: setCurrentPlanning(Planning)
+activate Ctrl
+deactivate Ctrl
+
+deactivate Ctrl
+
+@enduml
