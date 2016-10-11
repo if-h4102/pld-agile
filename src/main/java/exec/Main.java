@@ -2,16 +2,11 @@ package exec;
 
 import com.google.java.contract.Ensures;
 import com.google.java.contract.Requires;
+import gui.Application;
 
 public class Main {
     public static void main(String[] args) {
-        // 4 is even, it is a valid argument
-        System.out.println("Half of 4:");
-        System.out.println(half(4));
-
-        // 11 is odd, it breaks the pre-condition "n is even"
-        System.out.println("Half of 11:");
-        System.out.println(half(11)); // This should throw an Exception
+        Application.open();
     }
 
     /**
