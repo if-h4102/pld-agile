@@ -2,6 +2,7 @@
 participant "Controller" as Ctrl
 participant "GraphFactory" as GF
 participant "TSPSolver" as TSPS
+participant "currentCityMap: CityMap" as CM
 
 
 [-> Ctrl: computePlanning()
@@ -15,8 +16,19 @@ create TSPS
 Ctrl -> TSPS: <<create(BranchStrategy, BoundStrategy)>>
 
 
-Ctrl -> GF: computeDeliveryGraph(CityMap, DeliveryRequest)
+Ctrl -> GF: computeDeliveryGraph(currentCityMap, DeliveryRequest)
 activate GF
+
+GF -> CM: getIntersections()
+activate CM
+GF <<-- CM: intersactions: Map<int, Intersection>
+deactivate CM
+
+GF -> CM: getStreetSections()
+activate CM
+GF <<-- CM: streetSections: Map<int,  Map<int, StreetSection>>
+deactivate CM
+
 Ctrl <<-- GF: deliveryGraph: DeliveryGraph
 deactivate GF
 
