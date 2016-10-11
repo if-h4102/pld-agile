@@ -12,6 +12,8 @@ To install the last version of eclipse on Ubuntu and derivate, you can use ubunt
 
 You may need to install ubuntu-make first
         
+        sudo add-apt-repository ppa:ubuntu-desktop/ubuntu-make
+        sudo apt-get update
         sudo apt-get install ubuntu-make
 
 
