@@ -47,16 +47,41 @@ plantuml -tsvg docs/**/*.puml
 
 [Planttext][planttext] is a web-application.
 
-### Plugin IntelliJ Idea
+### Plugin for IntelliJ Idea
 
 Open the plugin repositories: **File | Settings.. | Plugins | Browse
 Repositories...**.
  
 Install `PlantUML Integration` and restart your IDE.
 
+### Plugin for Eclipse
+
+[Official documentation][plantuml-eclipse]
+
+1. Open the **Install** menu with **Help | Install New Sofwtare...**
+
+2. Set `Work with` to `http://plantuml.sourceforge.net/updatesitejuno/`, then
+   add it (with the **Add** button). You can use `PlantUML` as the Name for the
+   addition.
+
+3. Select the `PlantUML` plugin in the list.
+
+4. **Next** to let Eclipse download some data.
+
+5. **Next** to advance in the installation...
+
+6. Accept the license and confirm with **Finish**.
+
+7. During the installation, a warning (about _unsigned content_) might appear.
+   You can simply acknowledge it with **OK**.
+   
+8. Restart Eclipse.
+
+9. **Window | Show View | Other...** then choose `PlantUML/PlantUML`.
 
 [plantuml]: http://plantuml.com/
 [plantuml-download]: http://plantuml.com/download
+[plantuml-eclipse]: http://plantuml.com/eclipse
 [plantuml-cli]: http://plantuml.com/command-line
 [plantuml-running]: http://plantuml.com/running
 [planttext]: http://www.planttext.com/planttext

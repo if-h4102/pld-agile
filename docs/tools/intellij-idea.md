@@ -23,10 +23,23 @@ There are two editions:
 [jetbrains-student]: https://www.jetbrains.com/student/
 [intellij-download]: https://www.jetbrains.com/idea/download/
 
-# Getting started
 
-## Build
+## Run configuration
 
-## _git_ integration
+### Main
 
-## Other
+In the **Run/Debug Configurations** menu, add a new `Application`
+configuration.
+
+Set `Main class` to `main.Application`.
+
+Add a new configuration to `Before launch`. **Add | Run Maven Goal**, then
+check that `Working directory` is set to your project root and set `Command
+line` to `process-ressources`. Move it after the `Make` configuration.
+
+### Test
+
+In the **Run/Debug Configurations** menu, add a new `JUnit`
+configuration.
+
+Set `Test kind` to `All in directory` and choose the `src/test` directory.

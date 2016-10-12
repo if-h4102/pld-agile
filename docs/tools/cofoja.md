@@ -100,7 +100,7 @@ configure anything: **it just works**.
 Just like Maven, it only enables contract checks for tests. Normally, this
 should be enough. If you want to enforce these checks in other run
 configurations, add the VM option `-javaagent:lib/cofoja.asm-1.3.jar` (in
-the `Run/Debug Configurations` menu).
+the **Run/Debug Configurations** menu).
 
 ### Eclipse
 
@@ -142,8 +142,8 @@ You need to enable Annotation processing.
 
 9. Check **Enable project specific settings**.
 
-10. Use the `Add JAR` button to add `cofoja.asm-1.3.jar` (located in the `lib`
-   directory of this project).
+10. Use the **Add JAR** button to add `cofoja.asm-1.3.jar` (located in the
+   `lib` directory of this project).
 
 11. Apply changes with the `Apply` button.
 

@@ -41,3 +41,50 @@ You'll then need to follow these steps (assuming you're using Windows; otherwise
         PATH=%PATH%;C:\Program Files\Java\jdk1.8.0_25\bin
         
 5. Start Eclipse
+
+## Project
+
+The recommended way to import the project is to download it with the `git`
+command line tool and then use **File | Open Projects from File System...** to
+add it to your workspace. This way, Eclipse will configure some parameters
+automatically.
+
+### General Configuration
+
+1. Refresh the Eclipse settings to match the `pom.xml` configuration with
+   **_Project's Contextual Menu_ | Maven | Update Project...** (`Alt` + `F5`).
+   The _Project's Contextual Menu_ is accessed by a right click on the
+   project's root directory in the _Package Explorer_ view.
+
+2. [Configure Cofoja](./cofoja.md#eclipse)
+
+3. Configure PlantUML plugin ?
+
+4. Configure JavaFX Scene Builder plugin ?
+
+### Run configurations
+
+**TODO**: "Native" _Application_ and _JUnit_ configurations with build paths,
+VM options, etc.
+
+#### Main
+
+Open the _Run configurations_ menu: **Run | Run configurations...**
+
+In the builds list, selection the **Maven build** category, then click on
+**New launch configuration**. Set the following values:
+   
+- Name: `App`
+- Base directory: `${project_loc}`
+- Goals: `compile exec:java`
+
+#### Test
+
+Open the _Run configurations_ menu: **Run | Run configurations...**
+
+In the builds list, selection the **Maven build** category, then click on
+**New launch configuration**. Set the following values:
+
+- Name: `Test`
+- Base directory: `${project_loc}`
+- Goals: `test`
