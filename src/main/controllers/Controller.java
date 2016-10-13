@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ToolBar;
 import models.Intersection;
 import models.Point;
 
@@ -13,6 +14,9 @@ import java.util.ResourceBundle;
 
 
 public class Controller implements Initializable {
+    @FXML
+    protected ToolBar toolbar;
+
     private SimpleStringProperty btnText = new SimpleStringProperty();
     private SimpleObjectProperty<Intersection> origin = new SimpleObjectProperty<>();
 
@@ -22,7 +26,8 @@ public class Controller implements Initializable {
         this.setOrigin(new Intersection(42, 10, 20));
     }
 
-    public void helloWorld(ActionEvent actionEvent) {
+    public void loadCityMap(ActionEvent actionEvent) {
+        System.out.println("Loading map...");
         this.setBtnText("Hello world!!!!!");
         this.getOrigin().getCoordinates().setX(50);
     }

@@ -1,0 +1,14 @@
+#cvs {
+    -fx-background-color: indigo;
+    -fx-padding: 30%;
+    -fx-border-width: 2px;
+    -fx-border-style: solid;
+    -fx-border-color: green;
+    -fx-fit-to-width: true;
+    -fx-fit-to-height: true;
+}
+
+ResizableCanvas {
+    -fx-background-color: red;
+    -fx-color-label-visible: blue;
+}
