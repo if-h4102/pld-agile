@@ -1,0 +1,32 @@
+@startuml
+
+package services {
+    package xml {
+        class Parser {
+            list<StreetSection> getStreetSections(pathToXml: String)
+            list<DeliveryAddress> getDeliveryAddresses(pathToXml: String)
+        }
+    }
+
+    package tsp {
+        abstract class TspSolver {
+            +{abstract} Planning solve(graph: DeliveryGraph)
+        }
+
+        class BasicTspSolver {
+            +Planning solve(graph: DeliveryGraph)
+        }
+
+        class AdvancedTspSolver {
+            +Planning solve(graph: DeliveryGraph)
+        }
+
+        TspSolver <|-- BasicTspSolver
+        TspSolver <|-- AdvancedTspSolver
+
+    }
+}
+
+
+
+@enduml

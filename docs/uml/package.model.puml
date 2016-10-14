@@ -1,0 +1,71 @@
+@startuml
+
+package model {
+    class CityMapFactory {
+        +{static} CityMap constructCityMapFromXml(pathToXml)
+    }
+
+    class CityMap {
+       +Route shortestPath(IntersectionStart: Intersection, IntersectionEnd: Intersection)
+    }
+
+    class StreetSection {
+        -length: int
+        -time: int
+        #Intersection getIntersectionEnd()
+        #Intersection getIntersectionSTart()
+    }
+
+    class Intersection {
+        -id: int
+        #int getId()
+        +Point getCoordinates()
+    }
+
+    class Point {
+        -x: int
+        -y: int
+        +int getX()
+        +int getY()
+    }
+
+    class DeliveryAddress {
+        -deliveryDuration: int
+        -deliveryIntervalStart: int
+        -deliveryIntervalEnd: int
+
+        +int getDeliveryDuration()
+        +Point getPoint()
+        #int getId()
+    }
+
+    class Planning {
+
+    }
+
+    class Route {
+        -time: int
+        +DeliveryAddress getDeliveryAddressStart()
+        +DeliveryAddress getDeliveryAddressEnd()
+    }
+
+    class DeliveryGraph {
+    }
+
+    CityMap o-- StreetSection
+    CityMap o-- Intersection
+    Intersection --> Point
+    DeliveryAddress --> Intersection
+    StreetSection --> Intersection : end
+    StreetSection --> Intersection : start
+    Route o-- StreetSection
+    Route --> DeliveryAddress : end
+    Route --> DeliveryAddress : start
+    DeliveryGraph o-- DeliveryAddress
+    DeliveryGraph o-- Route
+    Planning o-- Route
+}
+
+
+
+@enduml
