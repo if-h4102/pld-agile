@@ -38,12 +38,12 @@ package view {
     class MainView
 }
 
-MainController --> Parser
-MainController --> CityMap
-MainController --> Planning
-MainController --> DeliveryRequest
-MainController --> MainView
+MainController -left-> Parser
+MainController -right-> CityMap
+MainController -right-> Planning
+MainController -right-> DeliveryRequest
+MainController -up-> MainView
 
-MainController -up-> tsp
+MainController --> tsp
 
 @enduml
