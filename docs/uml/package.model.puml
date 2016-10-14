@@ -17,6 +17,7 @@ class StreetSection {
 class Intersection {
     -id: int
     #int getId()
+    +Point getPoint
 }
 
 class Point {
@@ -30,6 +31,10 @@ class DeliveryAddress {
     -deliveryDuration: int
     -deliveryIntervalStart: int
     -deliveryIntervalEnd: int
+
+    +int getDeliveryDuration()
+    +Point getPoint()
+    #int getId()
 }
 
 class Planning {
@@ -38,11 +43,25 @@ class Planning {
 
 class Route {
     -time: int
+    +DeliveryAddress getDeliveryAddressStart()
+    +DeliveryAddress getDeliveryAddressEnd()
 }
 
 class DeliveryGraph {
 }
 
+CityMap o-- StreetSection
+CityMap o-- Intersection
+Intersection --> Point
+DeliveryAddress --> Intersection
+StreetSection --> Intersection : end
+StreetSection --> Intersection : start
+Route o-- StreetSection
+Route --> DeliveryAddress : end
+Route --> DeliveryAddress : start
+DeliveryGraph o-- DeliveryAddress
+DeliveryGraph o-- Route
+Planning o-- Route
 
 
 @enduml
