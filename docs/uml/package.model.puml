@@ -18,15 +18,9 @@ package model {
 
     class Intersection {
         -id: int
-        #int getId()
-        +Point getCoordinates()
-    }
-
-    class Point {
-        -x: int
-        -y: int
         +int getX()
         +int getY()
+        #int getId()
     }
 
     class DeliveryAddress {
@@ -35,12 +29,12 @@ package model {
         -deliveryIntervalEnd: int
 
         +int getDeliveryDuration()
-        +Point getPoint()
+        +int getX()
+        +int getY()
         #int getId()
     }
 
     class Planning {
-
     }
 
     class Route {
@@ -50,11 +44,11 @@ package model {
     }
 
     class DeliveryGraph {
+        +Route getRoute(idStart: int, idEnd: int)
     }
 
     CityMap o-- StreetSection
     CityMap o-- Intersection
-    Intersection --> Point
     DeliveryAddress --> Intersection
     StreetSection --> Intersection : end
     StreetSection --> Intersection : start

@@ -23,17 +23,15 @@ package "controllers" {
         +setCurrentCityMap(cityMap: CityMap)
         +setCurrentDeliveryRequestMap(deliveryRequest: DeliveryRequest)
         +setCurrentPlanning(planning: Planning)
-        ==
-        ...
     }
 
     interface State {
-        #loadCityMap(controller: MainController): void
-        #loadDeliveryRequest(controller: MainController): void
-        #computePlanning(controller: MainController): void
-        #moveMap(controller: MainController): void
-        #zoomIn(controller: MainController): void
-        #zoomOut(controller: MainController): void
+        +loadCityMap(controller: MainController): void
+        +loadDeliveryRequest(controller: MainController): void
+        +computePlanning(controller: MainController): void
+        +moveMap(controller: MainController): void
+        +zoomIn(controller: MainController): void
+        +zoomOut(controller: MainController): void
     }
 
     abstract DefaultState {
