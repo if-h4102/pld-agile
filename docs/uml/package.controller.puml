@@ -1,16 +1,5 @@
 @startuml
 
-package "models" {
-    class CityMap {
-
-    }
-    class DeliveryRequest {
-
-    }
-    class Planning {
-
-    }
-}
 
 package "controllers" {
     class MainController {
@@ -67,14 +56,6 @@ package "controllers" {
 
     MainController --> State
 }
-
-
-
-MainController --> CityMap
-MainController --> Planning
-MainController --> DeliveryRequest
-MainController --> MainView
-MainView ..> MainController
 
 
 
