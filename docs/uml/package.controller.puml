@@ -68,14 +68,7 @@ package "controllers" {
     MainController --> State
 }
 
-package "view" {
-    class MainView {
-    }
 
-    class MapView {
-        +draw()
-    }
-}
 
 MainController --> CityMap
 MainController --> Planning
