@@ -1,23 +1,36 @@
 @startuml
 
 package model {
-    class CityMapFactory {
-        +{static} CityMap constructCityMapFromXml(pathToXml)
+    class CityMap {
+       -Route shortestPath(IntersectionStart: Intersection, IntersectionEnd: Intersection)
+       +DeliveryGraph computeDeliveryGraph(request: DeliveryRequest)
+       +list<Intersection> getIntersections()
+       +list<StreetSection> getStreetSections()
     }
 
-    class CityMap {
-       +Route shortestPath(IntersectionStart: Intersection, IntersectionEnd: Intersection)
+    class DeliveryGraph {
+        +Route getRoute(idStart: int, idEnd: int)
     }
 
     class StreetSection {
         -length: int
         -time: int
+        -streetName: String
         #Intersection getIntersectionEnd()
         #Intersection getIntersectionSTart()
     }
 
     class Intersection {
         -id: int
+        -x: int
+        -y: int
+        +int getX()
+        +int getY()
+        #int getId()
+    }
+
+    abstract class AbstractWayPoint {
+        +Intersection getIntersection()
         +int getX()
         +int getY()
         #int getId()
@@ -27,11 +40,15 @@ package model {
         -deliveryDuration: int
         -deliveryIntervalStart: int
         -deliveryIntervalEnd: int
-
         +int getDeliveryDuration()
-        +int getX()
-        +int getY()
-        #int getId()
+    }
+
+    class Warehouse {
+    }
+
+    class DeliveryRequest {
+        +void addDeliveryAddress(address: DeliveryAddress)
+        +void removeDeliveryAddress(address: DeliveryAddress)
     }
 
     class Planning {
@@ -43,19 +60,18 @@ package model {
         +DeliveryAddress getDeliveryAddressEnd()
     }
 
-    class DeliveryGraph {
-        +Route getRoute(idStart: int, idEnd: int)
-    }
-
     CityMap o-- StreetSection
     CityMap o-- Intersection
-    DeliveryAddress --> Intersection
+    AbstractWayPoint --> Intersection
     StreetSection --> Intersection : end
     StreetSection --> Intersection : start
     Route o-- StreetSection
-    Route --> DeliveryAddress : end
-    Route --> DeliveryAddress : start
-    DeliveryGraph o-- DeliveryAddress
+    Route --> AbstractWayPoint : end
+    Route --> AbstractWayPoint : start
+    AbstractWayPoint <|-- DeliveryAddress
+    AbstractWayPoint <|-- Warehouse
+    DeliveryRequest o-- DeliveryAddress
+    DeliveryRequest -left-> Warehouse : warehouse
     DeliveryGraph o-- Route
     Planning o-- Route
 }

@@ -3,8 +3,8 @@
 package services {
     package xml {
         class Parser {
-            list<StreetSection> getStreetSections(pathToXml: String)
-            list<DeliveryAddress> getDeliveryAddresses(pathToXml: String)
+            CityMap getStreetSections(pathToXml: String)
+            DeliveryRequest getDeliveryRequest(pathToXml: String)
         }
     }
 
