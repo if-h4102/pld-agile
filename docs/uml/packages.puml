@@ -1,0 +1,49 @@
+@startuml
+
+package services {
+    package xml {
+        class Parser {
+        }
+    }
+
+    package tsp {
+        abstract class TspSolver {
+        }
+
+        class BasicTspSolver {
+        }
+
+        class AdvancedTspSolver {
+        }
+    }
+}
+
+package model {
+    class CityMap {
+    }
+
+    class Planning {
+    }
+
+    class DeliveryRequest {
+    }
+}
+
+package controller {
+    class MainController {
+    }
+}
+
+package view {
+    class MainView
+}
+
+MainController --> Parser
+MainController --> CityMap
+MainController --> Planning
+MainController --> DeliveryRequest
+MainController --> MainView
+
+MainController -up-> tsp
+
+@enduml
