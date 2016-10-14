@@ -7,7 +7,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ToolBar;
 import models.Intersection;
-import models.Point;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -29,7 +28,6 @@ public class Controller implements Initializable {
     public void loadCityMap(ActionEvent actionEvent) {
         System.out.println("Loading map...");
         this.setBtnText("Hello world!!!!!");
-        this.getOrigin().getCoordinates().setX(50);
     }
 
     public SimpleStringProperty btnTextProperty() {

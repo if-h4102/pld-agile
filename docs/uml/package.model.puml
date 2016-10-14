@@ -2,22 +2,22 @@
 
 package model {
     class CityMap {
-       -Route shortestPath(IntersectionStart: Intersection, IntersectionEnd: Intersection)
+       -Route shortestPath(startIntersection: Intersection, endIntersection: Intersection)
        +DeliveryGraph computeDeliveryGraph(request: DeliveryRequest)
-       +list<Intersection> getIntersections()
-       +list<StreetSection> getStreetSections()
+       +List<Intersection> getIntersections()
+       +List<StreetSection> getStreetSections()
     }
 
     class DeliveryGraph {
-        +Route getRoute(idStart: int, idEnd: int)
+        +Route getRoute(startId: int, endId: int)
     }
 
     class StreetSection {
         -length: int
-        -time: int
+        -duration: int
         -streetName: String
-        #Intersection getIntersectionEnd()
-        #Intersection getIntersectionSTart()
+        #Intersection getStartIntersection()
+        #Intersection getEndIntersection()
     }
 
     class Intersection {
@@ -38,8 +38,8 @@ package model {
 
     class DeliveryAddress {
         -deliveryDuration: int
-        -deliveryIntervalStart: int
-        -deliveryIntervalEnd: int
+'        -deliveryIntervalStart: int
+'        -deliveryIntervalEnd: int
         +int getDeliveryDuration()
     }
 
@@ -55,9 +55,9 @@ package model {
     }
 
     class Route {
-        -time: int
-        +DeliveryAddress getDeliveryAddressStart()
-        +DeliveryAddress getDeliveryAddressEnd()
+        -duration: int
+        +Waypoint getStartWaypoint()
+        +Waypoint getEndWaypoint()
     }
 
     CityMap o-- StreetSection
