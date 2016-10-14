@@ -1,0 +1,90 @@
+@startuml
+
+package "models" {
+    class CityMap {
+
+    }
+    class DeliveryRequest {
+
+    }
+    class Planning {
+
+    }
+}
+
+package "controllers" {
+    class MainController {
+'        -currentCityMap: ObservableObjectProperty<CityMap>
+'        -currentDeliveryGraph: ObservableObjectProperty<DeliveryGraph>
+'        -currentPlanning: ObservableObjectProperty<Planning>
+        -mapOffsetX: ObservableIntegerProperty
+        -mapOffsetY: ObservableIntegerProperty
+        -mapZoom: ObservableIntegerProperty
+        +setCurrentCityMap(cityMap: CityMap)
+        +setCurrentDeliveryRequestMap(deliveryRequest: DeliveryRequest)
+        +setCurrentPlanning(planning: Planning)
+        ==
+        ...
+    }
+
+    interface State {
+        #loadCityMap(controller: MainController): void
+        #loadDeliveryRequest(controller: MainController): void
+        #computePlanning(controller: MainController): void
+        #moveMap(controller: MainController): void
+        #zoomIn(controller: MainController): void
+        #zoomOut(controller: MainController): void
+    }
+
+    abstract DefaultState {
+
+    }
+
+    class InitState {
+
+    }
+
+    class CityMapLoadedState {
+
+    }
+
+    class DeliveryRequestLoadedState {
+
+    }
+
+    class PlanningComputationState {
+
+    }
+
+    class ComputedPlanningState {
+
+    }
+
+    DefaultState --|> State
+    InitState --|> DefaultState
+    CityMapLoadedState --|> DefaultState
+    DeliveryRequestLoadedState --|> DefaultState
+    ComputePlanningState --|> DefaultState
+    ComputedPlanningState --|> DefaultState
+
+    MainController --> State
+}
+
+package "view" {
+    class MainView {
+    }
+
+    class MapView {
+        +draw()
+    }
+}
+
+MainController --> CityMap
+MainController --> Planning
+MainController --> DeliveryRequest
+MainController --> MainView
+MainView ..> MainController
+
+
+
+@enduml
