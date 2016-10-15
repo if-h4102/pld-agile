@@ -3,6 +3,8 @@ package services.tsp;
 import models.DeliveryGraph;
 import models.Planning;
 
+import java.util.ArrayList;
+
 public class BasicTspSolver extends AbstractTspSolver {
     /**
      * The constructor for a basic TSP solver.
@@ -21,5 +23,45 @@ public class BasicTspSolver extends AbstractTspSolver {
     public Planning solve(DeliveryGraph graph) {
         // TODO
         return null;
+    }
+
+    public void showPermutations(int nodes) {
+        // Create nodes lists
+        ArrayList<Integer> notSeen = new ArrayList<Integer>(nodes);
+        ArrayList<Integer> seen = new ArrayList<Integer>();
+        // Let's say that the first seen node is 0...
+        seen.add(0);
+        // ...so the others aren't seen yet
+        for(int i = 1; i < nodes; i++) {
+            notSeen.add(i);
+        }
+        // Let's compute permutations
+        getPermutations(0, notSeen, seen);
+    }
+
+    private void getPermutations(int node, ArrayList<Integer> notSeen, ArrayList<Integer> seen) {
+        if(notSeen.size() == 0) {
+            // Stop it
+            // "seen" contains a new nodes permutation
+        } else {
+            for(int nextNode: notSeen) {
+                seen.add(nextNode);
+                notSeen.remove(nextNode);
+                getPermutations(nextNode, notSeen, seen);
+                // Show it
+                this.showIntegerArray(seen);
+                // Let's put everything like it was before
+                notSeen.add(nextNode);
+                seen.remove(nextNode);
+            }
+        }
+    }
+
+    private void showIntegerArray(ArrayList<Integer> l) {
+        System.out.print("Seen: ");
+        for(int i: l) {
+            System.out.print(i + " ");
+        }
+        System.out.println();
     }
 }
