@@ -6,15 +6,18 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ToolBar;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
 import models.Intersection;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 
 public class Controller implements Initializable {
     @FXML
-    protected ToolBar toolbar;
+    protected BorderPane root;
 
     private SimpleStringProperty btnText = new SimpleStringProperty();
     private SimpleObjectProperty<Intersection> origin = new SimpleObjectProperty<>();
@@ -25,9 +28,18 @@ public class Controller implements Initializable {
         this.setOrigin(new Intersection(42, 10, 20));
     }
 
-    public void loadCityMap(ActionEvent actionEvent) {
-        System.out.println("Loading map...");
-        this.setBtnText("Hello world!!!!!");
+    public void openCityMap(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open City Map");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("City Map file (*.xml)", "xml"));
+        File cityMapFile = fileChooser.showOpenDialog(root.getScene().getWindow());
+
+        if (cityMapFile == null) { // Cancelled
+            return;
+        }
+
+        // TODO: use service to load and parse the cityMap
+        // this.setCurrentCityMap(this.parser.parseCityMap(cityMapFile));
     }
 
     public SimpleStringProperty btnTextProperty() {
