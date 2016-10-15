@@ -1,19 +1,33 @@
 @startuml
 
-[*] --> Init
-Init --> LoadedStreetMap: loadStreetMap
-LoadedStreetMap --> LoadedRequest: loadRequest
-LoadedRequest --> ComputePath: computePathRequest
-ComputePath --> ComputedPath: finishComputation
+[*] --> WaitOpenCityMap
 
-ComputePath --> LoadedRequest: computationError
-ComputePath --> LoadedRequest: cancelComputation
+WaitOpenCityMap --> OpenedCityMap: openCityMap
+OpenedCityMap --> OpenedCityMap: openCityMap
 
-LoadedStreetMap --> LoadedStreetMap: loadStreetMap
-LoadedRequest --> LoadedStreetMap: loadStreetMap
-ComputedPath --> LoadedStreetMap: loadStreetMap
+state OpenedCityMap {
+    [*] --> WaitOpenDeliveryRequest
 
-LoadedRequest --> LoadedRequest: loadRequest
-ComputedPath --> LoadedRequest: loadRequest
+    WaitOpenDeliveryRequest --> OpenedDeliveryRequest: openDeliveryRequest
+    OpenedDeliveryRequest --> OpenedDeliveryRequest: openDeliveryRequest
+
+    state OpenedDeliveryRequest {
+        [*] --> Ready
+
+        Ready --> ComputingPlanning: computePlanning
+        ComputingPlanning --> Ready: success, cancel, error
+
+        Ready --> AddDeliveryAddress: addDeliveryAddress
+        AddDeliveryAddress --> Ready: cancel, MapView#click
+    }
+
+    --
+
+    [*] --> DisplayMap
+
+    DisplayMap --> DragMap: MapView#mousePressed
+    DragMap --> DragMap: mouseDragged | translateMap()
+    DragMap --> DisplayMap: mouseReleased
+}
 
 @enduml

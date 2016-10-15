@@ -5,10 +5,13 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
+import models.CityMap;
 import models.Intersection;
+import services.xml.Parser;
 
 import java.io.File;
 import java.net.URL;
@@ -17,15 +20,15 @@ import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
     @FXML
-    protected BorderPane root;
+    private BorderPane root;
 
-    private SimpleStringProperty btnText = new SimpleStringProperty();
-    private SimpleObjectProperty<Intersection> origin = new SimpleObjectProperty<>();
+    final private SimpleObjectProperty<CityMap> currentCityMap = new SimpleObjectProperty<>();
+    final private Parser parserService = new Parser();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.setBtnText("Hello world");
-        this.setOrigin(new Intersection(42, 10, 20));
+//        this.setBtnText("Hello world");
+//        this.setOrigin(new Intersection(42, 10, 20));
     }
 
     public void openCityMap(ActionEvent actionEvent) {
@@ -42,27 +45,23 @@ public class MainController implements Initializable {
         // this.setCurrentCityMap(this.parser.parseCityMap(cityMapFile));
     }
 
-    public SimpleStringProperty btnTextProperty() {
-        return this.btnText;
+    protected Parent getRoot() {
+        return this.root;
     }
 
-    public String getBtnText() {
-        return this.btnText.getValue();
+    protected Parser getParserService() {
+        return this.parserService;
     }
 
-    public void setBtnText(String btnText) {
-        this.btnText.setValue(btnText);
+    protected SimpleObjectProperty<CityMap> currentCityMapProperty() {
+        return this.currentCityMap;
     }
 
-    public SimpleObjectProperty<Intersection> originProperty() {
-        return this.origin;
+    protected CityMap getOrigin () {
+        return this.currentCityMap.getValue();
     }
 
-    public Intersection getOrigin () {
-        return this.origin.getValue();
-    }
-
-    public void setOrigin (Intersection origin) {
-        this.origin.setValue(origin);
+    protected void setCurrentCityMap (CityMap currentCityMap) {
+        this.currentCityMap.setValue(currentCityMap);
     }
 }

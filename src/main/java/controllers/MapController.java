@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.input.DragEvent;
+import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -31,6 +32,14 @@ public class MapController implements Initializable {
     }
 
     public void mousePressed(MouseEvent mouseEvent) {
-        System.out.println("mouse pressed");
+        System.out.println("Start drag");
+    }
+
+    public void mouseDragged(MouseEvent mouseEvent) {
+        System.out.println("dragged");
+    }
+
+    public void mouseReleased(MouseEvent mouseEvent) {
+        System.out.println("Released");
     }
 }
