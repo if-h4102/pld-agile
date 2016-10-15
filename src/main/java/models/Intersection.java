@@ -2,8 +2,6 @@ package models;
 
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
 
 public class Intersection {
     final private ReadOnlyIntegerWrapper id = new ReadOnlyIntegerWrapper();
