@@ -20,4 +20,8 @@ public class Route {
     public AbstractWayPoint getEndWaypoint() {
         return this.end.getValue();
     }
+
+    public int getDuration() {
+        return this.duration.getValue();
+    }
 }

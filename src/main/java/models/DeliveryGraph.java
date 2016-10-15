@@ -1,10 +1,14 @@
 package models;
 
+import com.google.java.contract.Invariant;
+
+@Invariant("routes.length == routes[0].length")
 public class DeliveryGraph {
 
     /**
      * The matrix representing the complete graph.
      */
+
     private Route[][] routes;
 
     /**
@@ -14,6 +18,10 @@ public class DeliveryGraph {
     public DeliveryGraph(Route[][] routes) {
         // TODO: compute matrix here ?
         this.routes = routes;
+    }
+
+    public int size() {
+        return this.routes.length;
     }
 
     /**

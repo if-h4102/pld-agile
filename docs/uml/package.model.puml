@@ -9,6 +9,7 @@ package model {
     }
 
     class DeliveryGraph {
+        +int size()
         +Route getRoute(startId: int, endId: int)
     }
 
@@ -58,6 +59,7 @@ package model {
         -duration: int
         +Waypoint getStartWaypoint()
         +Waypoint getEndWaypoint()
+        +int getDuration()
     }
 
     CityMap o-- StreetSection
@@ -72,7 +74,7 @@ package model {
     AbstractWayPoint <|-- Warehouse
     DeliveryRequest o-- DeliveryAddress
     DeliveryRequest -left-> Warehouse : warehouse
-    DeliveryGraph o-- Route
+    DeliveryGraph o-- Route : routes
     Planning o-- Route
 }
 
