@@ -2,8 +2,10 @@ package services.tsp;
 
 import models.DeliveryGraph;
 import models.Planning;
+import models.Route;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BasicTspSolver extends AbstractTspSolver {
     /**
@@ -15,53 +17,40 @@ public class BasicTspSolver extends AbstractTspSolver {
     }
 
     /**
-     * Solve the TSP problem from a DeliveryGraph.
+     * Solve the TSP problem for the given DeliveryGraph.
+     * IMPORTANT: we need to assume that nodes have an ID between 0 and graph.size().
      * @param graph The (complete) graph representing all delivery points and the warehouse.
      * @return The delivery plan (Planning) associated to the given DeliveryGraph.
      */
     @Override
     public Planning solve(DeliveryGraph graph) {
-        // TODO
-        return null;
-    }
-
-    public void showPermutations(int nodes) {
-        // Create nodes lists
-        ArrayList<Integer> notSeen = new ArrayList<Integer>(nodes);
-        ArrayList<Integer> seen = new ArrayList<Integer>();
-        // Let's say that the first seen node is 0...
-        seen.add(0);
-        // ...so the others aren't seen yet
-        for(int i = 1; i < nodes; i++) {
-            notSeen.add(i);
-        }
-        // Let's compute permutations
-        getPermutations(0, notSeen, seen);
-    }
-
-    private void getPermutations(int node, ArrayList<Integer> notSeen, ArrayList<Integer> seen) {
-        if(notSeen.size() == 0) {
-            // Stop it
-            // "seen" contains a new nodes permutation
-        } else {
-            for(int nextNode: notSeen) {
-                seen.add(nextNode);
-                notSeen.remove(nextNode);
-                getPermutations(nextNode, notSeen, seen);
-                // Show it
-                this.showIntegerArray(seen);
-                // Let's put everything like it was before
-                notSeen.add(nextNode);
-                seen.remove(nextNode);
+        // Initialize solver parameters
+        this.bestSolutionCost = Integer.MAX_VALUE;
+        this.bestSolution = new Integer[graph.size()];
+        // Initialize unseen nodes
+        ArrayList<Integer> unseen = new ArrayList<Integer>();           // TODO
+        for (int i=1; i<graph.size(); i++) unseen.add(i);               // TODO
+        // Initialize seen nodes
+        ArrayList<Integer> seen = new ArrayList<Integer>(graph.size()); // TODO
+        seen.add(0); // The first seen node is the 0th                  // TODO
+        // Get the cost for all routes
+        int[][] costs = new int[graph.size()][graph.size()];
+        for(int i = 0; i < graph.size(); i++) {
+            for(int j = 0; j < graph.size(); j++) {
+                costs[i][j] = graph.getRoute(i, j).getDuration();
             }
         }
+        // Compute solution
+        branchAndBound(0, unseen, seen, 0, costs);
+        // Construct Planning based on the previous result
+        List<Route> routes = new ArrayList<>(graph.size());
+        for(int i = 0; i < graph.size(); i++) {
+            routes.add(graph.getRoute(this.bestSolution[i], this.bestSolution[(i+1)%graph.size()]));
+        }
+        return new Planning(routes);
     }
 
-    private void showIntegerArray(ArrayList<Integer> l) {
-        System.out.print("Seen: ");
-        for(int i: l) {
-            System.out.print(i + " ");
-        }
-        System.out.println();
+    private void branchAndBound(int lastSeenNodeId, ArrayList<Integer> unseen, ArrayList<Integer> seen, int seenCost, int[][] costs) {
+
     }
 }
