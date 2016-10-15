@@ -10,28 +10,30 @@ public class IteratorSeq implements Iterator<Integer> {
 
     /**
      * Cree un iterateur pour iterer sur l'ensemble des sommets de nonVus
+     *
      * @param nonVus
      * @param sommetCrt
      */
-    public IteratorSeq(Collection<Integer> nonVus, int sommetCrt){
+    public IteratorSeq(Collection<Integer> nonVus, int sommetCrt) {
         this.candidats = new Integer[nonVus.size()];
         nbCandidats = 0;
-        for (Integer s : nonVus){
+        for (Integer s : nonVus) {
             candidats[nbCandidats++] = s;
         }
     }
-	
+
     @Override
     public boolean hasNext() {
-	return nbCandidats > 0;
+        return nbCandidats > 0;
     }
 
     @Override
     public Integer next() {
-	return candidats[--nbCandidats];
+        return candidats[--nbCandidats];
     }
 
     @Override
-    public void remove() {}
+    public void remove() {
+    }
 
 }

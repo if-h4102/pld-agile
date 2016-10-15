@@ -1,29 +1,27 @@
 package controllers;
 
-import com.sun.istack.internal.NotNull;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableObjectValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.FileChooser;
 import models.CityMap;
 import models.DeliveryRequest;
-import models.Intersection;
 import services.xml.Parser;
 
-import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 
 public class MainController implements Initializable {
+    final private ReadOnlyObjectWrapper<MainControllerState> state = new ReadOnlyObjectWrapper<>();
+    final private SimpleObjectProperty<CityMap> currentCityMap = new SimpleObjectProperty<>();
+    final private SimpleObjectProperty<DeliveryRequest> currentDeliveryRequest = new SimpleObjectProperty<>();
+    final private Parser parserService = new Parser();
     @FXML
     private BorderPane root;
     @FXML
@@ -32,11 +30,6 @@ public class MainController implements Initializable {
     private Button openDeliveryRequestButton;
     @FXML
     private Button computePlanningButton;
-
-    final private ReadOnlyObjectWrapper<MainControllerState> state = new ReadOnlyObjectWrapper<>();
-    final private SimpleObjectProperty<CityMap> currentCityMap = new SimpleObjectProperty<>();
-    final private SimpleObjectProperty<DeliveryRequest> currentDeliveryRequest = new SimpleObjectProperty<>();
-    final private Parser parserService = new Parser();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -57,11 +50,11 @@ public class MainController implements Initializable {
         return this.currentCityMap;
     }
 
-    protected CityMap getCurrentCityMap () {
+    protected CityMap getCurrentCityMap() {
         return this.currentCityMap.getValue();
     }
 
-    protected void setCurrentCityMap (CityMap currentCityMap) {
+    protected void setCurrentCityMap(CityMap currentCityMap) {
         this.currentCityMap.setValue(currentCityMap);
     }
 
@@ -69,11 +62,11 @@ public class MainController implements Initializable {
         return this.currentDeliveryRequest;
     }
 
-    protected DeliveryRequest getCurrentDeliveryRequest () {
+    protected DeliveryRequest getCurrentDeliveryRequest() {
         return this.currentDeliveryRequest.getValue();
     }
 
-    protected void setCurrentDeliveryRequest (DeliveryRequest currentDeliveryRequest) {
+    protected void setCurrentDeliveryRequest(DeliveryRequest currentDeliveryRequest) {
         this.currentDeliveryRequest.setValue(currentDeliveryRequest);
     }
 
@@ -81,15 +74,15 @@ public class MainController implements Initializable {
         return this.state.getReadOnlyProperty();
     }
 
-    protected MainControllerState getState () {
+    protected MainControllerState getState() {
         return this.state.getValue();
     }
 
-    private void setState (MainControllerState state) {
+    private void setState(MainControllerState state) {
         this.state.setValue(state);
     }
 
-    private void applyState(@NotNull MainControllerState nextState) {
+    private void applyState(MainControllerState nextState) {
         MainControllerState currentState = this.getState();
         if (currentState == nextState) {
             return;

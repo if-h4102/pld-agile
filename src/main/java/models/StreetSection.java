@@ -13,7 +13,7 @@ public class StreetSection {
     final private SimpleObjectProperty<Intersection> start = new SimpleObjectProperty<>();
     final private SimpleObjectProperty<Intersection> end = new SimpleObjectProperty<>();
 
-    public StreetSection (int length, int speed, String streetName, Intersection start, Intersection end) {
+    public StreetSection(int length, int speed, String streetName, Intersection start, Intersection end) {
         this.length.setValue(length);
         this.speed.setValue(speed);
         this.streetName.setValue(streetName);
@@ -35,5 +35,11 @@ public class StreetSection {
 
     protected Intersection getEndIntersection() {
         return end.getValue();
+    }
+
+    public boolean equals(StreetSection other) {
+        return this.streetName.getValue().equals(other.streetName.getValue())
+            && this.length.getValue().equals(other.length.getValue())
+            && this.speed.getValue().equals(other.speed.getValue());
     }
 }

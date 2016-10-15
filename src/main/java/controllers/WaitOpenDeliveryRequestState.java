@@ -1,22 +1,21 @@
 package controllers;
 
 
-import com.sun.istack.internal.NotNull;
 import javafx.stage.FileChooser;
 import models.DeliveryRequest;
 
 import java.io.File;
 
 public class WaitOpenDeliveryRequestState extends WaitOpenCityMapState {
-    public void enterState(@NotNull MainController mainController) {
+    public void enterState(MainController mainController) {
         mainController.setCurrentDeliveryRequest(null); // Reset any previous delivery request
     }
 
-    public void leaveState(@NotNull MainController mainController) {
+    public void leaveState(MainController mainController) {
 
     }
 
-    public @NotNull MainControllerState onOpenDeliveryRequestButtonAction(@NotNull MainController mainController) {
+    public MainControllerState onOpenDeliveryRequestButtonAction(MainController mainController) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Delivery Request");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Delivery Request file (*.xml)", "xml"));
