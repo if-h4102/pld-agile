@@ -5,10 +5,8 @@ import models.Planning;
 
 public abstract class AbstractTspSolver {
 
-    private Integer[] bestSolution;
-    private int bestSolutionCost;
-
-
+    protected Integer[] bestSolution;
+    protected int bestSolutionCost;
 
     /**
      * Solve the TSP problem from a DeliveryGraph.
