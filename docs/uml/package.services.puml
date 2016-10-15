@@ -4,7 +4,7 @@ package services {
     package xml {
         class Parser {
             CityMap getStreetSections(pathToXml: String)
-            DeliveryRequest getDeliveryRequest(pathToXml: String)
+            DeliveryRequest getDeliveryRequest(pathToXml: String, cityMap: CityMap)
         }
     }
 

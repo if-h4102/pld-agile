@@ -11,6 +11,9 @@ public class CityMap {
 	private Map<Integer, Map<Integer, StreetSection>> streetSections; // Map<idIntersectionStart, Map<idIntersectionEnd, streetSection>>
 
 	public CityMap(Collection<Intersection> intersectionsList, Collection<StreetSection> streetSectionsList) {
+		intersections = new TreeMap<Integer, Intersection>();
+		streetSections = new TreeMap<Integer, Map<Integer, StreetSection>>();
+		
 		for (Intersection intersection : intersectionsList) {
 			addIntersections(intersection);
 		}
@@ -50,5 +53,9 @@ public class CityMap {
 	// TODO
 	public List<StreetSection> getStreetSections() {
 		return null;
+	}
+	
+	public Intersection getIntersection(int idIntersection) {
+		return intersections.get(idIntersection);
 	}
 }

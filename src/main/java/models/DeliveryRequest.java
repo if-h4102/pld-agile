@@ -9,12 +9,14 @@ import javafx.beans.property.SimpleSetProperty;
 public class DeliveryRequest {
     final private SimpleObjectProperty<Warehouse> warehouse = new SimpleObjectProperty<>();
     final private SimpleSetProperty<DeliveryAddress> deliveryAddresses = new SimpleSetProperty<>();
+    private int startPlanningTimestamp;
 
-    public DeliveryRequest (Warehouse warehouse, Collection<DeliveryAddress> deliveryAddresses) {
+    public DeliveryRequest (Warehouse warehouse, Collection<DeliveryAddress> deliveryAddresses, int startPlanningTimestamp) {
     	this.warehouse.setValue(warehouse);
     	for (DeliveryAddress deliveryAddress : deliveryAddresses) {
     		addDeliveryAddress(deliveryAddress);
     	}
+    	this.startPlanningTimestamp = startPlanningTimestamp;
     }
 
     @Requires("!deliveryAddresses.contains(deliveryAddress)")
