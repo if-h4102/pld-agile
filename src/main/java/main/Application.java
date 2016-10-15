@@ -6,6 +6,9 @@ import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 public class Application extends javafx.application.Application {
     public static void main(String[] args) {
         launch(args);
@@ -13,11 +16,10 @@ public class Application extends javafx.application.Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-//        System.out.println("Resources root:");
-//        System.out.println(getClass().getResource("/").getPath());
-
-        Parent root = FXMLLoader.load(getClass().getResource("/views/main.fxml"));
-        Scene scene = new Scene(root, 300, 275);
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/views/main.fxml"));
+        fxmlLoader.setResources(ResourceBundle.getBundle("views.Locale", new Locale("en", "US")));
+        Parent root = fxmlLoader.load();
+        Scene scene = new Scene(root, 640, 480);
 
         primaryStage.setTitle("Delivery App");
         primaryStage.setScene(scene);
