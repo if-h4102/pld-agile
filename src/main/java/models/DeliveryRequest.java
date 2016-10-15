@@ -1,5 +1,6 @@
 package models;
 
+import java.util.Collection;
 import com.google.java.contract.Ensures;
 import com.google.java.contract.Requires;
 import javafx.beans.property.SimpleObjectProperty;
@@ -9,9 +10,11 @@ public class DeliveryRequest {
     final private SimpleObjectProperty<Warehouse> warehouse = new SimpleObjectProperty<>();
     final private SimpleSetProperty<DeliveryAddress> deliveryAddresses = new SimpleSetProperty<>();
 
-    // TODO
-    public DeliveryRequest () {
-
+    public DeliveryRequest (Warehouse warehouse, Collection<DeliveryAddress> deliveryAddresses) {
+    	this.warehouse.setValue(warehouse);
+    	for (DeliveryAddress deliveryAddress : deliveryAddresses) {
+    		addDeliveryAddress(deliveryAddress);
+    	}
     }
 
     @Requires("!deliveryAddresses.contains(deliveryAddress)")

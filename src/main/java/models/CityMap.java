@@ -1,28 +1,54 @@
 package models;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class CityMap {
-    // TODO
-    public CityMap() {}
 
-    // TODO
-    private Route shortestPath(Intersection startIntersection, Intersection endIntersection) {
-        return null;
-    }
+	private Map<Integer, Intersection> intersections; // Map<idIntersection, intersection>
+	private Map<Integer, Map<Integer, StreetSection>> streetSections; // Map<idIntersectionStart, Map<idIntersectionEnd, streetSection>>
 
-    // TODO
-    public DeliveryGraph computeDeliveryGraph(DeliveryRequest request) {
-        return null;
-    }
+	public CityMap(Collection<Intersection> intersectionsList, Collection<StreetSection> streetSectionsList) {
+		for (Intersection intersection : intersectionsList) {
+			addIntersections(intersection);
+		}
+		for (StreetSection streetSection : streetSectionsList) {
+			addStreetSections(streetSection);
+		}
+	}
 
-    // TODO
-    public List<Intersection> getIntersections() {
-        return null;
-    }
+	private void addIntersections(Intersection intersection) {
+		intersections.put(intersection.getId(), intersection);
+	}
 
-    // TODO
-    public List<StreetSection> getStreetSections() {
-        return null;
-    }
+	private void addStreetSections(StreetSection streetSection) {
+		Map<Integer, StreetSection> streetSectionsFromIntersectionStart = streetSections.get(streetSection.getStartIntersection().getId());
+		if (streetSectionsFromIntersectionStart == null)
+			streetSectionsFromIntersectionStart = new TreeMap<Integer, StreetSection>();
+
+		streetSectionsFromIntersectionStart.put(streetSection.getEndIntersection().getId(), streetSection);
+		streetSections.put(streetSection.getStartIntersection().getId(), streetSectionsFromIntersectionStart);
+	}
+
+	// TODO
+	private Route shortestPath(Intersection startIntersection, Intersection endIntersection) {
+		return null;
+	}
+
+	// TODO
+	public DeliveryGraph computeDeliveryGraph(DeliveryRequest request) {
+		return null;
+	}
+
+	// TODO
+	public List<Intersection> getIntersections() {
+		return null;
+	}
+
+	// TODO
+	public List<StreetSection> getStreetSections() {
+		return null;
+	}
 }

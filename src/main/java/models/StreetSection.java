@@ -13,12 +13,12 @@ public class StreetSection {
     final private SimpleObjectProperty<Intersection> start = new SimpleObjectProperty<>();
     final private SimpleObjectProperty<Intersection> end = new SimpleObjectProperty<>();
 
-    public StreetSection (int length, int speed, String streetName) {
+    public StreetSection (int length, int speed, String streetName, Intersection start, Intersection end) {
         this.length.setValue(length);
         this.speed.setValue(speed);
         this.streetName.setValue(streetName);
-        // this.start.setValue();
-        // this.end.setValue();
+        this.start.setValue(start);
+        this.end.setValue(end);
     }
 
     public int getDuration() {
@@ -29,13 +29,11 @@ public class StreetSection {
         return this.streetName.getValue();
     }
 
-    // TODO
     protected Intersection getStartIntersection() {
-        return null;
+        return start.getValue();
     }
 
-    // TODO
     protected Intersection getEndIntersection() {
-        return null;
+        return end.getValue();
     }
 }
