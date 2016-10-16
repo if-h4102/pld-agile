@@ -51,6 +51,15 @@ public class BasicTspSolver extends AbstractTspSolver {
         return new Planning(routes);
     }
 
+    /**
+     * Basic branch an bound algorithm
+     * @param lastSeenNode the last explored node.
+     * @param unseen all nodes not explored yet.
+     * @param seen all nodes already explored.
+     * @param seenCost the cost of all explored nodes.
+     * @param costs the cost of the path between each node.
+     * @param deliveryDurations the delivery duration of each node.
+     */
     private void branchAndBound(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen, ArrayList<AbstractWayPoint> seen, int seenCost, Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs, Map<AbstractWayPoint, Integer> deliveryDurations) {
         if (unseen.size() == 0) {
             // All nodes have been seen
@@ -64,7 +73,7 @@ public class BasicTspSolver extends AbstractTspSolver {
             }
         } else if (seenCost + this.bound(lastSeenNode, unseen, costs, deliveryDurations) < this.bestSolutionCost) {
             // We have a great candidate !
-            Iterator<AbstractWayPoint> it = iterator(lastSeenNode, unseen, costs, deliveryDurations);
+            Iterator<AbstractWayPoint> it = this.iterator(lastSeenNode, unseen, costs, deliveryDurations);
             while (it.hasNext()){
                 AbstractWayPoint nextNode = it.next();
                 seen.add(nextNode);
@@ -76,13 +85,30 @@ public class BasicTspSolver extends AbstractTspSolver {
         }
     }
 
+    /**
+     * The most basic bounding algorithm.
+     * @param lastSeenNode
+     * @param unseen
+     * @param costs
+     * @param deliveryDurations
+     * @return
+     */
     private int bound(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen, Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs, Map<AbstractWayPoint, Integer> deliveryDurations) {
-        // TODO ?
-        return 0;
+        // TODO: improve that, or is this enough for this solver ?
+        return 0;   // The most basic bound
     }
 
-    protected Iterator<AbstractWayPoint> iterator(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen, Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs, Map<AbstractWayPoint, Integer> deliveryDurations) {
-        // TODO
-        return null;
+    /**
+     * Return a very basic iterator on the given collection.
+     * @param lastSeenNode
+     * @param unseen the collection in which you want to iterate.
+     * @param costs
+     * @param deliveryDurations
+     * @return
+     */
+    private Iterator<AbstractWayPoint> iterator(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen, Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs, Map<AbstractWayPoint, Integer> deliveryDurations) {
+        // NOTE: for the moment, this just returns a basic iterator,
+        //       which won't look for the best node to return.
+        return new WayPointIterator(unseen);
     }
 }
