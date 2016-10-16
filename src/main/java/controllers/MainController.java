@@ -101,6 +101,6 @@ public class MainController implements Initializable {
     }
 
     public void onComputePlanningButtonAction(ActionEvent actionEvent) {
-        this.applyState(this.getState().onOpenDeliveryRequestButtonAction(this));
+        this.applyState(this.getState().onComputePlanningButtonAction(this));
     }
 }

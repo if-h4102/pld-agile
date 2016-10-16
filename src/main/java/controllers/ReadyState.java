@@ -10,9 +10,7 @@ public class ReadyState extends WaitOpenDeliveryRequestState {
 
     }
 
-    public MainControllerState onCumputePlanningButtonAction(MainController mainController) {
-        System.out.println("Computing Planning...");
-
-        return this;
+    public MainControllerState onComputePlanningButtonAction(MainController mainController) {
+        return new ComputingPlanningState();
     }
 }

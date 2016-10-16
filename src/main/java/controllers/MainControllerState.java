@@ -17,7 +17,7 @@ public abstract class MainControllerState {
         return this;
     }
 
-    public MainControllerState onCumputePlanningButtonAction(MainController mainController) {
+    public MainControllerState onComputePlanningButtonAction(MainController mainController) {
         return this;
     }
 }

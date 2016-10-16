@@ -7,7 +7,7 @@ import javafx.collections.ObservableList;
 import java.util.List;
 
 public class Planning {
-    final private SimpleListProperty<Route> routes = new SimpleListProperty();
+    final private SimpleListProperty<Route> routes = new SimpleListProperty<>();
 
     public Planning(ObservableList<Route> routes) {
         this.routes.setValue(routes);

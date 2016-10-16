@@ -4,12 +4,13 @@ import com.google.java.contract.Ensures;
 import com.google.java.contract.Requires;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleSetProperty;
+import javafx.collections.FXCollections;
 
 import java.util.Collection;
 
 public class DeliveryRequest {
     final private SimpleObjectProperty<Warehouse> warehouse = new SimpleObjectProperty<>();
-    final private SimpleSetProperty<DeliveryAddress> deliveryAddresses = new SimpleSetProperty<>();
+    final private SimpleSetProperty<DeliveryAddress> deliveryAddresses = new SimpleSetProperty<>(FXCollections.observableSet());
     private int startPlanningTimestamp;
 
     public DeliveryRequest(Warehouse warehouse, Collection<DeliveryAddress> deliveryAddresses, int startPlanningTimestamp) {
