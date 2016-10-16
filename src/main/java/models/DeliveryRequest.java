@@ -35,13 +35,11 @@ public class DeliveryRequest {
         assert removed;
     }
 
-    // TODO
     public Warehouse getWareHouse() {
-        return null;
+        return warehouse.getValue();
     }
 
-    // TODO
     public Iterable<DeliveryAddress> getDeliveryAddresses() {
-        return null;
+        return deliveryAddresses.getValue();
     }
 }

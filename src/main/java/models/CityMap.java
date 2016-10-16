@@ -153,9 +153,28 @@ public class CityMap {
         return neighbourIntersections;
     }
 
-    // TODO
+    @Requires({ "request != null", "request.getWareHouse() != null", "request.getDeliveryAddresses() != null" })
     public DeliveryGraph computeDeliveryGraph(DeliveryRequest request) {
-        return null;
+        List<AbstractWayPoint> pointsContainedInRequest = new ArrayList<AbstractWayPoint>();
+        pointsContainedInRequest.add(request.getWareHouse());
+        
+        Iterable<DeliveryAddress> adressContainedInRequest = request.getDeliveryAddresses();
+        for (DeliveryAddress adress : adressContainedInRequest) {
+            pointsContainedInRequest.add(adress);
+        }
+
+        Map<AbstractWayPoint, Map<AbstractWayPoint, Route>> mappedRoutes = new TreeMap<AbstractWayPoint, Map<AbstractWayPoint, Route>>();
+        for (AbstractWayPoint startPoint : pointsContainedInRequest) {
+            Map<AbstractWayPoint, Route> routesFromGivenStartPoint = new TreeMap<AbstractWayPoint, Route>();
+            pointsContainedInRequest.remove(startPoint);
+            List<Route> shortestPathRoutes = shortestPath(startPoint,pointsContainedInRequest);
+            for (Route route : shortestPathRoutes) {
+                routesFromGivenStartPoint.put(route.getEndWaypoint(), route);
+            }
+            mappedRoutes.put(startPoint, routesFromGivenStartPoint);
+            pointsContainedInRequest.add(startPoint);
+        }
+        return new DeliveryGraph(mappedRoutes);
     }
 
     // TODO
