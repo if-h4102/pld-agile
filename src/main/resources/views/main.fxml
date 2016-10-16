@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import controllers.MapScreenController?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="root" prefHeight="480.0"
@@ -20,9 +21,14 @@
     <SplitPane dividerPositions="0.75" prefHeight="160.0" prefWidth="200.0"
                BorderPane.alignment="CENTER">
       <AnchorPane BorderPane.alignment="CENTER">
-        <fx:include source="map.fxml" AnchorPane.bottomAnchor="0"
-                    AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
-                    AnchorPane.topAnchor="0"/>
+        <MapScreenController AnchorPane.bottomAnchor="0"
+                             AnchorPane.leftAnchor="0"
+                             AnchorPane.rightAnchor="0"
+                             AnchorPane.topAnchor="0"
+                             cityMap="${controller.currentCityMap}"
+                             deliveryRequest="${controller.currentDeliveryRequest}"
+                             planning="${controller.planning}" />
+        <!--<fx:include fx:id="mapView" source="mapScreen.fxml" />-->
       </AnchorPane>
       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0"
                   prefWidth="100.0">
