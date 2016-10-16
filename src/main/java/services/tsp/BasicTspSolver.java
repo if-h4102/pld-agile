@@ -52,31 +52,36 @@ public class BasicTspSolver extends AbstractTspSolver {
     }
 
     private void branchAndBound(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen, ArrayList<AbstractWayPoint> seen, int seenCost, Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs, Map<AbstractWayPoint, Integer> deliveryDurations) {
-        /*if (unseen.size() == 0){ // tous les sommets ont ete visites
-            seenCost += costs[lastSeenNodeId][0];
-            if (seenCost < this.bestSolutionCost){ // on a trouve une solution meilleure que meilleureSolution
+        if (unseen.size() == 0) {
+            // All nodes have been seen
+            // Just complete the circuit...
+            seenCost += costs.get(lastSeenNode).get(seen.get(0));   // TODO: is that the right cost ?
+            // ...and check if this was a better solution
+            if (seenCost < this.bestSolutionCost) {
+                // Indeed it was ! Let's update the previous one
                 seen.toArray(this.bestSolution);
                 this.bestSolutionCost = seenCost;
             }
-        } else if (seenCost + this.bound(lastSeenNodeId, unseen, costs, deliveryDurations) < this.bestSolutionCost){
-            Iterator<Integer> it = iterator(lastSeenNodeId, unseen, costs);
+        } else if (seenCost + this.bound(lastSeenNode, unseen, costs, deliveryDurations) < this.bestSolutionCost) {
+            // We have a great candidate !
+            Iterator<AbstractWayPoint> it = iterator(lastSeenNode, unseen, costs, deliveryDurations);
             while (it.hasNext()){
-                Integer prochainSommet = it.next();
-                seen.add(prochainSommet);
-                unseen.remove(prochainSommet);
-                branchAndBound(prochainSommet, unseen, seen, seenCost + costs[lastSeenNodeId][prochainSommet] + deliveryDurations[prochainSommet], costs, duree);
-                unseen.add(prochainSommet);
-                seen.remove(prochainSommet);
+                AbstractWayPoint nextNode = it.next();
+                seen.add(nextNode);
+                unseen.remove(nextNode);
+                branchAndBound(nextNode, unseen, seen, seenCost + costs.get(lastSeenNode).get(nextNode) + deliveryDurations.get(nextNode), costs, deliveryDurations);
+                unseen.add(nextNode);
+                seen.remove(nextNode);
             }
-        }*/
+        }
     }
 
-    private int bound(int lastSeenNodeId, ArrayList<Integer> unseen, int[][] costs, int[] deliveryDurations) {
+    private int bound(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen, Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs, Map<AbstractWayPoint, Integer> deliveryDurations) {
         // TODO ?
         return 0;
     }
 
-    protected Iterator<Integer> iterator(Integer lastSeenNodeId, ArrayList<Integer> unseen, int[][] costs) {
+    protected Iterator<AbstractWayPoint> iterator(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen, Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs, Map<AbstractWayPoint, Integer> deliveryDurations) {
         // TODO
         return null;
     }
