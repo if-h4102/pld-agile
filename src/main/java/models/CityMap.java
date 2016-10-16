@@ -179,12 +179,21 @@ public class CityMap {
 
     // TODO
     public List<Intersection> getIntersections() {
-        return null;
+    	List<Intersection> listIntersection = new ArrayList<Intersection>();
+    	for (Intersection value : intersections.values()) {
+    	    listIntersection.add(value);
+    	}
+        return listIntersection;
     }
 
     // TODO
     public List<StreetSection> getStreetSections() {
-        return null;
+    	List<StreetSection> listStreetSection = new ArrayList<StreetSection>();
+    	for (Map<Integer, StreetSection> value : streetSections.values()) {
+    		for(StreetSection section : value.values())
+    			listStreetSection.add(section);
+    	}
+        return listStreetSection;
     }
 
     /**

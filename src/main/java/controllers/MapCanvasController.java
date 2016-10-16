@@ -11,9 +11,14 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import models.CityMap;
 import models.DeliveryRequest;
+import models.Intersection;
 import models.Planning;
+import models.StreetSection;
 
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 public class MapCanvasController extends Canvas {
     private static final CityMap DEFAULT_CITY_MAP = null;
@@ -51,14 +56,44 @@ public class MapCanvasController extends Canvas {
         if (getCityMap() == null) {
             gc.setStroke(Color.RED);
         } else if(getDeliveryRequest() == null) {
-            gc.setStroke(Color.BLUE);
-        } else {
+        	drawCityMap();
+        } else {        	
             gc.setStroke(Color.GREEN);
         }
 
-        gc.strokeLine(0, 0, width, height);
-        gc.strokeLine(0, height, width, 0);
+        /*gc.strokeLine(0, 0, width, height);
+        gc.strokeLine(0, height, width, 0);*/
     }
+    
+    //TODO add an offset : extreme interscetions can't be seen
+    private void drawCityMap(){
+    	double width = getWidth();
+        double height = getHeight();
+    	GraphicsContext gc = getGraphicsContext2D();
+    	CityMap map = getCityMap();
+        List<Intersection> intersections = map.getIntersections();
+        double xmax = 0;
+        double ymax = 0;
+        
+		for (Intersection inter : intersections) {
+			System.out.println(inter.getX()+" "+inter.getY());
+			xmax = Math.max(xmax, inter.getX());
+			ymax = Math.max(ymax, inter.getY());
+		}
+		
+		List<StreetSection> streetSections = map.getStreetSections();
+		for (StreetSection section : streetSections) {
+			gc.setLineWidth(2);
+			gc.setStroke(Color.BLUE);
+			gc.strokeLine(section.getStartIntersection().getX()*width/xmax, section.getStartIntersection().getY()*height/ymax, 
+					section.getEndIntersection().getX(), section.getEndIntersection().getY());
+		}
+		
+		for (Intersection inter : intersections){
+			gc.fillOval(inter.getX()*width/xmax, inter.getY()*height/ymax, 10, 10);
+		}
+    }
+    
 
     @Override
     public boolean isResizable() {
