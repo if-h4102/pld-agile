@@ -33,7 +33,7 @@ public class Route {
         return this.end.getValue();
     }
 
-    protected int getDuration() {
-        return duration.getValue();
+    public int getDuration() {
+        return this.duration.getValue();
     }
 }

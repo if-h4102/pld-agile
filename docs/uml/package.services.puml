@@ -10,6 +10,8 @@ package services {
 
     package tsp {
         abstract class TspSolver {
+            #bestSolution: List<int>
+            #bestSolutionCost: int
             +{abstract} Planning solve(graph: DeliveryGraph)
         }
 
