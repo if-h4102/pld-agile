@@ -15,7 +15,6 @@ public class BasicTspSolver extends AbstractTspSolver {
 
     /**
      * Solve the TSP problem for the given DeliveryGraph.
-     * IMPORTANT: we need to assume that nodes have an ID between 0 and graph.size().
      * @param graph The (complete) graph representing all delivery points and the warehouse.
      * @return The delivery plan (Planning) associated to the given DeliveryGraph.
      */
