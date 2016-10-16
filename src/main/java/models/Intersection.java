@@ -96,6 +96,6 @@ public class Intersection {
     }
 
     public boolean equals(Intersection other) {
-        return this.getId() == this.getId() && this.getX() == this.getX() && this.getY() == this.getY();
+        return this.getId() == other.getId();
     }
 }

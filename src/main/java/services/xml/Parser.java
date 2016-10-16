@@ -66,6 +66,7 @@ public class Parser {
         int id = Integer.parseInt(intersectionNode.getAttribute(NAME_ATTRIBUTE_INTERSECTION_ID));
         int x = Integer.parseInt(intersectionNode.getAttribute(NAME_ATTRIBUTE_INTERSECTION_X));
         int y = Integer.parseInt(intersectionNode.getAttribute(NAME_ATTRIBUTE_INTERSECTION_Y));
+        
         Intersection intersection = new Intersection(id, x, y);
         intersections.put(id, intersection);
     }

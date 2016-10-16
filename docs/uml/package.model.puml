@@ -2,10 +2,13 @@
 
 package model {
     class CityMap {
-       -Route shortestPath(startIntersection: Intersection, endIntersection: Intersection)
+       -List<Route> shortestPath(startWayPoint: AbstractWayPoint, endWayPoints: List<AbstractWayPoint>)
+       -void release(streetSection: StreetSection, predecessors: Intersection[], duration: int[])
+       -Collection<Intersection> getNeighbourIntersection(idIntersection: int)
        +DeliveryGraph computeDeliveryGraph(request: DeliveryRequest)
        +List<Intersection> getIntersections()
        +List<StreetSection> getStreetSections()
+       +Intersection getIntersection(idIntersection: int)
     }
 
     class DeliveryGraph {
@@ -18,6 +21,7 @@ package model {
         -streetName: String
         #Intersection getStartIntersection()
         #Intersection getEndIntersection()
+        +int getDuration()
     }
 
     class Intersection {
