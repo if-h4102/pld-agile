@@ -10,10 +10,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import models.CityMap;
+import models.DeliveryAddress;
 import models.DeliveryRequest;
 import models.Intersection;
 import models.Planning;
 import models.StreetSection;
+import models.Warehouse;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -57,12 +59,11 @@ public class MapCanvasController extends Canvas {
             gc.setStroke(Color.RED);
         } else if(getDeliveryRequest() == null) {
         	drawCityMap();
-        } else {        	
-            gc.setStroke(Color.GREEN);
+        } else {      
+        	drawCityMap();
+        	drawDeliveryRequest();
         }
 
-        /*gc.strokeLine(0, 0, width, height);
-        gc.strokeLine(0, height, width, 0);*/
     }
     
     //TODO add an offset : extreme interscetions can't be seen
@@ -76,7 +77,6 @@ public class MapCanvasController extends Canvas {
         double ymax = 0;
         
 		for (Intersection inter : intersections) {
-			System.out.println(inter.getX()+" "+inter.getY());
 			xmax = Math.max(xmax, inter.getX());
 			ymax = Math.max(ymax, inter.getY());
 		}
@@ -84,7 +84,7 @@ public class MapCanvasController extends Canvas {
 		List<StreetSection> streetSections = map.getStreetSections();
 		for (StreetSection section : streetSections) {
 			gc.setLineWidth(2);
-			gc.setStroke(Color.BLUE);
+			gc.setStroke(Color.GREY);
 			gc.strokeLine(section.getStartIntersection().getX()*width/xmax, section.getStartIntersection().getY()*height/ymax, 
 					section.getEndIntersection().getX(), section.getEndIntersection().getY());
 		}
@@ -92,6 +92,34 @@ public class MapCanvasController extends Canvas {
 		for (Intersection inter : intersections){
 			gc.fillOval(inter.getX()*width/xmax, inter.getY()*height/ymax, 10, 10);
 		}
+    }
+    
+    private void drawDeliveryRequest(){
+    	double width = getWidth();
+        double height = getHeight();
+    	GraphicsContext gc = getGraphicsContext2D();
+    	CityMap map = getCityMap();
+        List<Intersection> intersections = map.getIntersections();
+        double xmax = 0;
+        double ymax = 0;
+        
+		for (Intersection inter : intersections) {
+			xmax = Math.max(xmax, inter.getX());
+			ymax = Math.max(ymax, inter.getY());
+		}
+		
+    	DeliveryRequest deliveryRequest = getDeliveryRequest();
+    	
+    	Iterable<DeliveryAddress> listDeliveryAddresses = deliveryRequest.getDeliveryAddresses();
+    	Warehouse warehouse = deliveryRequest.getWareHouse();
+    	
+    	for(DeliveryAddress delivery : listDeliveryAddresses){
+    		gc.setFill(Color.BLUE);
+    		gc.fillOval(delivery.getX()*width/xmax, delivery.getY()*height/ymax, 10, 10);
+    	}
+    	gc.setFill(Color.YELLOW);
+    	gc.fillOval(warehouse.getX()*width/xmax, warehouse.getY()*height/ymax, 10, 10);
+    	
     }
     
 
