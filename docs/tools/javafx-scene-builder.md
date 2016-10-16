@@ -11,10 +11,16 @@
 
 ## Installation
 
+###Windows
+
 From [the download page][jfxsb-download], choose the Scene Builder 2.0 for
 your system from the **JavaFX Scene Builder 2.0 Related Downloads** table.
 
-### Editors
+###Debian based Linux
+
+    sudo apt-get install openjfx
+
+## Editors integration
 
 ### IntelliJ IDEA
 
