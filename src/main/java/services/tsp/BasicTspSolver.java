@@ -1,11 +1,8 @@
 package services.tsp;
 
-import models.DeliveryGraph;
-import models.Planning;
-import models.Route;
+import models.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class BasicTspSolver extends AbstractTspSolver {
     /**
@@ -26,22 +23,26 @@ public class BasicTspSolver extends AbstractTspSolver {
     public Planning solve(DeliveryGraph graph) {
         // Initialize solver parameters
         this.bestSolutionCost = Integer.MAX_VALUE;
-        this.bestSolution = new Integer[graph.size()];
+        this.bestSolution = new AbstractWayPoint[graph.size()];
         // Initialize unseen nodes
-        ArrayList<Integer> unseen = new ArrayList<Integer>();           // TODO
-        for (int i=1; i<graph.size(); i++) unseen.add(i);               // TODO
+        ArrayList<AbstractWayPoint> unseen = graph.getNodes();
         // Initialize seen nodes
-        ArrayList<Integer> seen = new ArrayList<Integer>(graph.size()); // TODO
-        seen.add(0); // The first seen node is the 0th                  // TODO
+        ArrayList<AbstractWayPoint> seen = new ArrayList<AbstractWayPoint>(graph.size());
+        // Let's say that the first seen node is the first one of the graph
+        seen.add(graph.iterator().next().getKey());
+        unseen.remove(graph.iterator().next().getKey());
         // Get the cost for all routes
-        int[][] costs = new int[graph.size()][graph.size()];
-        for(int i = 0; i < graph.size(); i++) {
-            for(int j = 0; j < graph.size(); j++) {
-                costs[i][j] = graph.getRoute(i, j).getDuration();
-            }
-        }
+        Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs = new HashMap<>();
+        graph.iterator().forEachRemaining((startPoint) -> {
+            costs.put(startPoint.getKey(), new HashMap<>());
+            startPoint.getValue().entrySet().forEach((endPoint) -> {
+                costs.get(startPoint).put(endPoint.getKey(), endPoint.getValue().getDuration());
+            });
+        });
+        // Get the time needed to deliver each way point
+        Map<AbstractWayPoint, Integer> deliveryDurations = graph.getDeliveryDurations();
         // Compute solution
-        branchAndBound(0, unseen, seen, 0, costs);
+        branchAndBound(graph.iterator().next().getKey(), unseen, seen, 0, costs, deliveryDurations);
         // Construct Planning based on the previous result
         List<Route> routes = new ArrayList<>(graph.size());
         for(int i = 0; i < graph.size(); i++) {
@@ -50,7 +51,33 @@ public class BasicTspSolver extends AbstractTspSolver {
         return new Planning(routes);
     }
 
-    private void branchAndBound(int lastSeenNodeId, ArrayList<Integer> unseen, ArrayList<Integer> seen, int seenCost, int[][] costs) {
+    private void branchAndBound(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen, ArrayList<AbstractWayPoint> seen, int seenCost, Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs, Map<AbstractWayPoint, Integer> deliveryDurations) {
+        /*if (unseen.size() == 0){ // tous les sommets ont ete visites
+            seenCost += costs[lastSeenNodeId][0];
+            if (seenCost < this.bestSolutionCost){ // on a trouve une solution meilleure que meilleureSolution
+                seen.toArray(this.bestSolution);
+                this.bestSolutionCost = seenCost;
+            }
+        } else if (seenCost + this.bound(lastSeenNodeId, unseen, costs, deliveryDurations) < this.bestSolutionCost){
+            Iterator<Integer> it = iterator(lastSeenNodeId, unseen, costs);
+            while (it.hasNext()){
+                Integer prochainSommet = it.next();
+                seen.add(prochainSommet);
+                unseen.remove(prochainSommet);
+                branchAndBound(prochainSommet, unseen, seen, seenCost + costs[lastSeenNodeId][prochainSommet] + deliveryDurations[prochainSommet], costs, duree);
+                unseen.add(prochainSommet);
+                seen.remove(prochainSommet);
+            }
+        }*/
+    }
 
+    private int bound(int lastSeenNodeId, ArrayList<Integer> unseen, int[][] costs, int[] deliveryDurations) {
+        // TODO ?
+        return 0;
+    }
+
+    protected Iterator<Integer> iterator(Integer lastSeenNodeId, ArrayList<Integer> unseen, int[][] costs) {
+        // TODO
+        return null;
     }
 }
