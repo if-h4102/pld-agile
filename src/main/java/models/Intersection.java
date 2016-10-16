@@ -95,7 +95,14 @@ public class Intersection {
         this.id.setValue(id);
     }
 
-    public boolean equals(Intersection other) {
-        return this.getId() == other.getId();
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Intersection))
+            return false;
+        
+        Intersection other = (Intersection) obj;
+        return this.id.getValue() == other.id.getValue()
+                && this.x.getValue() == other.x.getValue()
+                && this.y.getValue() == other.y.getValue();
     }
 }

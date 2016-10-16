@@ -37,9 +37,16 @@ public class StreetSection {
         return end.getValue();
     }
 
-    public boolean equals(StreetSection other) {
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof StreetSection))
+            return false;
+        
+        StreetSection other = (StreetSection) obj;
         return this.streetName.getValue().equals(other.streetName.getValue())
             && this.length.getValue().equals(other.length.getValue())
-            && this.speed.getValue().equals(other.speed.getValue());
+            && this.speed.getValue().equals(other.speed.getValue())
+            && this.start.getValue().equals(other.start.getValue())
+            && this.end.getValue().equals(other.end.getValue());
     }
 }

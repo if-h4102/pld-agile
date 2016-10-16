@@ -3,19 +3,20 @@ package services.xml;
 import models.CityMap;
 import models.Intersection;
 import models.StreetSection;
-import org.junit.Assert;
 import org.junit.Test;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import java.io.File;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
 public class ParserTest {
-    @Test()
+
+    @Test
     public void parseCityMap2x2() throws Exception {
         URL testMapPath = getClass().getResource("/services/xml/test-city-map-2x2.xml");
-        Assert.assertNotNull(testMapPath);
+        assertNotNull(testMapPath);
 
         File testMapFile = new File(testMapPath.toURI());
 
@@ -42,7 +43,6 @@ public class ParserTest {
         CityMap expectedCityMap = new CityMap(intersections, streetSections);
         CityMap actualCityMap = parser.getCityMap(testMapFile);
 
-        // TODO: implement deepEquals for CityMap ?
-        // Assert.assertEquals(expectedCityMap, actualCityMap);
+        assertEquals(expectedCityMap, actualCityMap);
     }
 }
