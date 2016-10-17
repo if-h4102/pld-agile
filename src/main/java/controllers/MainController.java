@@ -1,6 +1,7 @@
 package controllers;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableObjectValue;
 import javafx.event.ActionEvent;
@@ -8,9 +9,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import models.CityMap;
 import models.DeliveryRequest;
+import models.Planning;
 import services.xml.Parser;
 
 import java.net.URL;
@@ -21,7 +24,10 @@ public class MainController implements Initializable {
     final private ReadOnlyObjectWrapper<MainControllerState> state = new ReadOnlyObjectWrapper<>();
     final private SimpleObjectProperty<CityMap> currentCityMap = new SimpleObjectProperty<>();
     final private SimpleObjectProperty<DeliveryRequest> currentDeliveryRequest = new SimpleObjectProperty<>();
+    final private SimpleObjectProperty<Planning> planning = new SimpleObjectProperty<>();
     final private Parser parserService = new Parser();
+    final private SimpleDoubleProperty mapZoom = new SimpleDoubleProperty(1.0);
+
     @FXML
     private BorderPane root;
     @FXML
@@ -46,30 +52,58 @@ public class MainController implements Initializable {
         return this.parserService;
     }
 
-    protected SimpleObjectProperty<CityMap> currentCityMapProperty() {
+    // CityMap
+    public SimpleObjectProperty<CityMap> currentCityMapProperty() {
         return this.currentCityMap;
     }
 
-    protected CityMap getCurrentCityMap() {
-        return this.currentCityMap.getValue();
+    public CityMap getCurrentCityMap() {
+        return currentCityMapProperty().getValue();
     }
 
-    protected void setCurrentCityMap(CityMap currentCityMap) {
-        this.currentCityMap.setValue(currentCityMap);
+    public void setCurrentCityMap(CityMap currentCityMap) {
+        currentCityMapProperty().setValue(currentCityMap);
     }
 
-    protected ObservableObjectValue<DeliveryRequest> currentDeliveryRequestProperty() {
+    // Planning
+    public SimpleObjectProperty<Planning> planningProperty() {
+        return this.planning;
+    }
+
+    public Planning getPlanning() {
+        return planningProperty().getValue();
+    }
+
+    public void setCurrentCityMap(Planning planning) {
+        planningProperty().setValue(planning);
+    }
+
+    // mapZoom
+    public SimpleDoubleProperty mapZoomProperty() {
+        return this.mapZoom;
+    }
+
+    public double getMapZoom() {
+        return mapZoomProperty().getValue();
+    }
+
+    public void setMapZoom(double mapZoom) {
+        mapZoomProperty().setValue(mapZoom);
+    }
+
+    public ObservableObjectValue<DeliveryRequest> currentDeliveryRequestProperty() {
         return this.currentDeliveryRequest;
     }
 
-    protected DeliveryRequest getCurrentDeliveryRequest() {
+    public DeliveryRequest getCurrentDeliveryRequest() {
         return this.currentDeliveryRequest.getValue();
     }
 
-    protected void setCurrentDeliveryRequest(DeliveryRequest currentDeliveryRequest) {
+    public void setCurrentDeliveryRequest(DeliveryRequest currentDeliveryRequest) {
         this.currentDeliveryRequest.setValue(currentDeliveryRequest);
     }
 
+    @FXML
     protected ObservableObjectValue<MainControllerState> stateProperty() {
         return this.state.getReadOnlyProperty();
     }
@@ -92,6 +126,7 @@ public class MainController implements Initializable {
         this.setState(nextState);
     }
 
+    // handlers
     public void onOpenCityMapButtonAction(ActionEvent actionEvent) {
         this.applyState(this.getState().onOpenCityMapButtonAction(this));
     }

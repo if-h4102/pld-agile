@@ -20,8 +20,8 @@ package model {
         -length: int
         -duration: int
         -streetName: String
-        #Intersection getStartIntersection()
-        #Intersection getEndIntersection()
+        +Intersection getStartIntersection()
+        +Intersection getEndIntersection()
         +int getDuration()
     }
 

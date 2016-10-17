@@ -153,19 +153,47 @@ public class CityMap {
         return neighbourIntersections;
     }
 
-    // TODO
+    @Requires({ "request != null", "request.getWareHouse() != null", "request.getDeliveryAddresses() != null" })
     public DeliveryGraph computeDeliveryGraph(DeliveryRequest request) {
-        return null;
+        List<AbstractWayPoint> pointsContainedInRequest = new ArrayList<AbstractWayPoint>();
+        pointsContainedInRequest.add(request.getWareHouse());
+
+        Iterable<DeliveryAddress> adressContainedInRequest = request.getDeliveryAddresses();
+        for (DeliveryAddress adress : adressContainedInRequest) {
+            pointsContainedInRequest.add(adress);
+        }
+
+        Map<AbstractWayPoint, Map<AbstractWayPoint, Route>> mappedRoutes = new TreeMap<AbstractWayPoint, Map<AbstractWayPoint, Route>>();
+        for (AbstractWayPoint startPoint : pointsContainedInRequest) {
+            Map<AbstractWayPoint, Route> routesFromGivenStartPoint = new TreeMap<AbstractWayPoint, Route>();
+            pointsContainedInRequest.remove(startPoint);
+            List<Route> shortestPathRoutes = shortestPath(startPoint,pointsContainedInRequest);
+            for (Route route : shortestPathRoutes) {
+                routesFromGivenStartPoint.put(route.getEndWaypoint(), route);
+            }
+            mappedRoutes.put(startPoint, routesFromGivenStartPoint);
+            pointsContainedInRequest.add(startPoint);
+        }
+        return new DeliveryGraph(mappedRoutes);
     }
 
     // TODO
     public List<Intersection> getIntersections() {
-        return null;
+    	List<Intersection> listIntersection = new ArrayList<Intersection>();
+    	for (Intersection value : intersections.values()) {
+    	    listIntersection.add(value);
+    	}
+        return listIntersection;
     }
 
     // TODO
     public List<StreetSection> getStreetSections() {
-        return null;
+    	List<StreetSection> listStreetSection = new ArrayList<StreetSection>();
+    	for (Map<Integer, StreetSection> value : streetSections.values()) {
+    		for(StreetSection section : value.values())
+    			listStreetSection.add(section);
+    	}
+        return listStreetSection;
     }
 
     /**
