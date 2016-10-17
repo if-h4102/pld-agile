@@ -1,17 +1,17 @@
 package models;
 
 import com.google.java.contract.Requires;
-import javafx.beans.property.SimpleObjectProperty;
 
-public abstract class AbstractWayPoint implements Comparable<AbstractWayPoint>{
-    final protected SimpleObjectProperty<Intersection> intersection = new SimpleObjectProperty<>();
+public abstract class AbstractWayPoint implements Comparable<AbstractWayPoint> {
+
+    final protected Intersection intersection;
 
     public AbstractWayPoint(Intersection intersection) {
-        this.intersection.setValue(intersection);
+        this.intersection = intersection; // TODO clone to avoid a later modification?
     }
 
     public Intersection getIntersection() {
-        return this.intersection.getValue();
+        return intersection;
     }
 
     public int getX() {
@@ -26,16 +26,16 @@ public abstract class AbstractWayPoint implements Comparable<AbstractWayPoint>{
     public boolean equals(Object obj) {
         if (!(obj instanceof AbstractWayPoint))
             return false;
-        
+
         AbstractWayPoint other = (AbstractWayPoint) obj;
-        return this.intersection.getValue().equals(other.intersection.getValue());
+        return this.intersection.equals(other.intersection);
     }
 
     @Override
     public int hashCode() {
         return new Integer(this.getId()).hashCode();
     }
-    
+
     @Override
     @Requires({ "other != null" })
     public int compareTo(AbstractWayPoint other) {
@@ -43,6 +43,6 @@ public abstract class AbstractWayPoint implements Comparable<AbstractWayPoint>{
     }
 
     protected int getId() {
-        return this.intersection.getValue().getId();
+        return this.intersection.getId();
     }
 }

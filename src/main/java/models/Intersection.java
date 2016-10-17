@@ -1,6 +1,7 @@
 package models;
 
 public class Intersection {
+
     private int x;
     private int y;
     private int id;
@@ -42,10 +43,8 @@ public class Intersection {
     public boolean equals(Object obj) {
         if (!(obj instanceof Intersection))
             return false;
-        
+
         Intersection other = (Intersection) obj;
-        return this.id == other.id
-                && this.x == other.x
-                && this.y == other.y;
+        return this.id == other.id && this.x == other.x && this.y == other.y;
     }
 }

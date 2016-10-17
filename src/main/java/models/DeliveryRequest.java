@@ -16,7 +16,7 @@ public class DeliveryRequest {
     private int startPlanningTimestamp;
 
     public DeliveryRequest(Warehouse warehouse, Collection<DeliveryAddress> deliveryAddresses, int startPlanningTimestamp) {
-        this.warehouse = warehouse; // TODO clone to do to avoid a later modification?
+        this.warehouse = warehouse; // TODO clone to avoid a later modification?
         this.deliveryAddresses = new TreeSet<DeliveryAddress>();
         for (DeliveryAddress deliveryAddress : deliveryAddresses) {
             addDeliveryAddress(deliveryAddress);

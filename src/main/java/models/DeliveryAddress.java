@@ -1,25 +1,24 @@
 package models;
 
-import javafx.beans.property.SimpleIntegerProperty;
-
 public class DeliveryAddress extends AbstractWayPoint {
-    final private SimpleIntegerProperty deliveryDuration = new SimpleIntegerProperty();
+
+    final private int deliveryDuration;
 
     public DeliveryAddress(Intersection intersection, int deliveryDuration) {
         super(intersection);
-        this.deliveryDuration.setValue(deliveryDuration);
+        this.deliveryDuration = deliveryDuration;
     }
 
     public int getDeliveryDuration() {
-        return this.deliveryDuration.getValue();
+        return deliveryDuration;
     }
-    
+
     @Override
-    public boolean equals(Object obj)  {
+    public boolean equals(Object obj) {
         if (!(obj instanceof DeliveryAddress))
             return false;
-        
+
         DeliveryAddress other = (DeliveryAddress) obj;
-        return this.deliveryDuration.getValue() == other.deliveryDuration.getValue() && super.equals(other);
+        return this.deliveryDuration == other.deliveryDuration && super.equals(other);
     }
 }

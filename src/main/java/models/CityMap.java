@@ -167,7 +167,7 @@ public class CityMap {
         for (AbstractWayPoint startPoint : pointsContainedInRequest) {
             Map<AbstractWayPoint, Route> routesFromGivenStartPoint = new TreeMap<AbstractWayPoint, Route>();
             pointsContainedInRequest.remove(startPoint);
-            List<Route> shortestPathRoutes = shortestPath(startPoint,pointsContainedInRequest);
+            List<Route> shortestPathRoutes = shortestPath(startPoint, pointsContainedInRequest);
             for (Route route : shortestPathRoutes) {
                 routesFromGivenStartPoint.put(route.getEndWaypoint(), route);
             }
@@ -179,20 +179,20 @@ public class CityMap {
 
     // TODO
     public List<Intersection> getIntersections() {
-    	List<Intersection> listIntersection = new ArrayList<Intersection>();
-    	for (Intersection value : intersections.values()) {
-    	    listIntersection.add(value);
-    	}
+        List<Intersection> listIntersection = new ArrayList<Intersection>();
+        for (Intersection value : intersections.values()) {
+            listIntersection.add(value);
+        }
         return listIntersection;
     }
 
     // TODO
     public List<StreetSection> getStreetSections() {
-    	List<StreetSection> listStreetSection = new ArrayList<StreetSection>();
-    	for (Map<Integer, StreetSection> value : streetSections.values()) {
-    		for(StreetSection section : value.values())
-    			listStreetSection.add(section);
-    	}
+        List<StreetSection> listStreetSection = new ArrayList<StreetSection>();
+        for (Map<Integer, StreetSection> value : streetSections.values()) {
+            for (StreetSection section : value.values())
+                listStreetSection.add(section);
+        }
         return listStreetSection;
     }
 
@@ -233,7 +233,7 @@ public class CityMap {
             if (!entry.getValue().equals(other.intersections.get(entry.getKey())))
                 return false;
         }
-        
+
         if (streetSections.size() != other.streetSections.size())
             return false;
         for (Map.Entry<Integer, Map<Integer, StreetSection>> entrySubMap : streetSections.entrySet()) {
@@ -244,13 +244,13 @@ public class CityMap {
                 continue; // The two sub item are null, so they are equals
             if (otherSubMap.size() != entrySubMap.getValue().size())
                 return false;
-            
+
             for (Map.Entry<Integer, StreetSection> entry : entrySubMap.getValue().entrySet()) {
                 if (!entry.getValue().equals(otherSubMap.get(entry.getKey())))
                     return false;
             }
         }
-        
+
         return true;
     }
 }
