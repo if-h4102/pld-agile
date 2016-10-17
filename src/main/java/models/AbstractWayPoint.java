@@ -31,8 +31,7 @@ public abstract class AbstractWayPoint {
         return new Integer(this.getId()).hashCode();
     }
 
-    // TODO
     protected int getId() {
-        return 0;
+        return this.intersection.getValue().getId();
     }
 }
