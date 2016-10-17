@@ -14,6 +14,7 @@ import models.DeliveryAddress;
 import models.DeliveryRequest;
 import models.Intersection;
 import models.Planning;
+import models.Route;
 import models.StreetSection;
 import models.Warehouse;
 
@@ -59,15 +60,20 @@ public class MapCanvasController extends Canvas {
             gc.setStroke(Color.RED);
         } else if(getDeliveryRequest() == null) {
         	drawCityMap();
-        } else {      
+        } else if(getPlanning() == null){      
         	drawCityMap();
         	drawDeliveryRequest();
+        } else{
+        	drawCityMap();
+        	drawDeliveryRequest();
+        	drawPlanning();
         }
 
     }
     
     //TODO add an offset : extreme interscetions can't be seen
-    private void drawCityMap(){
+    @SuppressWarnings("restriction")
+	private void drawCityMap(){
     	double width = getWidth();
         double height = getHeight();
     	GraphicsContext gc = getGraphicsContext2D();
@@ -94,7 +100,8 @@ public class MapCanvasController extends Canvas {
 		}
     }
     
-    private void drawDeliveryRequest(){
+    @SuppressWarnings("restriction")
+	private void drawDeliveryRequest(){
     	double width = getWidth();
         double height = getHeight();
     	GraphicsContext gc = getGraphicsContext2D();
@@ -120,6 +127,35 @@ public class MapCanvasController extends Canvas {
     	gc.setFill(Color.YELLOW);
     	gc.fillOval(warehouse.getX()*width/xmax, warehouse.getY()*height/ymax, 10, 10);
     	
+    }
+    
+	@SuppressWarnings("restriction")
+	private void drawPlanning(){
+    	double width = getWidth();
+        double height = getHeight();
+    	GraphicsContext gc = getGraphicsContext2D();
+    	CityMap map = getCityMap();
+        List<Intersection> intersections = map.getIntersections();
+        double xmax = 0;
+        double ymax = 0;
+        
+		for (Intersection inter : intersections) {
+			xmax = Math.max(xmax, inter.getX());
+			ymax = Math.max(ymax, inter.getY());
+		}
+		
+		Planning planning = getPlanning();
+		
+		//planning.
+    	
+    	Iterable<Route> listRoutes = planning.getRoutes();
+    	
+    	
+    	for(Route route : listRoutes){
+    		gc.setStroke(Color.ORANGE);
+    		gc.strokeLine(route.getStartWaypoint().getX()*width/xmax, route.getStartWaypoint().getY()*height/ymax, 
+    				route.getEndWaypoint().getX()*width/xmax, route.getEndWaypoint().getY()*height/ymax);
+    	}    	
     }
     
 

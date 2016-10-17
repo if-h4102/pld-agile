@@ -16,4 +16,8 @@ public class Planning {
     public Planning(List<Route> routes) {
         this(FXCollections.observableArrayList(routes));  // Copy the values in `routes` to an ObservableList
     }
+    
+    public SimpleListProperty<Route> getRoutes(){
+    	return this.routes;
+    }
 }
