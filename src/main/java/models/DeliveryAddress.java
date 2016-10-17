@@ -13,4 +13,13 @@ public class DeliveryAddress extends AbstractWayPoint {
     public int getDeliveryDuration() {
         return this.deliveryDuration.getValue();
     }
+    
+    @Override
+    public boolean equals(Object obj)  {
+        if (!(obj instanceof DeliveryAddress))
+            return false;
+        
+        DeliveryAddress other = (DeliveryAddress) obj;
+        return this.deliveryDuration.getValue() == other.deliveryDuration.getValue() && super.equals(other);
+    }
 }

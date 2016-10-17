@@ -1,35 +1,25 @@
 package services.xml;
 
 import models.CityMap;
+import models.DeliveryAddress;
 import models.DeliveryRequest;
 import models.Intersection;
 import models.StreetSection;
+import models.Warehouse;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class ParserTest {
 
     @Test
-    public void parseCityMapTest() {
-        URL testMapPath = getClass().getResource("/services/xml/test-city-map-2x2.xml");
-        assertNotNull(testMapPath);
-
-        File testMapFile = null;
-        try {
-            testMapFile = new File(testMapPath.toURI());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            assert(false); // The test has failed
-        }
-
-        Parser parser = new Parser();
-
+    public void parseCityMapTest() throws URISyntaxException {
         List<Intersection> intersections = new LinkedList<>();
         intersections.add(new Intersection(0, 134, 193));
         intersections.add(new Intersection(1, 195, 291));
@@ -49,25 +39,39 @@ public class ParserTest {
         streetSections.add(new StreetSection(15203, 46, "diag", intersections.get(2), intersections.get(0)));
 
         CityMap expectedCityMap = new CityMap(intersections, streetSections);
+
+        File testMapFile = getFile("/services/xml/test-city-map-2x2.xml");
+        Parser parser = new Parser();
         CityMap actualCityMap = parser.getCityMap(testMapFile);
 
         assertEquals(expectedCityMap, actualCityMap);
     }
-    
+
     @Test
-    public void parseDeliveryRequestTest() {
-        URL testDeliveryRequestPath = getClass().getResource("/services/xml/test-deliveryRequest.xml");
-        assertNotNull(testDeliveryRequestPath);
-
-        File testDeliveryRequestFile = null;
-        try {
-            testDeliveryRequestFile = new File(testDeliveryRequestPath.toURI());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            assert(false);
-        }
-
+    public void parseDeliveryRequestTest() throws URISyntaxException {
         Parser parser = new Parser();
-        DeliveryRequest actualDeliveryRequest = parser.getDeliveryRequest(testDeliveryRequestFile, null);
+
+        File testMapFile = getFile("/services/xml/test-city-map-2x2.xml");
+        CityMap cityMap = parser.getCityMap(testMapFile);
+
+        File testDeliveryRequestFile = getFile("/services/xml/test-deliveryRequest.xml");
+        DeliveryRequest actualDeliveryRequest = parser.getDeliveryRequest(testDeliveryRequestFile, cityMap);
+        
+        Warehouse expectedW = new Warehouse(new Intersection(2, 140, 420));
+        List<DeliveryAddress> expectedDA = new ArrayList<DeliveryAddress>();
+        expectedDA.add(new DeliveryAddress(new Intersection(0, 134, 193), 100));
+        expectedDA.add(new DeliveryAddress(new Intersection(3, 132, 470), 250));
+        DeliveryRequest expectedDeliveryRequest = new DeliveryRequest(expectedW, expectedDA, 28_800);
+        
+        assertEquals(actualDeliveryRequest, expectedDeliveryRequest);
+    }
+
+    private File getFile(String location) throws URISyntaxException {
+        URL testMapPath = getClass().getResource(location);
+        assertNotNull(testMapPath);
+
+        File file = null;
+        file = new File(testMapPath.toURI());
+        return file;
     }
 }

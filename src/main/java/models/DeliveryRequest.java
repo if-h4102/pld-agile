@@ -5,16 +5,19 @@ import com.google.java.contract.Requires;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleSetProperty;
 import javafx.collections.FXCollections;
-
 import java.util.Collection;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class DeliveryRequest {
-    final private SimpleObjectProperty<Warehouse> warehouse = new SimpleObjectProperty<>();
-    final private SimpleSetProperty<DeliveryAddress> deliveryAddresses = new SimpleSetProperty<>(FXCollections.observableSet());
+
+    private Warehouse warehouse;
+    private Set<DeliveryAddress> deliveryAddresses;
     private int startPlanningTimestamp;
 
     public DeliveryRequest(Warehouse warehouse, Collection<DeliveryAddress> deliveryAddresses, int startPlanningTimestamp) {
-        this.warehouse.setValue(warehouse);
+        this.warehouse = warehouse; // TODO clone to do to avoid a later modification?
+        this.deliveryAddresses = new TreeSet<DeliveryAddress>();
         for (DeliveryAddress deliveryAddress : deliveryAddresses) {
             addDeliveryAddress(deliveryAddress);
         }
@@ -24,22 +27,45 @@ public class DeliveryRequest {
     @Requires("!deliveryAddresses.contains(deliveryAddress)")
     @Ensures("deliveryAddresses.contains(deliveryAddress)")
     public void addDeliveryAddress(DeliveryAddress deliveryAddress) {
-        boolean added = this.deliveryAddresses.add(deliveryAddress);
+        boolean added = deliveryAddresses.add(deliveryAddress);
         assert added;
     }
 
     @Requires("deliveryAddresses.contains(deliveryAddress)")
     @Ensures("!deliveryAddresses.contains(deliveryAddress)")
     public void removeDeliveryAddress(DeliveryAddress deliveryAddress) {
-        boolean removed = this.deliveryAddresses.remove(deliveryAddress);
+        boolean removed = deliveryAddresses.remove(deliveryAddress);
         assert removed;
     }
 
     public Warehouse getWareHouse() {
-        return warehouse.getValue();
+        return warehouse;
     }
 
     public Iterable<DeliveryAddress> getDeliveryAddresses() {
-        return deliveryAddresses.getValue();
+        return deliveryAddresses;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof DeliveryRequest))
+            return false;
+
+        DeliveryRequest other = (DeliveryRequest) obj;
+
+        if (this.startPlanningTimestamp != other.startPlanningTimestamp)
+            return false;
+
+        if (!this.warehouse.equals(other.warehouse))
+            return false;
+
+        if (this.deliveryAddresses.size() != other.deliveryAddresses.size())
+            return false;
+        for (DeliveryAddress deliveryAddress : this.deliveryAddresses) {
+            if (!other.deliveryAddresses.contains(deliveryAddress))
+                return false;
+        }
+
+        return true;
     }
 }

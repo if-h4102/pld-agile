@@ -29,11 +29,11 @@ public class StreetSection {
         return this.streetName.getValue();
     }
 
-    protected Intersection getStartIntersection() {
+    public Intersection getStartIntersection() {
         return start.getValue();
     }
 
-    protected Intersection getEndIntersection() {
+    public Intersection getEndIntersection() {
         return end.getValue();
     }
 
