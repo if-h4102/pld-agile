@@ -21,6 +21,16 @@ public abstract class AbstractWayPoint {
         return this.getIntersection().getX();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof AbstractWayPoint && this.getId() == ((AbstractWayPoint)o).getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return new Integer(this.getId()).hashCode();
+    }
+
     // TODO
     protected int getId() {
         return 0;
