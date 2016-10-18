@@ -1,4 +1,4 @@
-package controllers;
+package components.application;
 
 
 public class ReadyState extends WaitOpenDeliveryRequestState {

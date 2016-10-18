@@ -1,4 +1,4 @@
-package controllers;
+package components.application;
 
 public abstract class MainControllerState {
     public void enterState(MainController mainController) {

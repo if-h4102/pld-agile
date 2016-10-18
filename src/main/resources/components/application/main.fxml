@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import controllers.MapScreenController?>
+<?import components.mapscreen.MapScreenController?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="root" prefHeight="480.0"
             prefWidth="640.0"
-            stylesheets="/views/main.css"
+            stylesheets="/components/application/main.css"
             xmlns="http://javafx.com/javafx/8.0.65"
-            fx:controller="controllers.MainController">
+            fx:controller="components.application.MainController">
   <top>
     <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
       <Button fx:id="openCityMapButton" mnemonicParsing="false"

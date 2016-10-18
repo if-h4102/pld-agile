@@ -1,4 +1,4 @@
-package controllers;
+package components.application;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleDoubleProperty;

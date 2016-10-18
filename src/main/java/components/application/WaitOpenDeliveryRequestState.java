@@ -1,4 +1,4 @@
-package controllers;
+package components.application;
 
 
 import javafx.stage.FileChooser;
