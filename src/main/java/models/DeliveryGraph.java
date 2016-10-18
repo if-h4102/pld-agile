@@ -14,12 +14,8 @@ public class DeliveryGraph {
     private Map<AbstractWayPoint, Map<AbstractWayPoint, Route>> routes;
 
     /**
-<<<<<<< HEAD
-     * Consruct a complete graph
-     *
-=======
      * Construct a complete graph
->>>>>>> tsp
+     * 
      * @param routes
      */
     public DeliveryGraph(Map<AbstractWayPoint, Map<AbstractWayPoint, Route>> routes) {
@@ -29,6 +25,7 @@ public class DeliveryGraph {
 
     /**
      * Get the number of nodes in the current graph.
+     * 
      * @return the total number of nodes.
      */
     public int size() {
@@ -37,6 +34,7 @@ public class DeliveryGraph {
 
     /**
      * Get all IDs of the graph's nodes.
+     * 
      * @return an array filled with the IDs of each graph's node.
      */
     public ArrayList<AbstractWayPoint> getNodes() {
@@ -55,7 +53,7 @@ public class DeliveryGraph {
         Map<AbstractWayPoint, Integer> deliveryDurations = new HashMap();
         this.routes.entrySet().forEach((entry) -> {
             int duration = 0;
-            if(entry.getKey() instanceof DeliveryAddress) {
+            if (entry.getKey() instanceof DeliveryAddress) {
                 duration = ((DeliveryAddress) entry.getKey()).getDeliveryDuration();
             }
             deliveryDurations.put(entry.getKey(), duration);
@@ -73,6 +71,7 @@ public class DeliveryGraph {
 
     /**
      * TODO: description
+     * 
      * @param start
      * @param end
      * @return

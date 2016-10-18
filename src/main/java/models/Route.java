@@ -7,14 +7,14 @@ import javafx.beans.property.SimpleObjectProperty;
 
 public class Route {
 
-    final private SimpleIntegerProperty duration = new SimpleIntegerProperty();
-    final private SimpleObjectProperty<AbstractWayPoint> start = new SimpleObjectProperty();
-    final private SimpleObjectProperty<AbstractWayPoint> end = new SimpleObjectProperty();
-    final private List<StreetSection> streetSections;
+    private int duration;
+    private AbstractWayPoint start;
+    private AbstractWayPoint end;
+    private List<StreetSection> streetSections;
 
     public Route(AbstractWayPoint startWayPoint, AbstractWayPoint endWayPoint, List<StreetSection> streetSections) {
-        this.start.setValue(startWayPoint);
-        this.end.setValue(endWayPoint);
+        this.start = startWayPoint; // TODO add a clone to avoid modification?
+        this.end = endWayPoint;
 
         this.streetSections = new ArrayList<StreetSection>(streetSections);
         int sumStreetSectionDuration = 0;
@@ -22,18 +22,18 @@ public class Route {
             sumStreetSectionDuration += streetSection.getDuration();
         }
 
-        this.duration.setValue(sumStreetSectionDuration);
+        this.duration = sumStreetSectionDuration;
     }
 
     public AbstractWayPoint getStartWaypoint() {
-        return this.start.getValue();
+        return start;
     }
 
     public AbstractWayPoint getEndWaypoint() {
-        return this.end.getValue();
+        return end;
     }
 
     public int getDuration() {
-        return this.duration.getValue();
+        return duration;
     }
 }
