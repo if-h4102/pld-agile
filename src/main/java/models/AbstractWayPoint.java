@@ -28,7 +28,7 @@ public abstract class AbstractWayPoint implements Comparable<AbstractWayPoint> {
             return false;
 
         AbstractWayPoint other = (AbstractWayPoint) obj;
-        return this.intersection.equals(other.intersection);
+        return getId() == other.getId();
     }
 
     @Override

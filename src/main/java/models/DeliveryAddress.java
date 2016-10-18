@@ -21,4 +21,10 @@ public class DeliveryAddress extends AbstractWayPoint {
         DeliveryAddress other = (DeliveryAddress) obj;
         return this.deliveryDuration == other.deliveryDuration && super.equals(other);
     }
+    
+    @Override
+    public String toString() {
+        //return "DeliveryAddress [intersection=" + intersection + ", deliveryDuration=" + deliveryDuration + "]";
+        return "" + getId();
+    }
 }

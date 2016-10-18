@@ -1,13 +1,14 @@
 package services.tsp;
 
 import models.*;
-
 import java.util.*;
 
 public class BasicTspSolver extends AbstractTspSolver {
+
+    private AbstractWayPoint startPoint;
+    
     /**
-     * The constructor for a basic TSP solver.
-     * It doesn't need anything for now.
+     * The constructor for a basic TSP solver. It doesn't need anything for now.
      */
     public BasicTspSolver() {
         // Nothing to do
@@ -15,7 +16,9 @@ public class BasicTspSolver extends AbstractTspSolver {
 
     /**
      * Solve the TSP problem for the given DeliveryGraph.
-     * @param graph The (complete) graph representing all delivery points and the warehouse.
+     * 
+     * @param graph
+     *            The (complete) graph representing all delivery points and the warehouse.
      * @return The delivery plan (Planning) associated to the given DeliveryGraph.
      */
     @Override
@@ -27,18 +30,16 @@ public class BasicTspSolver extends AbstractTspSolver {
         ArrayList<AbstractWayPoint> unseen = graph.getNodes();
         // Initialize seen nodes
         ArrayList<AbstractWayPoint> seen = new ArrayList<AbstractWayPoint>(graph.size());
-        // Let's say that the first seen node is the first one of the graph
-//        seen.add(graph.iterator().next().getKey());
-//        unseen.remove(graph.iterator().next().getKey());
-        AbstractWayPoint warehouse = null;
-        for(AbstractWayPoint point: unseen) {
-            if(point instanceof Warehouse) {
-                warehouse = point;
+        // Let's say that the starting point is the first warehouse found
+        for (AbstractWayPoint point : unseen) {
+            if (point instanceof Warehouse) {
+                startPoint = point;
                 break;
             }
         }
-        seen.add(warehouse);
-        unseen.remove(warehouse);
+        seen.add(startPoint);
+        unseen.remove(startPoint);
+
         // Get the cost for all routes
         Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs = new HashMap<>();
         graph.iterator().forEachRemaining((startPoint) -> {
@@ -48,32 +49,41 @@ public class BasicTspSolver extends AbstractTspSolver {
             });
             costs.put(startPoint.getKey(), costsFromStartPoint);
         });
+        
         // Get the time needed to deliver each way point
         Map<AbstractWayPoint, Integer> deliveryDurations = graph.getDeliveryDurations();
         // Compute solution
-        branchAndBound(graph.iterator().next().getKey(), unseen, seen, 0, costs, deliveryDurations);
+        branchAndBound(startPoint, unseen, seen, 0, costs, deliveryDurations);
         // Construct Planning based on the previous result
         List<Route> routes = new ArrayList<>(graph.size());
-        for(int i = 0; i < graph.size(); i++) {
-            routes.add(graph.getRoute(this.bestSolution[i], this.bestSolution[(i+1)%graph.size()]));
+        for (int i = 0; i < graph.size(); i++) {
+            routes.add(graph.getRoute(this.bestSolution[i], this.bestSolution[(i + 1) % graph.size()]));
         }
         return new Planning(routes);
     }
 
     /**
      * Basic branch an bound algorithm
-     * @param lastSeenNode the last explored node.
-     * @param unseen all nodes not explored yet.
-     * @param seen all nodes already explored.
-     * @param seenCost the cost of all explored nodes.
-     * @param costs the cost of the path between each node.
-     * @param deliveryDurations the delivery duration of each node.
+     * 
+     * @param lastSeenNode
+     *            the last explored node.
+     * @param unseen
+     *            all nodes not explored yet.
+     * @param seen
+     *            all nodes already explored.
+     * @param seenCost
+     *            the cost of all explored nodes.
+     * @param costs
+     *            the cost of the path between each node.
+     * @param deliveryDurations
+     *            the delivery duration of each node.
      */
-    private void branchAndBound(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen, ArrayList<AbstractWayPoint> seen, int seenCost, Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs, Map<AbstractWayPoint, Integer> deliveryDurations) {
+    private void branchAndBound(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen, ArrayList<AbstractWayPoint> seen,
+            int seenCost, Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs, Map<AbstractWayPoint, Integer> deliveryDurations) {
         if (unseen.size() == 0) {
             // All nodes have been seen
             // Just complete the circuit...
-            seenCost += costs.get(lastSeenNode).get(seen.get(0));   // TODO: is that the right cost ?
+            seenCost += costs.get(lastSeenNode).get(this.startPoint) + deliveryDurations.get(startPoint);
             // ...and check if this was a better solution
             if (seenCost < this.bestSolutionCost) {
                 // Indeed it was ! Let's update the previous one
@@ -83,11 +93,12 @@ public class BasicTspSolver extends AbstractTspSolver {
         } else if (seenCost + this.bound(lastSeenNode, unseen, costs, deliveryDurations) < this.bestSolutionCost) {
             // We have a great candidate !
             Iterator<AbstractWayPoint> it = this.iterator(lastSeenNode, unseen, costs, deliveryDurations);
-            while (it.hasNext()){
+            while (it.hasNext()) {
                 AbstractWayPoint nextNode = it.next();
                 seen.add(nextNode);
                 unseen.remove(nextNode);
-                branchAndBound(nextNode, unseen, seen, seenCost + costs.get(lastSeenNode).get(nextNode) + deliveryDurations.get(nextNode), costs, deliveryDurations);
+                int costRouteAndDelivery = costs.get(lastSeenNode).get(nextNode) + deliveryDurations.get(nextNode);
+                branchAndBound(nextNode, unseen, seen, seenCost + costRouteAndDelivery, costs, deliveryDurations);
                 unseen.add(nextNode);
                 seen.remove(nextNode);
             }
@@ -96,28 +107,33 @@ public class BasicTspSolver extends AbstractTspSolver {
 
     /**
      * The most basic bounding algorithm.
+     * 
      * @param lastSeenNode
      * @param unseen
      * @param costs
      * @param deliveryDurations
      * @return
      */
-    private int bound(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen, Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs, Map<AbstractWayPoint, Integer> deliveryDurations) {
+    private int bound(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen,
+            Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs, Map<AbstractWayPoint, Integer> deliveryDurations) {
         // TODO: improve that, or is this enough for this solver ?
-        return 0;   // The most basic bound
+        return 0; // The most basic bound
     }
 
     /**
      * Return a very basic iterator on the given collection.
+     * 
      * @param lastSeenNode
-     * @param unseen the collection in which you want to iterate.
+     * @param unseen
+     *            the collection in which you want to iterate.
      * @param costs
      * @param deliveryDurations
      * @return
      */
-    private Iterator<AbstractWayPoint> iterator(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen, Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs, Map<AbstractWayPoint, Integer> deliveryDurations) {
+    private Iterator<AbstractWayPoint> iterator(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen,
+            Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs, Map<AbstractWayPoint, Integer> deliveryDurations) {
         // NOTE: for the moment, this just returns a basic iterator,
-        //       which won't look for the best node to return.
+        // which won't look for the best node to return.
         return new WayPointIterator(unseen);
     }
 }

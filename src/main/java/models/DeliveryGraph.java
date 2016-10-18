@@ -49,8 +49,9 @@ public class DeliveryGraph {
      *
      * @return the map of the delivery duration for each node.
      */
+    // TODO to improve with better-looking code
     public Map<AbstractWayPoint, Integer> getDeliveryDurations() {
-        Map<AbstractWayPoint, Integer> deliveryDurations = new HashMap();
+        Map<AbstractWayPoint, Integer> deliveryDurations = new HashMap<AbstractWayPoint, Integer>();
         this.routes.entrySet().forEach((entry) -> {
             int duration = 0;
             if (entry.getKey() instanceof DeliveryAddress) {
