@@ -37,6 +37,7 @@ public class MapCanvasController extends Canvas {
     private SimpleObjectProperty<CityMap> cityMap;
     private SimpleObjectProperty<DeliveryRequest> deliveryRequest;
     private SimpleObjectProperty<Planning> planning;
+    
 
     public MapCanvasController() {
         widthProperty().addListener(event -> draw());
@@ -49,72 +50,94 @@ public class MapCanvasController extends Canvas {
         planningProperty().addListener(event -> draw());
     }
 
-    private void draw() {
+    @SuppressWarnings("restriction")
+    private void resetBuffer() {
         double width = getWidth();
         double height = getHeight();
-
         GraphicsContext gc = getGraphicsContext2D();
+        gc.setTransform(1, 0,  0, 1,0, 0);
         gc.clearRect(0, 0, width, height);
-
-        if (getCityMap() == null) {
-            gc.setStroke(Color.RED);
-        } else if(getDeliveryRequest() == null) {
-        	drawCityMap();
-        } else if(getPlanning() == null){      
-        	drawCityMap();
-        	drawDeliveryRequest();
-        } else{
-        	drawCityMap();
-        	drawDeliveryRequest();
-        	drawPlanning();
-        }
-
     }
-    
-    //TODO add an offset : extreme interscetions can't be seen
+
     @SuppressWarnings("restriction")
-	private void drawCityMap(){
-    	double width = getWidth();
+    private void refreshTransform() {
+        double width = getWidth();
         double height = getHeight();
-    	GraphicsContext gc = getGraphicsContext2D();
+        GraphicsContext gc = getGraphicsContext2D();
+        gc.setTransform(1, 0,  0, 1, 0, 0);
+        gc.clearRect(0, 0, width, height);
+        
     	CityMap map = getCityMap();
         List<Intersection> intersections = map.getIntersections();
         double xmax = 0;
         double ymax = 0;
+        double xmin = 0;
+        double ymin = 0;
         
 		for (Intersection inter : intersections) {
 			xmax = Math.max(xmax, inter.getX());
 			ymax = Math.max(ymax, inter.getY());
+			xmin = Math.min(xmin, inter.getX());
+			ymin = Math.min(ymin, inter.getY());
 		}
-		
+        
+        double mapWidth = xmax-xmin;
+        double mapHeight = ymax-ymin;
+       
+        double zoomX = width/mapWidth;
+        double zoomY = height/mapHeight;
+       
+        double zoom = Math.min(zoomX,zoomY);
+        
+        gc.scale(zoom, zoom);
+        gc.translate(-xmin, -ymin);
+    }
+    
+    
+    @SuppressWarnings("restriction")
+	private void draw() {
+    	resetBuffer();
+    	
+    	if (getCityMap() == null) {
+            return;
+        }
+    	
+    	refreshTransform();
+        
+        drawCityMap();
+        if(getDeliveryRequest() == null) {        	
+        	return;
+        }
+        drawDeliveryRequest();
+        if(getPlanning() == null){      
+        	return;
+        } 
+        drawPlanning();
+    }
+    
+    
+    @SuppressWarnings("restriction")
+	private void drawCityMap(){
+        GraphicsContext gc = getGraphicsContext2D();
+        CityMap map = getCityMap();
+        List<Intersection> intersections = map.getIntersections();
+        
 		List<StreetSection> streetSections = map.getStreetSections();
 		for (StreetSection section : streetSections) {
 			gc.setLineWidth(2);
 			gc.setStroke(Color.GREY);
-			gc.strokeLine(section.getStartIntersection().getX()*width/xmax, section.getStartIntersection().getY()*height/ymax, 
-					section.getEndIntersection().getX()*width/xmax, section.getEndIntersection().getY()*height/ymax);
+			gc.strokeLine(section.getStartIntersection().getX(), section.getStartIntersection().getY(), 
+					section.getEndIntersection().getX(), section.getEndIntersection().getY());
 		}
 		
 		for (Intersection inter : intersections){
-			gc.fillOval(inter.getX()*width/xmax-5, inter.getY()*height/ymax-5, 10, 10);
+			gc.fillOval(inter.getX()-5, inter.getY()-5, 10, 10);
 		}
     }
     
     @SuppressWarnings("restriction")
 	private void drawDeliveryRequest(){
-    	double width = getWidth();
-        double height = getHeight();
     	GraphicsContext gc = getGraphicsContext2D();
-    	CityMap map = getCityMap();
-        List<Intersection> intersections = map.getIntersections();
-        double xmax = 0;
-        double ymax = 0;
-        
-		for (Intersection inter : intersections) {
-			xmax = Math.max(xmax, inter.getX());
-			ymax = Math.max(ymax, inter.getY());
-		}
-		
     	DeliveryRequest deliveryRequest = getDeliveryRequest();
     	
     	Iterable<DeliveryAddress> listDeliveryAddresses = deliveryRequest.getDeliveryAddresses();
@@ -122,41 +145,43 @@ public class MapCanvasController extends Canvas {
     	
     	for(DeliveryAddress delivery : listDeliveryAddresses){
     		gc.setFill(Color.BLUE);
-    		gc.fillOval(delivery.getX()*width/xmax, delivery.getY()*height/ymax, 10, 10);
+    		gc.fillOval(delivery.getIntersection().getX()-9, delivery.getIntersection().getY()-9, 18, 18);
     	}
-    	gc.setFill(Color.YELLOW);
-    	gc.fillOval(warehouse.getX()*width/xmax, warehouse.getY()*height/ymax, 10, 10);
-    	
+    	gc.setFill(Color.RED);
+    	gc.fillOval(warehouse.getIntersection().getX()-9, warehouse.getIntersection().getY()-9, 18, 18);
+    	gc.setFill(Color.BLACK);
     }
     
 	@SuppressWarnings("restriction")
 	private void drawPlanning(){
-    	double width = getWidth();
-        double height = getHeight();
-    	GraphicsContext gc = getGraphicsContext2D();
-    	CityMap map = getCityMap();
-        List<Intersection> intersections = map.getIntersections();
-        double xmax = 0;
-        double ymax = 0;
-        
-		for (Intersection inter : intersections) {
-			xmax = Math.max(xmax, inter.getX());
-			ymax = Math.max(ymax, inter.getY());
-		}
 		
+    	GraphicsContext gc = getGraphicsContext2D();
+       
 		Planning planning = getPlanning();
 		
 		//planning.
     	
     	Iterable<Route> listRoutes = planning.getRoutes();
     	
-    	
+    	int number = 1;
     	for(Route route : listRoutes){
-    		System.out.println("haha");
     		gc.setStroke(Color.ORANGE);
-    		gc.strokeLine(route.getStartWaypoint().getX()*width/xmax, route.getStartWaypoint().getY()*height/ymax, 
-    				route.getEndWaypoint().getX()*width/xmax, route.getEndWaypoint().getY()*height/ymax);
-    	}    	
+    		List<StreetSection> streetSections = route.getStreetSections();
+    		for (StreetSection section : streetSections) {
+    			gc.setLineWidth(4);
+    			gc.setStroke(Color.ORANGE);
+    			gc.strokeLine(section.getStartIntersection().getX(), section.getStartIntersection().getY(), 
+    					section.getEndIntersection().getX(), section.getEndIntersection().getY());
+    		}	
+    		gc.setLineWidth(3);
+    		gc.setStroke(Color.BLACK);
+    		gc.strokeText(""+number, route.getStartWaypoint().getIntersection().getX(), route.getStartWaypoint().getIntersection().getY());
+    		gc.setStroke(Color.WHITE);
+    		gc.setLineWidth(1);
+    		gc.strokeText(""+number, route.getStartWaypoint().getIntersection().getX(), route.getStartWaypoint().getIntersection().getY());
+    		number++;
+    	} 
+    	
     }
     
 
@@ -243,7 +268,7 @@ public class MapCanvasController extends Canvas {
      * @param value
      */
     public final void setPlanning(Planning value) {
-        planningProperty().setValue(value);
+        planningProperty().bind(new SimpleObjectProperty<Planning>(value));
     }
 
     public final Planning getPlanning() {
@@ -268,7 +293,7 @@ public class MapCanvasController extends Canvas {
      * @param value
      */
     public final void setZoom(double value) {
-        zoomProperty().setValue(value);
+        zoomProperty().bind(new SimpleDoubleProperty(value));
     }
 
     public final double getZoom() {

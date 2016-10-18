@@ -19,7 +19,7 @@ public class Application extends javafx.application.Application {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/views/main.fxml"));
         fxmlLoader.setResources(ResourceBundle.getBundle("views.Locale", new Locale("en", "US")));
         Parent root = fxmlLoader.load();
-        Scene scene = new Scene(root, 640, 480);
+        Scene scene = new Scene(root, 1280, 960);
 
         primaryStage.setTitle("Delivery App");
         primaryStage.setScene(scene);
