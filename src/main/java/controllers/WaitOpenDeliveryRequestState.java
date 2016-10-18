@@ -28,6 +28,7 @@ public class WaitOpenDeliveryRequestState extends WaitOpenCityMapState {
         DeliveryRequest currentDeliveryRequest = mainController.getParserService().getDeliveryRequest(deliverRequestFile, mainController.getCityMap());
 
         mainController.setDeliveryRequest(currentDeliveryRequest);
+        mainController.setPlanning(null);
 
         return new ReadyState();
     }
