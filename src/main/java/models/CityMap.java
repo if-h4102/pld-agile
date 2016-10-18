@@ -49,8 +49,8 @@ public class CityMap {
         streetSections.put(streetSection.getStartIntersection().getId(), streetSectionsFromStartIntersection);
     }
 
-    // TODO Cpomplexity to improve by using a tas-min for the greys intersections
-    @Requires({"startWayPoint != null", "endWayPoints != null", "!endWayPoints.contains(startWayPoint)",
+    // TODO Complexity to improve by using a min-heap for the greys intersections
+    @Requires({"startWayPoint != null", "endWayPoints != null",
         "intersections.containsValue(startWayPoint.getIntersection())"})
     private List<Route> shortestPath(AbstractWayPoint startWayPoint, List<AbstractWayPoint> endWayPoints) {
         Intersection[] predecessors = new Intersection[intersections.size()];
@@ -116,7 +116,7 @@ public class CityMap {
         }
     }
 
-    @Requires({"endWayPoints != null", "startWayPoint != null", "!endWayPoints.contains(startWayPoint)"})
+    @Requires({"endWayPoints != null", "startWayPoint != null"})
     private List<Route> computeReturn(Intersection[] predecessors, AbstractWayPoint startWayPoint, List<AbstractWayPoint> endWayPoints) {
         List<Route> result = new ArrayList<Route>();
         for (AbstractWayPoint endWayPoint : endWayPoints) {
@@ -151,7 +151,7 @@ public class CityMap {
 
     @Requires({"request != null", "request.getWareHouse() != null", "request.getDeliveryAddresses() != null"})
     public DeliveryGraph computeDeliveryGraph(DeliveryRequest request) {
-        List<AbstractWayPoint> pointsContainedInRequest = new ArrayList<AbstractWayPoint>();
+        List<AbstractWayPoint> pointsContainedInRequest = new LinkedList<AbstractWayPoint>();
         pointsContainedInRequest.add(request.getWareHouse());
 
         Iterable<DeliveryAddress> adressContainedInRequest = request.getDeliveryAddresses();

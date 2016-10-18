@@ -1,6 +1,8 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
@@ -103,5 +105,44 @@ public class CityMapTest {
         assertTrue(!base.equals(moreIntersection));
         assertTrue(!base.equals(modifiedStreetSection));
         assertTrue(!base.equals(moreStreetSection));
+    }
+    
+    @Test
+    public void shortestPathTest() {
+        List<Intersection> intersections = new ArrayList<Intersection>();
+        Intersection intersection0 = new Intersection(0,1,3);
+        Intersection intersection1 = new Intersection(1,2,4);
+        Intersection intersection2 = new Intersection(2,4,4);
+        Intersection intersection3 = new Intersection(3,4,2);
+        Intersection intersection4 = new Intersection(4,2,2);
+        intersections.add(intersection0);
+        intersections.add(intersection1);
+        intersections.add(intersection2);
+        intersections.add(intersection3);
+        intersections.add(intersection4);
+        
+        List<StreetSection> streetSections = new ArrayList<StreetSection>();
+        streetSections.add(new StreetSection(120,40,"h0",intersection0, intersection1));
+        streetSections.add(new StreetSection(200,40,"h1",intersection0, intersection4));
+        streetSections.add(new StreetSection(240,40,"h2",intersection1, intersection2));
+        streetSections.add(new StreetSection(40,40,"h3",intersection1, intersection4));
+        streetSections.add(new StreetSection(80,40,"h4",intersection2, intersection3));
+        streetSections.add(new StreetSection(120,40,"v0",intersection3, intersection0));
+        streetSections.add(new StreetSection(280,40,"v1",intersection3, intersection2));
+        streetSections.add(new StreetSection(40,40,"v2",intersection4, intersection1));
+        streetSections.add(new StreetSection(120,40,"v3",intersection4, intersection2));
+        streetSections.add(new StreetSection(240,40,"v4",intersection4, intersection3));
+        
+        CityMap cityMap = new CityMap(intersections,streetSections);
+        
+        AbstractWayPoint origin = new Warehouse(intersection0);
+        List<AbstractWayPoint> points = new ArrayList<AbstractWayPoint>();
+        points.add(new DeliveryAddress(intersection1,5));
+        points.add(new DeliveryAddress(intersection2,5));
+        points.add(new DeliveryAddress(intersection4,5));
+        
+        
+        
+        
     }
 }
