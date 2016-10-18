@@ -112,11 +112,11 @@ public class CityMapTest {
     @Test
     public void computeDeliveryGraphTest() {
         List<Intersection> intersections = new ArrayList<Intersection>();
-        Intersection intersection0 = new Intersection(0,1,2);
-        Intersection intersection1 = new Intersection(1,2,3);
-        Intersection intersection2 = new Intersection(2,4,3);
-        Intersection intersection3 = new Intersection(3,4,1);
-        Intersection intersection4 = new Intersection(4,2,1);
+        Intersection intersection0 = new Intersection(52,1,2);
+        Intersection intersection1 = new Intersection(133,2,3);
+        Intersection intersection2 = new Intersection(259,4,3);
+        Intersection intersection3 = new Intersection(123,4,1);
+        Intersection intersection4 = new Intersection(925,2,1);
         intersections.add(intersection0);
         intersections.add(intersection1);
         intersections.add(intersection2);

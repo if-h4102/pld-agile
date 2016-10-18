@@ -53,25 +53,31 @@ public class CityMap {
     @Requires({"startWayPoint != null", "endWayPoints != null",
         "intersections.containsValue(startWayPoint.getIntersection())"})
     private List<Route> shortestPath(AbstractWayPoint startWayPoint, List<AbstractWayPoint> endWayPoints) {
+        Map<Integer, Integer> index = new TreeMap<Integer, Integer>();
+        int counter = 0;
+        for(Map.Entry<Integer,Intersection> entry : intersections.entrySet()) {
+            index.put(entry.getKey(), counter++);
+        }
+        
         Intersection[] predecessors = new Intersection[intersections.size()];
         int[] durations = new int[intersections.size()];
         Map<Integer, Intersection> blacks = new TreeMap<Integer, Intersection>();
         List<Intersection> greys = new LinkedList<Intersection>();
         Map<Integer, Intersection> whites = new TreeMap<Integer, Intersection>(intersections);
-
+        
         whites.remove(startWayPoint.getId());
         greys.add(startWayPoint.getIntersection());
         for (int i = 0; i < durations.length; i++) {
             durations[i] = Integer.MAX_VALUE;
         }
-        durations[startWayPoint.getId()] = 0;
+        durations[index.get(startWayPoint.getId())] = 0;
 
         while (greys.size() != 0) {
-            Intersection minimalGreyIntersection = getMinimalGreyIntersection(greys, durations);
+            Intersection minimalGreyIntersection = getMinimalGreyIntersection(index, greys, durations);
             for (Intersection successor : getNeighbourIntersection(minimalGreyIntersection)) {
                 if (!blacks.containsKey(successor.getId())) {
                     StreetSection streetSection = getStreetSection(minimalGreyIntersection, successor);
-                    release(streetSection, predecessors, durations);
+                    release(index, streetSection, predecessors, durations);
                     if (whites.containsKey(successor.getId())) {
                         whites.remove(successor.getId());
                         greys.add(successor);
@@ -82,19 +88,19 @@ public class CityMap {
             blacks.put(minimalGreyIntersection.getId(), minimalGreyIntersection);
         }
 
-        return computeReturn(predecessors, startWayPoint, endWayPoints);
+        return computeReturn(index, predecessors, startWayPoint, endWayPoints);
     }
 
     // TODO Improve complexity
     @Requires({"greys != null", "durations != null", "greys.size() <= durations.length"})
     @Ensures({"greys.contains(result)"})
-    private Intersection getMinimalGreyIntersection(List<Intersection> greys, int[] durations) {
+    private Intersection getMinimalGreyIntersection(Map<Integer, Integer> index, List<Intersection> greys, int[] durations) {
         int minDuration = Integer.MAX_VALUE;
         Intersection minimalGreyIntersection = null;
 
         for (Intersection greyIntersection : greys) {
-            if (durations[greyIntersection.getId()] < minDuration) {
-                minDuration = durations[greyIntersection.getId()];
+            if (durations[index.get(greyIntersection.getId())] < minDuration) {
+                minDuration = durations[index.get(greyIntersection.getId())];
                 minimalGreyIntersection = greyIntersection;
             }
         }
@@ -106,29 +112,29 @@ public class CityMap {
         "streetSection.getEndIntersection().getId() < durations.length"})
     @Ensures({"durations[streetSection.getEndIntersection().getId()] <= "
         + "durations[streetSection.getStartIntersection().getId()] + streetSection.getDuration()"})
-    private void release(StreetSection streetSection, /* IN/OUT */ Intersection[] predecessors, int[] durations) {
+    private void release(Map<Integer, Integer> index, StreetSection streetSection, /* IN/OUT */ Intersection[] predecessors, int[] durations) {
         int idStartIntersection = streetSection.getStartIntersection().getId();
         int idEndIntersection = streetSection.getEndIntersection().getId();
 
-        if (durations[idEndIntersection] > durations[idStartIntersection] + streetSection.getDuration()) {
-            durations[idEndIntersection] = durations[idStartIntersection] + streetSection.getDuration();
-            predecessors[idEndIntersection] = streetSection.getStartIntersection();
+        if (durations[index.get(idEndIntersection)] > durations[index.get(idStartIntersection)] + streetSection.getDuration()) {
+            durations[index.get(idEndIntersection)] = durations[index.get(idStartIntersection)] + streetSection.getDuration();
+            predecessors[index.get(idEndIntersection)] = streetSection.getStartIntersection();
         }
     }
 
     @Requires({"endWayPoints != null", "startWayPoint != null"})
-    private List<Route> computeReturn(Intersection[] predecessors, AbstractWayPoint startWayPoint, List<AbstractWayPoint> endWayPoints) {
+    private List<Route> computeReturn(Map<Integer, Integer> index, Intersection[] predecessors, AbstractWayPoint startWayPoint, List<AbstractWayPoint> endWayPoints) {
         List<Route> result = new ArrayList<Route>();
         for (AbstractWayPoint endWayPoint : endWayPoints) {
             List<StreetSection> streetSections = new LinkedList<StreetSection>();
 
             Intersection currentIntersection = endWayPoint.getIntersection();
-            Intersection precedentIntersection = predecessors[currentIntersection.getId()];
+            Intersection precedentIntersection = predecessors[index.get(currentIntersection.getId())];
 
             while(precedentIntersection != null) {
                 streetSections.add(0, getStreetSection(precedentIntersection, currentIntersection));
                 currentIntersection = precedentIntersection;
-                precedentIntersection = predecessors[currentIntersection.getId()];
+                precedentIntersection = predecessors[index.get(currentIntersection.getId())];
             }
 
             result.add(new Route(startWayPoint, endWayPoint, streetSections));
