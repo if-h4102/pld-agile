@@ -37,7 +37,6 @@ public class MapCanvasController extends Canvas {
     private SimpleObjectProperty<CityMap> cityMap;
     private SimpleObjectProperty<DeliveryRequest> deliveryRequest;
     private SimpleObjectProperty<Planning> planning;
-    
 
     public MapCanvasController() {
         widthProperty().addListener(event -> draw());
@@ -66,83 +65,83 @@ public class MapCanvasController extends Canvas {
         GraphicsContext gc = getGraphicsContext2D();
         gc.setTransform(1, 0,  0, 1, 0, 0);
         gc.clearRect(0, 0, width, height);
-        
+
     	CityMap map = getCityMap();
         List<Intersection> intersections = map.getIntersections();
         double xmax = 0;
         double ymax = 0;
         double xmin = 0;
         double ymin = 0;
-        
+
 		for (Intersection inter : intersections) {
 			xmax = Math.max(xmax, inter.getX());
 			ymax = Math.max(ymax, inter.getY());
 			xmin = Math.min(xmin, inter.getX());
 			ymin = Math.min(ymin, inter.getY());
 		}
-        
+
         double mapWidth = xmax-xmin;
         double mapHeight = ymax-ymin;
-       
+
         double zoomX = width/mapWidth;
         double zoomY = height/mapHeight;
-       
+
         double zoom = Math.min(zoomX,zoomY);
-        
+
         gc.scale(zoom, zoom);
         gc.translate(-xmin, -ymin);
     }
-    
-    
+
+
     @SuppressWarnings("restriction")
 	private void draw() {
     	resetBuffer();
-    	
+
     	if (getCityMap() == null) {
             return;
         }
-    	
+
     	refreshTransform();
-        
+
         drawCityMap();
-        if(getDeliveryRequest() == null) {        	
+        if(getDeliveryRequest() == null) {
         	return;
         }
         drawDeliveryRequest();
-        if(getPlanning() == null){      
+        if(getPlanning() == null){
         	return;
-        } 
+        }
         drawPlanning();
     }
-    
-    
+
+
     @SuppressWarnings("restriction")
 	private void drawCityMap(){
         GraphicsContext gc = getGraphicsContext2D();
         CityMap map = getCityMap();
         List<Intersection> intersections = map.getIntersections();
-        
+
 		List<StreetSection> streetSections = map.getStreetSections();
 		for (StreetSection section : streetSections) {
 			gc.setLineWidth(2);
 			gc.setStroke(Color.GREY);
-			gc.strokeLine(section.getStartIntersection().getX(), section.getStartIntersection().getY(), 
+			gc.strokeLine(section.getStartIntersection().getX(), section.getStartIntersection().getY(),
 					section.getEndIntersection().getX(), section.getEndIntersection().getY());
 		}
-		
+
 		for (Intersection inter : intersections){
 			gc.fillOval(inter.getX()-5, inter.getY()-5, 10, 10);
 		}
     }
-    
+
     @SuppressWarnings("restriction")
 	private void drawDeliveryRequest(){
     	GraphicsContext gc = getGraphicsContext2D();
     	DeliveryRequest deliveryRequest = getDeliveryRequest();
-    	
+
     	Iterable<DeliveryAddress> listDeliveryAddresses = deliveryRequest.getDeliveryAddresses();
     	Warehouse warehouse = deliveryRequest.getWareHouse();
-    	
+
     	for(DeliveryAddress delivery : listDeliveryAddresses){
     		gc.setFill(Color.BLUE);
     		gc.fillOval(delivery.getIntersection().getX()-9, delivery.getIntersection().getY()-9, 18, 18);
@@ -151,18 +150,17 @@ public class MapCanvasController extends Canvas {
     	gc.fillOval(warehouse.getIntersection().getX()-9, warehouse.getIntersection().getY()-9, 18, 18);
     	gc.setFill(Color.BLACK);
     }
-    
+
 	@SuppressWarnings("restriction")
 	private void drawPlanning(){
-		
+
     	GraphicsContext gc = getGraphicsContext2D();
-       
+
 		Planning planning = getPlanning();
-		
 		//planning.
-    	
+
     	Iterable<Route> listRoutes = planning.getRoutes();
-    	
+
     	int number = 1;
     	for(Route route : listRoutes){
     		gc.setStroke(Color.ORANGE);
@@ -170,9 +168,9 @@ public class MapCanvasController extends Canvas {
     		for (StreetSection section : streetSections) {
     			gc.setLineWidth(4);
     			gc.setStroke(Color.ORANGE);
-    			gc.strokeLine(section.getStartIntersection().getX(), section.getStartIntersection().getY(), 
+    			gc.strokeLine(section.getStartIntersection().getX(), section.getStartIntersection().getY(),
     					section.getEndIntersection().getX(), section.getEndIntersection().getY());
-    		}	
+    		}
     		gc.setLineWidth(3);
     		gc.setStroke(Color.BLACK);
     		gc.strokeText(""+number, route.getStartWaypoint().getIntersection().getX(), route.getStartWaypoint().getIntersection().getY());
@@ -180,10 +178,10 @@ public class MapCanvasController extends Canvas {
     		gc.setLineWidth(1);
     		gc.strokeText(""+number, route.getStartWaypoint().getIntersection().getX(), route.getStartWaypoint().getIntersection().getY());
     		number++;
-    	} 
-    	
+    	}
+
     }
-    
+
 
     @Override
     public boolean isResizable() {

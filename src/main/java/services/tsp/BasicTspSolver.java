@@ -37,6 +37,8 @@ public class BasicTspSolver extends AbstractTspSolver {
                 break;
             }
         }
+        seen.add(warehouse);
+        unseen.remove(warehouse);
         // Get the cost for all routes
         Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs = new HashMap<>();
         graph.iterator().forEachRemaining((startPoint) -> {
