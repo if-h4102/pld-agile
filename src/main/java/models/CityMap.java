@@ -53,7 +53,7 @@ public class CityMap {
         streetSections.put(streetSection.getStartIntersection().getId(), streetSectionsFromStartIntersection);
     }
 
-    // TODO Cpomplexity to improve by using a tas-min for the greys intersections
+    // TODO Complexity to improve by using a tas-min for the greys intersections
     @Requires({ "startWayPoint != null", "endWayPoints != null", "!endWayPoints.contains(startWayPoint)",
             "intersections.containsValue(startWayPoint.getIntersection())" })
     private List<Route> shortestPath(AbstractWayPoint startWayPoint, List<AbstractWayPoint> endWayPoints) {
@@ -155,7 +155,7 @@ public class CityMap {
 
     @Requires({ "request != null", "request.getWareHouse() != null", "request.getDeliveryAddresses() != null" })
     public DeliveryGraph computeDeliveryGraph(DeliveryRequest request) {
-        List<AbstractWayPoint> pointsContainedInRequest = new ArrayList<AbstractWayPoint>();
+        List<AbstractWayPoint> pointsContainedInRequest = new LinkedList<AbstractWayPoint>();
         pointsContainedInRequest.add(request.getWareHouse());
 
         Iterable<DeliveryAddress> adressContainedInRequest = request.getDeliveryAddresses();
@@ -164,15 +164,16 @@ public class CityMap {
         }
 
         Map<AbstractWayPoint, Map<AbstractWayPoint, Route>> mappedRoutes = new TreeMap<AbstractWayPoint, Map<AbstractWayPoint, Route>>();
-        for (AbstractWayPoint startPoint : pointsContainedInRequest) {
+        for (int i = 0; i < pointsContainedInRequest.size(); i++) {
+            AbstractWayPoint startPoint = pointsContainedInRequest.get(i);
             Map<AbstractWayPoint, Route> routesFromGivenStartPoint = new TreeMap<AbstractWayPoint, Route>();
-            pointsContainedInRequest.remove(startPoint);
+            pointsContainedInRequest.remove(i);
             List<Route> shortestPathRoutes = shortestPath(startPoint, pointsContainedInRequest);
             for (Route route : shortestPathRoutes) {
                 routesFromGivenStartPoint.put(route.getEndWaypoint(), route);
             }
             mappedRoutes.put(startPoint, routesFromGivenStartPoint);
-            pointsContainedInRequest.add(startPoint);
+            pointsContainedInRequest.add(i, startPoint);
         }
         return new DeliveryGraph(mappedRoutes);
     }
