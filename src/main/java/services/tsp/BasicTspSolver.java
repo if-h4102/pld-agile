@@ -33,10 +33,11 @@ public class BasicTspSolver extends AbstractTspSolver {
         // Get the cost for all routes
         Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs = new HashMap<>();
         graph.iterator().forEachRemaining((startPoint) -> {
-            costs.put(startPoint.getKey(), new HashMap<>());
+            HashMap<AbstractWayPoint, Integer> costsFromStartPoint = new HashMap<>();
             startPoint.getValue().entrySet().forEach((endPoint) -> {
-                costs.get(startPoint).put(endPoint.getKey(), endPoint.getValue().getDuration());
+                costsFromStartPoint.put(endPoint.getKey(), endPoint.getValue().getDuration());
             });
+            costs.put(startPoint.getKey(), costsFromStartPoint);
         });
         // Get the time needed to deliver each way point
         Map<AbstractWayPoint, Integer> deliveryDurations = graph.getDeliveryDurations();
