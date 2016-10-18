@@ -52,6 +52,9 @@ activate CPS
 
     C <<-- CPS
 deactivate CPS
+C -> C: setState(nextState)
+activate C
+deactivate C
 deactivate C
 deactivate C
 
