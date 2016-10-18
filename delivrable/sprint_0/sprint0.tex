@@ -12,6 +12,7 @@
 \usepackage{csvsimple}
 \usepackage{array}
 \usepackage{longtable}
+\usepackage{placeins}
 
 \begin{document}
 
@@ -24,17 +25,17 @@
 \section{Glossaire}
 \input{glossaire/glossaire.tex}
 
-
+\FloatBarrier
 \section{Modèle du domaine}
 \begin{figure}[h!]
   \begin{center}
-    \includegraphics[width=0.5\linewidth]{images/Modele.png}
+    \includegraphics[width=0.7\linewidth]{images/Modele.png}
     \caption{Modèle du domaine}
     \label{fig:modele}
   \end{center}
 \end{figure}
 
-
+\FloatBarrier
 \section{Diagramme de cas d'utilisation}
 \begin{figure}[h!]
   \begin{center}
@@ -44,19 +45,68 @@
   \end{center}
 \end{figure}
 
+\FloatBarrier
 \section{Description textuelle des cas d’utilisation}
 \input{project/use-cases/load-city-map.tex}
 \input{project/use-cases/load-delivery-request.tex}
 \input{project/use-cases/compute-planning.tex}
 
-\section{Liste des événements utilisateur}
+\FloatBarrier
+\section{Liste des événements utilisateur}  
 
+\FloatBarrier
 \section{Diagramme Etats-transitions}
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[width=0.8\linewidth]{uml/state-diagram-gui.png}
+    \caption{Diagramme Etats-transitions}
+    \label{fig:stateGui}
+  \end{center}
+\end{figure}
 
+
+\FloatBarrier
 \section{Diagramme de packages et de classes}
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[width=0.8\linewidth]{uml/packages.png}
+    \caption{Diagramme de packages et de classes}
+    \label{fig:packages}
+  \end{center}
+\end{figure}
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[width=0.8\linewidth]{{uml/package.model}.png}
+    \caption{Diagramme de classes du modèle}
+    \label{fig:packagesModel}
+  \end{center}
+\end{figure}
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[width=0.8\linewidth]{{uml/package.services}.png}
+    \caption{Diagramme de classes des services}
+    \label{fig:packagesServices}
+  \end{center}
+\end{figure}
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[width=0.8\linewidth]{{uml/package.controller}.png}
+    \caption{Diagramme de classes du controlleur}
+    \label{fig:packagesServices}
+  \end{center}
+\end{figure}
 
+\FloatBarrier
 \section{Diagramme de séquence du calcul de la tournée}
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[width=0.8\linewidth]{{uml/sequence-diagram-tsp}.png}
+    \caption{Diagramme de séquence du calcul de la tournée}
+    \label{fig:sequencesTournee}
+  \end{center}
+\end{figure}
 
+\FloatBarrier
 \section{Planning effectif de la première itération}
 
 \end{document}
