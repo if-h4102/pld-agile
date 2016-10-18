@@ -157,6 +157,7 @@ public class MapCanvasController extends Canvas {
     	GraphicsContext gc = getGraphicsContext2D();
 
 		Planning planning = getPlanning();
+		System.out.println(planning.getFullTime());
 		//planning.
 
     	Iterable<Route> listRoutes = planning.getRoutes();
