@@ -32,6 +32,10 @@ public class Route {
     public AbstractWayPoint getEndWaypoint() {
         return end;
     }
+    
+    public List<StreetSection> getStreetSections(){
+    	return streetSections;
+    }
 
     public int getDuration() {
         return duration;

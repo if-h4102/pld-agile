@@ -20,9 +20,10 @@ public class Application extends javafx.application.Application {
         fxmlLoader.setResources(ResourceBundle.getBundle("views.Locale", new Locale("en", "US")));
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root, 640, 480);
-
+     
         primaryStage.setTitle("Delivery App");
-        primaryStage.setScene(scene);
+        primaryStage.setScene(scene);   
+        primaryStage.setMaximized(true);
         primaryStage.show();
     }
 }

@@ -10,7 +10,7 @@
 
 ## Items
 
-### 1. Glossaire
+### 1. Glossary
 
 ### 2. Domain model diagram
 

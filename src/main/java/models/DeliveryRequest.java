@@ -20,7 +20,6 @@ public class DeliveryRequest {
         this.deliveryAddresses = new TreeSet<DeliveryAddress>();
         for (DeliveryAddress deliveryAddress : deliveryAddresses) {
             addDeliveryAddress(deliveryAddress);
-            System.out.println(deliveryAddress.getX()+" "+deliveryAddress.getY());
         }
         this.startPlanningTimestamp = startPlanningTimestamp;
     }

@@ -9,8 +9,21 @@ import java.util.List;
 public class Planning {
     final private SimpleListProperty<Route> routes = new SimpleListProperty<>();
 
+    private int fullTime;
+
     public Planning(ObservableList<Route> routes) {
         this.routes.setValue(routes);
+        this.fullTime = 0;
+        for(Route r: this.routes) {
+            fullTime += r.getDuration();
+            if(r.getStartWaypoint() instanceof DeliveryAddress) {
+                fullTime += ((DeliveryAddress) r.getStartWaypoint()).getDeliveryDuration();
+            }
+        }
+    }
+
+    public int getFullTime() {
+        return this.fullTime;
     }
 
     public Planning(List<Route> routes) {
