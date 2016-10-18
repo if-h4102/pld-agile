@@ -8,7 +8,7 @@ import java.io.File;
 
 public class WaitOpenDeliveryRequestState extends WaitOpenCityMapState {
     public void enterState(MainController mainController) {
-        mainController.setCurrentDeliveryRequest(null); // Reset any previous delivery request
+        mainController.setDeliveryRequest(null); // Reset any previous delivery request
     }
 
     public void leaveState(MainController mainController) {
@@ -25,9 +25,9 @@ public class WaitOpenDeliveryRequestState extends WaitOpenCityMapState {
             return this;
         }
 
-        DeliveryRequest currentDeliveryRequest = mainController.getParserService().getDeliveryRequest(deliverRequestFile, mainController.getCurrentCityMap());
+        DeliveryRequest currentDeliveryRequest = mainController.getParserService().getDeliveryRequest(deliverRequestFile, mainController.getCityMap());
 
-        mainController.setCurrentDeliveryRequest(currentDeliveryRequest);
+        mainController.setDeliveryRequest(currentDeliveryRequest);
 
         return new ReadyState();
     }

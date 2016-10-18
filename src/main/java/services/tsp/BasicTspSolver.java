@@ -9,7 +9,7 @@ public class BasicTspSolver extends AbstractTspSolver {
      * The constructor for a basic TSP solver.
      * It doesn't need anything for now.
      */
-    BasicTspSolver() {
+    public BasicTspSolver() {
         // Nothing to do
     }
 
