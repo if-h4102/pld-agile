@@ -19,7 +19,7 @@ import java.util.List;
 public class ParserTest {
 
     @Test
-    public void parseCityMapTest() throws URISyntaxException {
+    public void parseCityMapTestByEquals() throws URISyntaxException {
         List<Intersection> intersections = new LinkedList<>();
         intersections.add(new Intersection(0, 134, 193));
         intersections.add(new Intersection(1, 195, 291));

@@ -45,6 +45,12 @@ public class Intersection {
             return false;
 
         Intersection other = (Intersection) obj;
-        return this.id == other.id && this.x == other.x && this.y == other.y;
+        return this.id == other.id;
     }
+
+    @Override
+    public String toString() {
+        return "Intersection [x=" + x + ", y=" + y + ", id=" + id + "]";
+    }
+    
 }
