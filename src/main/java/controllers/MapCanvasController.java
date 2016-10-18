@@ -92,11 +92,11 @@ public class MapCanvasController extends Canvas {
 			gc.setLineWidth(2);
 			gc.setStroke(Color.GREY);
 			gc.strokeLine(section.getStartIntersection().getX()*width/xmax, section.getStartIntersection().getY()*height/ymax, 
-					section.getEndIntersection().getX(), section.getEndIntersection().getY());
+					section.getEndIntersection().getX()*width/xmax, section.getEndIntersection().getY()*height/ymax);
 		}
 		
 		for (Intersection inter : intersections){
-			gc.fillOval(inter.getX()*width/xmax, inter.getY()*height/ymax, 10, 10);
+			gc.fillOval(inter.getX()*width/xmax-5, inter.getY()*height/ymax-5, 10, 10);
 		}
     }
     
@@ -152,6 +152,7 @@ public class MapCanvasController extends Canvas {
     	
     	
     	for(Route route : listRoutes){
+    		System.out.println("haha");
     		gc.setStroke(Color.ORANGE);
     		gc.strokeLine(route.getStartWaypoint().getX()*width/xmax, route.getStartWaypoint().getY()*height/ymax, 
     				route.getEndWaypoint().getX()*width/xmax, route.getEndWaypoint().getY()*height/ymax);

@@ -157,7 +157,7 @@ public class CityMap {
     public DeliveryGraph computeDeliveryGraph(DeliveryRequest request) {
         List<AbstractWayPoint> pointsContainedInRequest = new ArrayList<AbstractWayPoint>();
         pointsContainedInRequest.add(request.getWareHouse());
-        
+
         Iterable<DeliveryAddress> adressContainedInRequest = request.getDeliveryAddresses();
         for (DeliveryAddress adress : adressContainedInRequest) {
             pointsContainedInRequest.add(adress);
@@ -167,7 +167,7 @@ public class CityMap {
         for (AbstractWayPoint startPoint : pointsContainedInRequest) {
             Map<AbstractWayPoint, Route> routesFromGivenStartPoint = new TreeMap<AbstractWayPoint, Route>();
             pointsContainedInRequest.remove(startPoint);
-            List<Route> shortestPathRoutes = shortestPath(startPoint,pointsContainedInRequest);
+            List<Route> shortestPathRoutes = shortestPath(startPoint, pointsContainedInRequest);
             for (Route route : shortestPathRoutes) {
                 routesFromGivenStartPoint.put(route.getEndWaypoint(), route);
             }
@@ -179,20 +179,20 @@ public class CityMap {
 
     // TODO
     public List<Intersection> getIntersections() {
-    	List<Intersection> listIntersection = new ArrayList<Intersection>();
-    	for (Intersection value : intersections.values()) {
-    	    listIntersection.add(value);
-    	}
+        List<Intersection> listIntersection = new ArrayList<Intersection>();
+        for (Intersection value : intersections.values()) {
+            listIntersection.add(value);
+        }
         return listIntersection;
     }
 
     // TODO
     public List<StreetSection> getStreetSections() {
-    	List<StreetSection> listStreetSection = new ArrayList<StreetSection>();
-    	for (Map<Integer, StreetSection> value : streetSections.values()) {
-    		for(StreetSection section : value.values())
-    			listStreetSection.add(section);
-    	}
+        List<StreetSection> listStreetSection = new ArrayList<StreetSection>();
+        for (Map<Integer, StreetSection> value : streetSections.values()) {
+            for (StreetSection section : value.values())
+                listStreetSection.add(section);
+        }
         return listStreetSection;
     }
 
@@ -219,15 +219,38 @@ public class CityMap {
         return null;
     }
 
-    // @Override
-    // public boolean equals(Object obj) {
-    // if (!(obj instanceof CityMap)) {
-    // return false;
-    // } else if (obj == this) {
-    // return true;
-    // }
-    // final CityMap other = (CityMap) obj;
-    // // TODO: deep equals ?
-    // return this.intersections.equals(other.intersections) && this.streetSections.equals(other.streetSections);
-    // }
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof CityMap)) {
+            return false;
+        } else if (this == obj)
+            return true;
+        CityMap other = (CityMap) obj;
+
+        if (intersections.size() != other.intersections.size())
+            return false;
+        for (Map.Entry<Integer, Intersection> entry : intersections.entrySet()) {
+            if (!entry.getValue().equals(other.intersections.get(entry.getKey())))
+                return false;
+        }
+
+        if (streetSections.size() != other.streetSections.size())
+            return false;
+        for (Map.Entry<Integer, Map<Integer, StreetSection>> entrySubMap : streetSections.entrySet()) {
+            Map<Integer, StreetSection> otherSubMap = other.streetSections.get(entrySubMap.getKey());
+            if (otherSubMap == null && entrySubMap.getValue() != null || otherSubMap != null && entrySubMap.getKey() == null)
+                return false;
+            if (otherSubMap == null)
+                continue; // The two sub item are null, so they are equals
+            if (otherSubMap.size() != entrySubMap.getValue().size())
+                return false;
+
+            for (Map.Entry<Integer, StreetSection> entry : entrySubMap.getValue().entrySet()) {
+                if (!entry.getValue().equals(otherSubMap.get(entry.getKey())))
+                    return false;
+            }
+        }
+
+        return true;
+    }
 }
