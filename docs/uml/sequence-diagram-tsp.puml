@@ -1,0 +1,71 @@
+@startuml
+actor Client as C
+participant View as V
+participant ComputingPlanningState as CPS
+participant TspSolver as TSP
+participant "planning: Planning" as Pl
+participant "it: Iterator" as it
+
+C -> V : Click on //Compute planning//
+
+ref over C, TSP
+    Some calls are voluntary omitted between the **Client** and the **TSpSolver**,
+    to avoid a very wide sequence diagram.
+    To see these calls, please refer to  **sequence-diagram-planning.puml**.
+end ref
+
+CPS -> TSP : solve(**deliveryGraph**: DeliveryGraph)
+activate TSP
+
+    TSP -> TSP : branchAndBound(**lastSeen**, **unseen**, **seen**, **deliveryGraph**, **cost**)
+    activate TSP
+
+        alt unseen.size() == 0
+            TSP -> TSP : cost += lastSeen.getCost()
+            alt betterCost(**cost**)
+                TSP -> TSP : updateBestCost(**cost**)
+            end
+        else unseen.size != 0
+            alt cost + bound(cost) < getBestCost()
+                create it
+                TSP -> it : iterator(**unseen**)
+                loop while it.hasNext()
+                    TSP -> it : next()
+                    activate it
+                    TSP <-- it : //next//
+                    deactivate it
+                    TSP -> TSP : unseen.remove(**next**)
+                    TSP -> TSP : seen.add(**next**)
+                    TSP -> TSP : newCost = getNewCost(**cost**, **lastSeen**, **next**, **deliveryGraph**)
+                    note left
+                        Some subcalls are omitted here
+                        for more clarity
+                    end note
+                    TSP -> TSP : branchAndBound(**next**, **unseen**, **seen**, **deliveryGraph**, **newCost**)
+                    activate TSP
+                        note left : Recursive call
+                    deactivate TSP
+                    TSP -> TSP : seen.remove(**next**)
+                    TSP -> TSP : unseen.add(**next**)
+                end
+                destroy it
+            end
+
+
+        end
+
+    deactivate TSP
+
+    create Pl
+    TSP -> Pl : <<create>>
+
+    CPS <-- TSP : planning
+
+deactivate TSP
+
+ref over C, CPS
+    Some calls are voluntary omitted between the **Client** and the **ComputingPlanningState**,
+    to avoid a very long sequence diagram.
+end ref
+
+@enduml
