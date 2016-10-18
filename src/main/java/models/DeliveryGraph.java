@@ -77,7 +77,10 @@ public class DeliveryGraph {
      * @return
      */
     public Route getRoute(AbstractWayPoint start, AbstractWayPoint end) {
-        // TODO: handle exceptions
-        return routes.get(start).get(end);
+        try {
+            return routes.get(start).get(end);
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 }
