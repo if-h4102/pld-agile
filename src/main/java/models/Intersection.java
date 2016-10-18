@@ -98,4 +98,8 @@ public class Intersection {
     public boolean equals(Intersection other) {
         return this.getId() == other.getId();
     }
+   
+    public String toString(){
+    	return "("+x+";"+y+")";
+    }
 }
