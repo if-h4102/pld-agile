@@ -2,12 +2,8 @@ package models;
 
 import com.google.java.contract.Ensures;
 import com.google.java.contract.Requires;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+
+import java.util.*;
 
 public class CityMap {
 
@@ -34,15 +30,15 @@ public class CityMap {
         }
     }
 
-    @Requires({ "intersection != null", "!intersections.containsKey(intersection.getId())" })
-    @Ensures({ "intersections.containsKey(intersection.getId())", "intersections.containsValue(intersection)",
-            "intersections.get(intersection.getId()) == intersection" })
+    @Requires({"intersection != null", "!intersections.containsKey(intersection.getId())"})
+    @Ensures({"intersections.containsKey(intersection.getId())", "intersections.containsValue(intersection)",
+        "intersections.get(intersection.getId()) == intersection"})
     private void addIntersection(Intersection intersection) {
         intersections.put(intersection.getId(), intersection);
     }
 
-    @Requires({ "streetSection != null", "intersections.containsKey(streetSection.getStartIntersection().getId())",
-            "intersections.containsKey(streetSection.getEndIntersection().getId())" })
+    @Requires({"streetSection != null", "intersections.containsKey(streetSection.getStartIntersection().getId())",
+        "intersections.containsKey(streetSection.getEndIntersection().getId())"})
     private void addStreetSection(StreetSection streetSection) {
         Map<Integer, StreetSection> streetSectionsFromStartIntersection = streetSections.get(streetSection.getStartIntersection().getId());
         if (streetSectionsFromStartIntersection == null) {
@@ -54,8 +50,8 @@ public class CityMap {
     }
 
     // TODO Cpomplexity to improve by using a tas-min for the greys intersections
-    @Requires({ "startWayPoint != null", "endWayPoints != null", "!endWayPoints.contains(startWayPoint)",
-            "intersections.containsValue(startWayPoint.getIntersection())" })
+    @Requires({"startWayPoint != null", "endWayPoints != null", "!endWayPoints.contains(startWayPoint)",
+        "intersections.containsValue(startWayPoint.getIntersection())"})
     private List<Route> shortestPath(AbstractWayPoint startWayPoint, List<AbstractWayPoint> endWayPoints) {
         Intersection[] predecessors = new Intersection[intersections.size()];
         int[] durations = new int[intersections.size()];
@@ -90,8 +86,8 @@ public class CityMap {
     }
 
     // TODO Improve complexity
-    @Requires({ "greys != null", "durations != null", "greys.size() <= durations.length" })
-    @Ensures({ "greys.contains(result)" })
+    @Requires({"greys != null", "durations != null", "greys.size() <= durations.length"})
+    @Ensures({"greys.contains(result)"})
     private Intersection getMinimalGreyIntersection(List<Intersection> greys, int[] durations) {
         int minDuration = Integer.MAX_VALUE;
         Intersection minimalGreyIntersection = null;
@@ -105,11 +101,11 @@ public class CityMap {
         return minimalGreyIntersection;
     }
 
-    @Requires({ "streetSection != null", "predecessors != null", "durations != null", "predecessors.length == durations.length",
-            "streetSection.getStartIntersection().getId() < durations.length",
-            "streetSection.getEndIntersection().getId() < durations.length" })
-    @Ensures({ "durations[streetSection.getEndIntersection().getId()] <= "
-            + "durations[streetSection.getStartIntersection().getId()] + streetSection.getDuration()" })
+    @Requires({"streetSection != null", "predecessors != null", "durations != null", "predecessors.length == durations.length",
+        "streetSection.getStartIntersection().getId() < durations.length",
+        "streetSection.getEndIntersection().getId() < durations.length"})
+    @Ensures({"durations[streetSection.getEndIntersection().getId()] <= "
+        + "durations[streetSection.getStartIntersection().getId()] + streetSection.getDuration()"})
     private void release(StreetSection streetSection, /* IN/OUT */ Intersection[] predecessors, int[] durations) {
         int idStartIntersection = streetSection.getStartIntersection().getId();
         int idEndIntersection = streetSection.getEndIntersection().getId();
@@ -120,7 +116,7 @@ public class CityMap {
         }
     }
 
-    @Requires({ "endWayPoints != null", "startWayPoint != null", "!endWayPoints.contains(startWayPoint)" })
+    @Requires({"endWayPoints != null", "startWayPoint != null", "!endWayPoints.contains(startWayPoint)"})
     private List<Route> computeReturn(Intersection[] predecessors, AbstractWayPoint startWayPoint, List<AbstractWayPoint> endWayPoints) {
         List<Route> result = new ArrayList<Route>();
         for (AbstractWayPoint endWayPoint : endWayPoints) {
@@ -128,19 +124,19 @@ public class CityMap {
 
             Intersection currentIntersection = endWayPoint.getIntersection();
             Intersection precedentIntersection = predecessors[currentIntersection.getId()];
-            do {
+
+            while(precedentIntersection != null) {
                 streetSections.add(0, getStreetSection(precedentIntersection, currentIntersection));
                 currentIntersection = precedentIntersection;
                 precedentIntersection = predecessors[currentIntersection.getId()];
-            } while (!precedentIntersection.equals(startWayPoint.getIntersection()));
+            }
 
             result.add(new Route(startWayPoint, endWayPoint, streetSections));
         }
-
         return result;
     }
 
-    @Requires({ "intersections.containsValue(intersection)" })
+    @Requires({"intersections.containsValue(intersection)"})
     private Collection<Intersection> getNeighbourIntersection(Intersection intersection) {
         Map<Integer, StreetSection> outStreetSections = streetSections.get(intersection.getId());
         List<Intersection> neighbourIntersections = new ArrayList<Intersection>();
@@ -153,7 +149,7 @@ public class CityMap {
         return neighbourIntersections;
     }
 
-    @Requires({ "request != null", "request.getWareHouse() != null", "request.getDeliveryAddresses() != null" })
+    @Requires({"request != null", "request.getWareHouse() != null", "request.getDeliveryAddresses() != null"})
     public DeliveryGraph computeDeliveryGraph(DeliveryRequest request) {
         List<AbstractWayPoint> pointsContainedInRequest = new ArrayList<AbstractWayPoint>();
         pointsContainedInRequest.add(request.getWareHouse());
@@ -166,18 +162,15 @@ public class CityMap {
         Map<AbstractWayPoint, Map<AbstractWayPoint, Route>> mappedRoutes = new TreeMap<AbstractWayPoint, Map<AbstractWayPoint, Route>>();
         for (AbstractWayPoint startPoint : pointsContainedInRequest) {
             Map<AbstractWayPoint, Route> routesFromGivenStartPoint = new TreeMap<AbstractWayPoint, Route>();
-            pointsContainedInRequest.remove(startPoint);
             List<Route> shortestPathRoutes = shortestPath(startPoint, pointsContainedInRequest);
             for (Route route : shortestPathRoutes) {
                 routesFromGivenStartPoint.put(route.getEndWaypoint(), route);
             }
             mappedRoutes.put(startPoint, routesFromGivenStartPoint);
-            pointsContainedInRequest.add(startPoint);
         }
         return new DeliveryGraph(mappedRoutes);
     }
 
-    // TODO
     public List<Intersection> getIntersections() {
         List<Intersection> listIntersection = new ArrayList<Intersection>();
         for (Intersection value : intersections.values()) {
@@ -186,7 +179,6 @@ public class CityMap {
         return listIntersection;
     }
 
-    // TODO
     public List<StreetSection> getStreetSections() {
         List<StreetSection> listStreetSection = new ArrayList<StreetSection>();
         for (Map<Integer, StreetSection> value : streetSections.values()) {
@@ -199,17 +191,16 @@ public class CityMap {
     /**
      * Returns the intersection with the supplied id.
      *
-     * @param idIntersection
-     *            The id of intersection to retrieve. The id must be in the map.
+     * @param idIntersection The id of intersection to retrieve. The id must be in the map.
      * @return The intersection with the supplied id
      */
-    @Requires({ "intersections.containsKey(idIntersection)" })
+    @Requires({"intersections.containsKey(idIntersection)"})
     public Intersection getIntersection(int idIntersection) {
         return intersections.get(idIntersection);
     }
 
-    @Requires({ "intersections.containsValue(startIntersection)", "intersections.containsValue(endIntersection)" })
-    @Ensures({ "result.getStartIntersection().equals(startIntersection)", "result.getEndIntersection().equals(endIntersection)" })
+    @Requires({"intersections.containsValue(startIntersection)", "intersections.containsValue(endIntersection)"})
+    @Ensures({"result.getStartIntersection().equals(startIntersection)", "result.getEndIntersection().equals(endIntersection)"})
     private StreetSection getStreetSection(Intersection startIntersection, Intersection endIntersection) {
         Map<Integer, StreetSection> outStreetSections = streetSections.get(startIntersection.getId());
         if (outStreetSections != null) {

@@ -9,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import models.CityMap;
 import models.DeliveryRequest;
@@ -22,8 +21,8 @@ import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
     final private ReadOnlyObjectWrapper<MainControllerState> state = new ReadOnlyObjectWrapper<>();
-    final private SimpleObjectProperty<CityMap> currentCityMap = new SimpleObjectProperty<>();
-    final private SimpleObjectProperty<DeliveryRequest> currentDeliveryRequest = new SimpleObjectProperty<>();
+    final private SimpleObjectProperty<CityMap> cityMap = new SimpleObjectProperty<>();
+    final private SimpleObjectProperty<DeliveryRequest> deliveryRequest = new SimpleObjectProperty<>();
     final private SimpleObjectProperty<Planning> planning = new SimpleObjectProperty<>();
     final private Parser parserService = new Parser();
     final private SimpleDoubleProperty mapZoom = new SimpleDoubleProperty(1.0);
@@ -40,8 +39,8 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.setState(new WaitOpenCityMapState());
-        this.openDeliveryRequestButton.disableProperty().bind(this.currentCityMap.isNull());
-        this.computePlanningButton.disableProperty().bind(this.currentDeliveryRequest.isNull());
+        this.openDeliveryRequestButton.disableProperty().bind(this.cityMap.isNull());
+        this.computePlanningButton.disableProperty().bind(this.deliveryRequest.isNull());
     }
 
     protected Parent getRoot() {
@@ -53,16 +52,16 @@ public class MainController implements Initializable {
     }
 
     // CityMap
-    public SimpleObjectProperty<CityMap> currentCityMapProperty() {
-        return this.currentCityMap;
+    public SimpleObjectProperty<CityMap> cityMapProperty() {
+        return this.cityMap;
     }
 
-    public CityMap getCurrentCityMap() {
-        return currentCityMapProperty().getValue();
+    public CityMap getCityMap() {
+        return cityMapProperty().getValue();
     }
 
-    public void setCurrentCityMap(CityMap currentCityMap) {
-        currentCityMapProperty().setValue(currentCityMap);
+    public void setCityMap(CityMap cityMap) {
+        cityMapProperty().setValue(cityMap);
     }
 
     // Planning
@@ -74,7 +73,7 @@ public class MainController implements Initializable {
         return planningProperty().getValue();
     }
 
-    public void setCurrentCityMap(Planning planning) {
+    public void setPlanning(Planning planning) {
         planningProperty().setValue(planning);
     }
 
@@ -91,16 +90,16 @@ public class MainController implements Initializable {
         mapZoomProperty().setValue(mapZoom);
     }
 
-    public ObservableObjectValue<DeliveryRequest> currentDeliveryRequestProperty() {
-        return this.currentDeliveryRequest;
+    public ObservableObjectValue<DeliveryRequest> deliveryRequestProperty() {
+        return this.deliveryRequest;
     }
 
-    public DeliveryRequest getCurrentDeliveryRequest() {
-        return this.currentDeliveryRequest.getValue();
+    public DeliveryRequest getDeliveryRequest() {
+        return this.deliveryRequest.getValue();
     }
 
-    public void setCurrentDeliveryRequest(DeliveryRequest currentDeliveryRequest) {
-        this.currentDeliveryRequest.setValue(currentDeliveryRequest);
+    public void setDeliveryRequest(DeliveryRequest deliveryRequest) {
+        this.deliveryRequest.setValue(deliveryRequest);
     }
 
     @FXML

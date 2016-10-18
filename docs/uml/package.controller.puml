@@ -3,7 +3,7 @@
 
 package "controllers" {
     class MainController {
-'        -currentCityMap: ObservableObjectProperty<CityMap>
+'        -cityMap: ObservableObjectProperty<CityMap>
 '        -currentDeliveryGraph: ObservableObjectProperty<DeliveryGraph>
 '        -currentPlanning: ObservableObjectProperty<Planning>
         -mapOffsetX: ObservableIntegerProperty
