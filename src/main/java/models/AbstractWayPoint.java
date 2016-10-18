@@ -15,11 +15,11 @@ public abstract class AbstractWayPoint implements Comparable<AbstractWayPoint> {
     }
 
     public int getX() {
-        return this.getIntersection().getX();
+        return getIntersection().getX();
     }
 
     public int getY() {
-        return this.getIntersection().getX();
+        return getIntersection().getY();
     }
 
     @Override

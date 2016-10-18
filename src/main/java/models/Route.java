@@ -36,4 +36,28 @@ public class Route {
     public int getDuration() {
         return duration;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Route))
+            return false;
+        
+        Route other = (Route) obj;
+        if (this.duration != other.duration)
+            return false;
+        
+        if (!this.start.equals(other.start))
+            return false;
+        
+        if (!this.end.equals(other.end))
+            return false;
+        
+        if (this.streetSections.size() != other.streetSections.size())
+            return false;
+        for (int i = 0; i < streetSections.size(); i++) {
+            if (!this.streetSections.get(i).equals(other.streetSections.get(i)))
+                return false;
+        }
+        return true;
+    }
 }

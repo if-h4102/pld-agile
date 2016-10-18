@@ -25,8 +25,8 @@
                              AnchorPane.leftAnchor="0"
                              AnchorPane.rightAnchor="0"
                              AnchorPane.topAnchor="0"
-                             cityMap="${controller.currentCityMap}"
-                             deliveryRequest="${controller.currentDeliveryRequest}"
+                             cityMap="${controller.cityMap}"
+                             deliveryRequest="${controller.deliveryRequest}"
                              planning="${controller.planning}" />
         <!--<fx:include fx:id="mapView" source="mapScreen.fxml" />-->
       </AnchorPane>

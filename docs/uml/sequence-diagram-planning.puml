@@ -1,49 +1,58 @@
 @startuml
-participant "Controller" as Ctrl
-participant "GraphFactory" as GF
-participant "TSPSolver" as TSPS
-participant "currentCityMap: CityMap" as CM
+actor Client as Cli
+participant View as V
+participant "mainController: MainController" as C
+participant ReadyState as RS
+participant "nextState:\nComputingPlanningState" as CPS
+participant TSPSolver as TSP
+participant "cityMap: CityMap" as CM
 
+Cli -> V : Click on //Compute Planning//
+V -> C : onComputePlanningButtonAction(**event**)
+activate C
+C -> RS : onComputePlanningButtonAction(**mainController**)
+activate RS
 
-[-> Ctrl: computePlanning()
-activate Ctrl
+create CPS
+RS -> CPS
+C <<-- RS: nextState
+deactivate RS
 
-'Instanciate with a strategy
-create GF
-Ctrl -> GF: <<create(GraphFactoryStrategy)>>
-'Instanciate with a strategy
-create TSPS
-Ctrl -> TSPS: <<create(BranchStrategy, BoundStrategy)>>
+C -> C: applyState(**nextState**)
+activate C
+C -> RS: leaveState(**mainController**)
+activate RS
+C <<-- RS
+deactivate RS
 
+C -> CPS: enterState(**mainController**)
+activate CPS
+    create TSP
+    C -> TSP: <<create>>
 
-Ctrl -> GF: computeDeliveryGraph(currentCityMap, DeliveryRequest)
-activate GF
+    C <- CPS: getCityMap()
+    C -->> CPS: cityMap
+    C <- CPS: getDeliveryRequest()
+    C -->> CPS: deliveryRequest
 
-GF -> CM: getIntersections()
-activate CM
-GF <<-- CM: intersactions: Map<int, Intersection>
-deactivate CM
+    CPS -> CM: getDeliveryGraph(**deliveryRequest**)
+    activate CM
 
-GF -> CM: getStreetSections()
-activate CM
-GF <<-- CM: streetSections: Map<int,  Map<int, StreetSection>>
-deactivate CM
+    CPS <<-- CM: deliveryGraph
+    deactivate CM
 
-Ctrl <<-- GF: deliveryGraph: DeliveryGraph
-deactivate GF
+    CPS -> TSP: solve(**deliveryGraph**)
+    activate TSP
+    CPS <<-- TSP: planning
+    note right: ← This will be explained\nin another sequence diagram\n(see **sequence-diagram-tsp**)
+    deactivate TSP
 
+    C <- CPS: setPlanning(**planning**)
+    C -->> CPS
 
-Ctrl -> TSPS: computePlanning(deliveryGraph, DeliveryRequest)
-activate TSPS
-Ctrl <<-- TSPS: Planning
-deactivate TSPS
-
-
-
-Ctrl -> Ctrl: setCurrentPlanning(Planning)
-activate Ctrl
-deactivate Ctrl
-
-deactivate Ctrl
+    C <<-- CPS
+deactivate CPS
+deactivate C
+deactivate C
 
 @enduml

@@ -27,7 +27,7 @@ public class WaitOpenCityMapState extends MainControllerState {
 
         CityMap currentCityMap = mainController.getParserService().getCityMap(cityMapFile);
 
-        mainController.setCurrentCityMap(currentCityMap);
+        mainController.setCityMap(currentCityMap);
 
         return new WaitOpenDeliveryRequestState();
     }
