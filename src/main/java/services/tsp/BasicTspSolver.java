@@ -28,8 +28,15 @@ public class BasicTspSolver extends AbstractTspSolver {
         // Initialize seen nodes
         ArrayList<AbstractWayPoint> seen = new ArrayList<AbstractWayPoint>(graph.size());
         // Let's say that the first seen node is the first one of the graph
-        seen.add(graph.iterator().next().getKey());
-        unseen.remove(graph.iterator().next().getKey());
+//        seen.add(graph.iterator().next().getKey());
+//        unseen.remove(graph.iterator().next().getKey());
+        AbstractWayPoint warehouse = null;
+        for(AbstractWayPoint point: unseen) {
+            if(point instanceof Warehouse) {
+                warehouse = point;
+                break;
+            }
+        }
         // Get the cost for all routes
         Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs = new HashMap<>();
         graph.iterator().forEachRemaining((startPoint) -> {
