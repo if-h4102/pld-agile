@@ -1,0 +1,29 @@
+@startuml
+
+title Agile use cases
+
+rectangle "Use Cases" {
+    usecase LoadCityMap
+    usecase LoadDeliveryRequest
+    usecase ComputePlanning
+    usecase ModifyDeliveryRequest
+    usecase GenerateItineraryText
+}
+
+actor Client
+actor Deliver
+actor FileSystem <<Application>>
+
+
+left to right direction
+Client --> LoadCityMap
+Client --> LoadDeliveryRequest
+Client --> ComputePlanning
+Client --> ModifyDeliveryRequest
+Client --> GenerateItineraryText
+
+Deliver --> GenerateItineraryText
+
+LoadCityMap <-- FileSystem
+LoadDeliveryRequest <-- FileSystem
+@enduml

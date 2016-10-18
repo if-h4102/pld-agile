@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="15cm" height="19cm" viewBox="6 26 290 363" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g>
+    <g>
+      <rect style="fill: #ffffff" x="64.5224" y="302" width="40" height="20"/>
+      <rect style="fill: none; fill-opacity:0; stroke-width: 0.6; stroke: #000000" x="64.5224" y="302" width="40" height="20"/>
+    </g>
+    <text font-size="6.77333" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="84.5224" y="314.325">
+      <tspan x="84.5224" y="314.325">Tournée</tspan>
+    </text>
+  </g>
+  <g>
+    <g>
+      <rect style="fill: #ffffff" x="127.878" y="238.04" width="88.5556" height="17.7646"/>
+      <rect style="fill: none; fill-opacity:0; stroke-width: 0.6; stroke: #000000" x="127.878" y="238.04" width="88.5556" height="17.7646"/>
+    </g>
+    <text font-size="6.77333" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="172.156" y="246.922">
+      <tspan x="172.156" y="246.922">Adresse de livraison</tspan>
+    </text>
+  </g>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="-397.524" y="372.016">
+    <tspan x="-397.524" y="372.016"></tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="193.222" y="109.039">
+    <tspan x="193.222" y="109.039"></tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="220.908" y="379.234">
+    <tspan x="220.908" y="379.234"></tspan>
+  </text>
+  <line style="fill: none; fill-opacity:0; stroke-width: 0.6; stroke: #000000" x1="88.24" y1="87.0318" x2="163.073" y2="86.5732"/>
+  <line style="fill: none; fill-opacity:0; stroke-width: 0.6; stroke: #000000" x1="88.24" y1="131.359" x2="163.073" y2="131.505"/>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="88.24" y="87.0318">
+    <tspan x="88.24" y="87.0318"></tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="88.24" y="87.0318">
+    <tspan x="88.24" y="87.0318"></tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="88.24" y="85.1235">
+    <tspan x="88.24" y="85.1235">Sortant</tspan>
+    <tspan x="88.24" y="93.5901">1,n</tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:end;font-family:sans-serif;font-style:normal;font-weight:normal" x="163.073" y="84.6649">
+    <tspan x="163.073" y="84.6649">Départ</tspan>
+    <tspan x="163.073" y="93.1315">1</tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:end;font-family:sans-serif;font-style:normal;font-weight:normal" x="163.073" y="129.597">
+    <tspan x="163.073" y="129.597">Arrivée</tspan>
+    <tspan x="163.073" y="138.064">1</tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="64.219" y="109.196">
+    <tspan x="64.219" y="109.196"></tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="88.24" y="131.359">
+    <tspan x="88.24" y="131.359"></tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="88.24" y="129.451">
+    <tspan x="88.24" y="129.451">Entrant</tspan>
+    <tspan x="88.24" y="137.918">1,n</tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="78.1068" y="193.773">
+    <tspan x="78.1068" y="193.773"></tspan>
+  </text>
+  <line style="fill: none; fill-opacity:0; stroke-width: 0.6; stroke: #000000" x1="64.219" y1="87.0318" x2="103.012" y2="37.921"/>
+  <line style="fill: none; fill-opacity:0; stroke-width: 0.6; stroke: #000000" x1="193.222" y1="86.5732" x2="138.85" y2="37.921"/>
+  <line style="fill: none; fill-opacity:0; stroke-width: 0.6; stroke: #000000" x1="40.198" y1="87.0318" x2="36.5707" y2="38.7808"/>
+  <line style="fill: none; fill-opacity:0; stroke-width: 0.6; stroke: #000000" x1="193.222" y1="131.505" x2="216.434" y2="238.04"/>
+  <line style="fill: none; fill-opacity:0; stroke-width: 0.6; stroke: #000000" x1="223.37" y1="131.505" x2="256.114" y2="291.632"/>
+  <line style="fill: none; fill-opacity:0; stroke-width: 0.6; stroke: #000000" x1="216.434" y1="255.804" x2="220.908" y2="369.434"/>
+  <line style="fill: none; fill-opacity:0; stroke-width: 0.6; stroke: #000000" x1="256.114" y1="306.172" x2="248.908" y2="369.434"/>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:end;font-family:sans-serif;font-style:normal;font-weight:normal" x="36.1196" y="44.7262">
+    <tspan x="36.1196" y="44.7262">1</tspan>
+    <tspan x="36.1196" y="53.1929"></tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:end;font-family:sans-serif;font-style:normal;font-weight:normal" x="40.198" y="76.9651">
+    <tspan x="40.198" y="76.9651"></tspan>
+    <tspan x="40.198" y="85.4318"> 1,n</tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="64.219" y="131.359">
+    <tspan x="64.219" y="131.359"></tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="81.528" y="142.051">
+    <tspan x="81.528" y="142.051"></tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:end;font-family:sans-serif;font-style:normal;font-weight:normal" x="103.012" y="36.321">
+    <tspan x="103.012" y="36.321">1</tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="79.236" y="195.236">
+    <tspan x="79.236" y="195.236"></tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="64.219" y="131.359">
+    <tspan x="64.219" y="131.359"></tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:end;font-family:sans-serif;font-style:normal;font-weight:normal" x="64.219" y="85.4318">
+    <tspan x="64.219" y="85.4318">0,n</tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="176.895" y="133.339">
+    <tspan x="176.895" y="133.339"></tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="175.519" y="132.422">
+    <tspan x="175.519" y="132.422"></tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="177.353" y="132.422">
+    <tspan x="177.353" y="132.422"></tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="193.222" y="84.9732">
+    <tspan x="193.222" y="84.9732">0,n</tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="120.931" y="32.962">
+    <tspan x="120.931" y="32.962"></tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="123.71" y="219.994">
+    <tspan x="123.71" y="219.994"></tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="138.85" y="37.921">
+    <tspan x="138.85" y="37.921">  1</tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="223.37" y="121.439">
+    <tspan x="223.37" y="121.439"> 1</tspan>
+    <tspan x="223.37" y="129.905"> Situe</tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="256.114" y="290.032">
+    <tspan x="256.114" y="290.032">  0,1</tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="223.37" y="131.505">
+    <tspan x="223.37" y="131.505"></tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="223.37" y="131.505">
+    <tspan x="223.37" y="131.505"></tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="193.222" y="137.755">
+    <tspan x="193.222" y="137.755"> 1</tspan>
+    <tspan x="193.222" y="146.222">  Situe</tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="216.434" y="236.44">
+    <tspan x="216.434" y="236.44">  0,1</tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:end;font-family:sans-serif;font-style:normal;font-weight:normal" x="216.434" y="262.054">
+    <tspan x="216.434" y="262.054">0,n</tspan>
+    <tspan x="216.434" y="270.521">Doit livrer</tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="220.908" y="367.834">
+    <tspan x="220.908" y="367.834">0,n</tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="291.06" y="192.485">
+    <tspan x="291.06" y="192.485"></tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="291.06" y="191.109">
+    <tspan x="291.06" y="191.109"></tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="256.114" y="312.422">
+    <tspan x="256.114" y="312.422">1</tspan>
+    <tspan x="256.114" y="320.889">Début et fin</tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="248.908" y="369.434">
+    <tspan x="248.908" y="369.434"></tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="248.908" y="367.834">
+    <tspan x="248.908" y="367.834"> 0,n</tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="269.51" y="266.76">
+    <tspan x="269.51" y="266.76"></tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="19.174" y="273.18">
+    <tspan x="19.174" y="273.18"></tspan>
+  </text>
+  <line style="fill: none; fill-opacity:0; stroke-width: 0.6; stroke: #000000" x1="40.198" y1="131.359" x2="25.7914" y2="242.982"/>
+  <line style="fill: none; fill-opacity:0; stroke-width: 0.6; stroke: #000000" x1="44.8188" y1="259.488" x2="64.5224" y2="302"/>
+  <line style="fill: none; fill-opacity:0; stroke-width: 0.6; stroke: #000000" x1="127.878" y1="255.804" x2="104.522" y2="312"/>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="64.219" y="131.359">
+    <tspan x="64.219" y="131.359"></tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="64.219" y="131.359">
+    <tspan x="64.219" y="131.359"></tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="40.198" y="137.609">
+    <tspan x="40.198" y="137.609">0,n</tspan>
+    <tspan x="40.198" y="146.076">Contigües</tspan>
+    <tspan x="40.198" y="154.543">Ordonné</tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="25.7914" y="241.382">
+    <tspan x="25.7914" y="241.382"> 0,n</tspan>
+  </text>
+  <line style="fill: none; fill-opacity:0; stroke-width: 0.6; stroke: #000000" x1="64.5224" y1="322" x2="48.7498" y2="369.314"/>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="154.643" y="214.08">
+    <tspan x="154.643" y="214.08"></tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="127.878" y="262.054">
+    <tspan x="127.878" y="262.054">0,n</tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:end;font-family:sans-serif;font-style:normal;font-weight:normal" x="64.5224" y="320.4">
+    <tspan x="64.5224" y="320.4">0,n</tspan>
+  </text>
+  <line style="fill: none; fill-opacity:0; stroke-width: 0.6; stroke: #000000" x1="84.5224" y1="322" x2="192.906" y2="369.434"/>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="44.8188" y="249.421">
+    <tspan x="44.8188" y="249.421"> 0,n</tspan>
+    <tspan x="44.8188" y="257.888">ordonné</tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="192.906" y="359.367">
+    <tspan x="192.906" y="359.367">1</tspan>
+    <tspan x="192.906" y="367.834">Précise</tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:end;font-family:sans-serif;font-style:normal;font-weight:normal" x="84.5224" y="328.25">
+    <tspan x="84.5224" y="328.25">1,n</tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="104.522" y="318.25">
+    <tspan x="104.522" y="318.25">0,n</tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="64.5224" y="300.4">
+    <tspan x="64.5224" y="300.4">0,n</tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:end;font-family:sans-serif;font-style:normal;font-weight:normal" x="48.7498" y="367.714">
+    <tspan x="48.7498" y="367.714">1</tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="7.20404" y="369.314">
+    <tspan x="7.20404" y="369.314"></tspan>
+  </text>
+  <line style="fill: none; fill-opacity:0; stroke-width: 0.6; stroke: #000000" x1="119.371" y1="203.772" x2="127.878" y2="238.04"/>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:end;font-family:sans-serif;font-style:normal;font-weight:normal" x="127.878" y="236.44">
+    <tspan x="127.878" y="236.44">1</tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="119.371" y="202.172">
+    <tspan x="119.371" y="202.172"> 0,n</tspan>
+  </text>
+  <g>
+    <g>
+      <rect style="fill: #ffffff" x="36.8426" y="183.773" width="82.5284" height="20"/>
+      <rect style="fill: none; fill-opacity:0; stroke-width: 0.6; stroke: #000000" x="36.8426" y="183.773" width="82.5284" height="20"/>
+    </g>
+    <text font-size="6.77333" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="78.1068" y="196.098">
+      <tspan x="78.1068" y="196.098">Horaire de passage</tspan>
+    </text>
+  </g>
+  <g>
+    <g>
+      <rect style="fill: #ffffff" x="6.764" y="242.982" width="38.0548" height="16.5057"/>
+      <rect style="fill: none; fill-opacity:0; stroke-width: 0.6; stroke: #000000" x="6.764" y="242.982" width="38.0548" height="16.5057"/>
+    </g>
+    <text font-size="6.77333" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="25.7914" y="253.559">
+      <tspan x="25.7914" y="253.559">Trajet</tspan>
+    </text>
+  </g>
+  <g>
+    <g>
+      <rect style="fill: #ffffff" x="7.20404" y="369.314" width="41.5457" height="14.8001"/>
+      <rect style="fill: none; fill-opacity:0; stroke-width: 0.6; stroke: #000000" x="7.20404" y="369.314" width="41.5457" height="14.8001"/>
+    </g>
+    <text font-size="6.77333" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="27.977" y="379.039">
+      <tspan x="27.977" y="379.039">Livreur</tspan>
+    </text>
+  </g>
+  <g>
+    <g>
+      <rect style="fill: #ffffff" x="192.906" y="369.434" width="56.0027" height="19.5985"/>
+      <rect style="fill: none; fill-opacity:0; stroke-width: 0.6; stroke: #000000" x="192.906" y="369.434" width="56.0027" height="19.5985"/>
+    </g>
+    <text font-size="6.77333" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="220.908" y="377.326">
+      <tspan x="220.908" y="377.326">Demande de</tspan>
+      <tspan x="220.908" y="385.792">livraison</tspan>
+    </text>
+  </g>
+  <g>
+    <g>
+      <rect style="fill: #ffffff" x="235.642" y="291.632" width="40.9452" height="14.539"/>
+      <rect style="fill: none; fill-opacity:0; stroke-width: 0.6; stroke: #000000" x="235.642" y="291.632" width="40.9452" height="14.539"/>
+    </g>
+    <text font-size="6.77333" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="256.114" y="301.227">
+      <tspan x="256.114" y="301.227">Entrepôt</tspan>
+    </text>
+  </g>
+  <g>
+    <g>
+      <rect style="fill: #ffffff" x="163.073" y="86.5732" width="60.2971" height="44.9321"/>
+      <rect style="fill: none; fill-opacity:0; stroke-width: 0.6; stroke: #000000" x="163.073" y="86.5732" width="60.2971" height="44.9321"/>
+    </g>
+    <text font-size="6.77333" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="193.222" y="111.364">
+      <tspan x="193.222" y="111.364">Intersection</tspan>
+    </text>
+  </g>
+  <g>
+    <g>
+      <rect style="fill: #ffffff" x="40.198" y="87.0318" width="48.0419" height="44.3276"/>
+      <rect style="fill: none; fill-opacity:0; stroke-width: 0.6; stroke: #000000" x="40.198" y="87.0318" width="48.0419" height="44.3276"/>
+    </g>
+    <text font-size="6.77333" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="64.219" y="111.521">
+      <tspan x="64.219" y="111.521">Tronçon</tspan>
+    </text>
+  </g>
+  <g>
+    <g>
+      <rect style="fill: #ffffff" x="21.4" y="27.0856" width="29.4393" height="11.3906"/>
+      <rect style="fill: none; fill-opacity:0; stroke-width: 0.6; stroke: #000000" x="21.4" y="27.0856" width="29.4393" height="11.3906"/>
+    </g>
+    <text font-size="6.77333" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="36.1196" y="35.106">
+      <tspan x="36.1196" y="35.106">Rue</tspan>
+    </text>
+  </g>
+  <g>
+    <g>
+      <rect style="fill: #ffffff" x="103.012" y="28.003" width="35.8385" height="9.91802"/>
+      <rect style="fill: none; fill-opacity:0; stroke-width: 0.6; stroke: #000000" x="103.012" y="28.003" width="35.8385" height="9.91802"/>
+    </g>
+    <text font-size="6.77333" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="120.931" y="35.287">
+      <tspan x="120.931" y="35.287">Plan</tspan>
+    </text>
+  </g>
+  <g>
+    <g>
+      <rect style="fill: #ffffff" x="147.773" y="159.969" width="40" height="20"/>
+      <rect style="fill: none; fill-opacity:0; stroke-width: 0.6; stroke: #000000" x="147.773" y="159.969" width="40" height="20"/>
+    </g>
+    <text font-size="6.77333" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="167.773" y="168.061">
+      <tspan x="167.773" y="168.061">Durée de </tspan>
+      <tspan x="167.773" y="176.528">livraison</tspan>
+    </text>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 0.6; stroke: #000000" x1="167.773" y1="179.969" x2="172.156" y2="238.04"/>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="172.156" y="236.44">
+    <tspan x="172.156" y="236.44">0,n</tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="167.773" y="186.219">
+    <tspan x="167.773" y="186.219"> 1</tspan>
+  </text>
+  <line style="fill: none; fill-opacity:0; stroke-width: 0.6; stroke: #000000" x1="84.5224" y1="302" x2="78.1068" y2="203.772"/>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="84.5224" y="300.4">
+    <tspan x="84.5224" y="300.4"> 0,n</tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="78.1068" y="210.022">
+    <tspan x="78.1068" y="210.022">  0,n</tspan>
+  </text>
+  <text font-size="6.77333" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="84.2728" y="215.295">
+    <tspan x="84.2728" y="215.295"></tspan>
+  </text>
+</svg>
