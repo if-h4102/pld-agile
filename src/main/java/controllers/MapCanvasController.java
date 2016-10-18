@@ -49,7 +49,8 @@ public class MapCanvasController extends Canvas {
         planningProperty().addListener(event -> draw());
     }
 
-    private void draw() {
+    @SuppressWarnings("restriction")
+	private void draw() {
         double width = getWidth();
         double height = getHeight();
 
@@ -77,15 +78,15 @@ public class MapCanvasController extends Canvas {
         double mapWidth = xmax-xmin;
         double mapHeight = ymax-ymin;
        
-        double zoomX = mapWidth/width;
-        double zoomY =mapHeight/height;
+        double zoomX = width/mapWidth;
+        double zoomY =height/mapHeight;
         setZoom(Math.max(zoomX,zoomY));
-       
-        //gc.translate(x, y);
-        gc.scale(getZoom(), getZoom());
+        
+        //gc.scale(getZoom(), getZoom());
         
         
         if(getDeliveryRequest() == null) {
+        	//gc.translate(-xmin, -ymin);
         	drawCityMap();
         } else if(getPlanning() == null){      
         	drawCityMap();
@@ -128,10 +129,11 @@ public class MapCanvasController extends Canvas {
     	
     	for(DeliveryAddress delivery : listDeliveryAddresses){
     		gc.setFill(Color.BLUE);
-    		gc.fillOval(delivery.getX(), delivery.getY(), 10, 10);
+    		gc.fillOval(delivery.getIntersection().getX()-5, delivery.getIntersection().getY()-5, 10, 10);
     	}
     	gc.setFill(Color.YELLOW);
-    	gc.fillOval(warehouse.getX(), warehouse.getY(), 10, 10);
+    	gc.fillOval(warehouse.getIntersection().getX()-5, warehouse.getIntersection().getY()-5, 10, 10);
+    	gc.setFill(Color.BLACK);
     }
     
 	@SuppressWarnings("restriction")
