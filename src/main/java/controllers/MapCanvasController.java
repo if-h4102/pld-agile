@@ -37,6 +37,7 @@ public class MapCanvasController extends Canvas {
     private SimpleObjectProperty<CityMap> cityMap;
     private SimpleObjectProperty<DeliveryRequest> deliveryRequest;
     private SimpleObjectProperty<Planning> planning;
+    
 
     public MapCanvasController() {
         widthProperty().addListener(event -> draw());
@@ -50,16 +51,21 @@ public class MapCanvasController extends Canvas {
     }
 
     @SuppressWarnings("restriction")
-	private void draw() {
+    private void resetBuffer() {
         double width = getWidth();
         double height = getHeight();
-
         GraphicsContext gc = getGraphicsContext2D();
+        gc.setTransform(1, 0,  0, 1,0, 0);
         gc.clearRect(0, 0, width, height);
+    }
 
-        if (getCityMap() == null) {
-            return;
-        }
+    @SuppressWarnings("restriction")
+    private void refreshTransform() {
+        double width = getWidth();
+        double height = getHeight();
+        GraphicsContext gc = getGraphicsContext2D();
+        gc.setTransform(1, 0,  0, 1, 0, 0);
+        gc.clearRect(0, 0, width, height);
         
     	CityMap map = getCityMap();
         List<Intersection> intersections = map.getIntersections();
@@ -79,27 +85,37 @@ public class MapCanvasController extends Canvas {
         double mapHeight = ymax-ymin;
        
         double zoomX = width/mapWidth;
-        double zoomY =height/mapHeight;
-        setZoom(Math.max(zoomX,zoomY));
+        double zoomY = height/mapHeight;
+       
+        double zoom = Math.min(zoomX,zoomY);
         
-        //gc.scale(getZoom(), getZoom());
-        
-        
-        if(getDeliveryRequest() == null) {
-        	//gc.translate(-xmin, -ymin);
-        	drawCityMap();
-        } else if(getPlanning() == null){      
-        	drawCityMap();
-        	drawDeliveryRequest();
-        } else{
-        	drawCityMap();
-        	drawDeliveryRequest();
-        	drawPlanning();
-        }
-
+        gc.scale(zoom, zoom);
+        gc.translate(-xmin, -ymin);
     }
     
-    //TODO add an offset : extreme interscetions can't be seen
+    
+    @SuppressWarnings("restriction")
+	private void draw() {
+    	resetBuffer();
+    	
+    	if (getCityMap() == null) {
+            return;
+        }
+    	
+    	refreshTransform();
+        
+        drawCityMap();
+        if(getDeliveryRequest() == null) {
+        	return;
+        }
+        drawDeliveryRequest();
+        if(getPlanning() == null){      
+        	return;
+        } 
+        drawPlanning();
+    }
+    
+    
     @SuppressWarnings("restriction")
 	private void drawCityMap(){
         GraphicsContext gc = getGraphicsContext2D();
