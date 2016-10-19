@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import components.mapcanvas.MapCanvasController?>
 <?import javafx.scene.layout.*?>
 <fx:root fx:id="root" prefHeight="480.0" prefWidth="640.0"

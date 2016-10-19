@@ -3,10 +3,11 @@
 <?import components.mapscreen.MapScreenController?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="root" prefHeight="480.0"
-            prefWidth="640.0"
+<?import components.planningdetails.PlanningDetails?>
+<BorderPane fx:id="root" prefHeight="480.0" prefWidth="640.0"
             stylesheets="/components/application/main.css"
             xmlns="http://javafx.com/javafx/8.0.65"
+            xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="components.application.MainController">
   <top>
     <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
@@ -21,13 +22,13 @@
     <SplitPane dividerPositions="0.75" prefHeight="160.0" prefWidth="200.0"
                BorderPane.alignment="CENTER">
       <AnchorPane BorderPane.alignment="CENTER">
-        <MapScreenController AnchorPane.bottomAnchor="0"
+        <MapScreenController cityMap="${controller.cityMap}"
+                             deliveryRequest="${controller.deliveryRequest}"
+                             planning="${controller.planning}"
+                             AnchorPane.bottomAnchor="0"
                              AnchorPane.leftAnchor="0"
                              AnchorPane.rightAnchor="0"
-                             AnchorPane.topAnchor="0"
-                             cityMap="${controller.cityMap}"
-                             deliveryRequest="${controller.deliveryRequest}"
-                             planning="${controller.planning}" />
+                             AnchorPane.topAnchor="0"/>
         <!--<fx:include fx:id="mapView" source="mapScreen.fxml" />-->
       </AnchorPane>
       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0"
@@ -44,6 +45,47 @@
               </buttons>
             </ButtonBar>
           </bottom>
+          <center>
+            <Accordion BorderPane.alignment="CENTER">
+              <panes>
+                <TitledPane animated="false" text="Planning objects">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0"
+                                prefHeight="180.0" prefWidth="200.0">
+                        <ListView layoutX="-46.0" layoutY="26.0"
+                                  prefHeight="200.0" prefWidth="200.0"
+                                  AnchorPane.bottomAnchor="0"
+                                  AnchorPane.leftAnchor="0"
+                                  AnchorPane.rightAnchor="0"
+                                  AnchorPane.topAnchor="0"
+                                  items="${controller.planning.routes}"/>
+                    </AnchorPane>
+                  </content>
+                </TitledPane>
+                <TitledPane animated="false" text="Planning">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0"
+                                prefHeight="180.0" prefWidth="200.0">
+                      <PlanningDetails layoutX="-46.0" layoutY="26.0"
+                                prefHeight="200.0" prefWidth="200.0"
+                                AnchorPane.bottomAnchor="0"
+                                AnchorPane.leftAnchor="0"
+                                AnchorPane.rightAnchor="0"
+                                AnchorPane.topAnchor="0"
+                                items="${controller.planning.routes}">
+                      </PlanningDetails>
+                    </AnchorPane>
+                  </content>
+                </TitledPane>
+                <TitledPane animated="false" text="TODO">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0"
+                                prefHeight="180.0" prefWidth="200.0"/>
+                  </content>
+                </TitledPane>
+              </panes>
+            </Accordion>
+          </center>
         </BorderPane>
       </AnchorPane>
     </SplitPane>
