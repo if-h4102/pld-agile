@@ -15,7 +15,7 @@ loop for (AbstractWayPoint startPoint : pointsContainedInRequest)
                 CM -> CM : streetSection = getStreetSection(minimalGreyIntersection, successor)
                 CM -> CM : release(index, streetSection, predecessors, durations)
                 note left
-                    duration and predecessor arrays are updated here
+                    durations and predecessors arrays are updated here
                 end note
                 alt whites.containsKey(successor.getId())
                     CM -> CM : whites.remove(successor.getId())
