@@ -35,6 +35,7 @@ package model {
     }
 
     abstract class AbstractWayPoint {
+        +{abstract} int getDuration()
         +Intersection getIntersection()
         +int getX()
         +int getY()
@@ -43,12 +44,12 @@ package model {
 
     class DeliveryAddress {
         -deliveryDuration: int
-'        -deliveryIntervalStart: int
-'        -deliveryIntervalEnd: int
-        +int getDeliveryDuration()
+        +int getDuration()
     }
 
     class Warehouse {
+        -loadingDuration
+        +int getDuration()
     }
 
     class DeliveryRequest {
