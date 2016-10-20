@@ -1,62 +1,154 @@
 @startuml
 
-
-package "controllers" {
-    class MainController {
-'        -cityMap: ObservableObjectProperty<CityMap>
-'        -currentDeliveryGraph: ObservableObjectProperty<DeliveryGraph>
-'        -currentPlanning: ObservableObjectProperty<Planning>
-        -mapOffsetX: ObservableIntegerProperty
-        -mapOffsetY: ObservableIntegerProperty
-        -mapZoom: ObservableIntegerProperty
-        +setCurrentCityMap(cityMap: CityMap)
-        +setCurrentDeliveryRequestMap(deliveryRequest: DeliveryRequest)
-        +setCurrentPlanning(planning: Planning)
+package javafx.scene {
+    package canvas {
+        class Canvas
     }
-
-    interface State {
-        +loadCityMap(controller: MainController): void
-        +loadDeliveryRequest(controller: MainController): void
-        +computePlanning(controller: MainController): void
-        +moveMap(controller: MainController): void
-        +zoomIn(controller: MainController): void
-        +zoomOut(controller: MainController): void
+    package control {
+        class ListView<T>
     }
-
-    abstract DefaultState {
-
+    package layout {
+        class AnchorPane
+        class BorderPane
     }
-
-    class InitState {
-
-    }
-
-    class CityMapLoadedState {
-
-    }
-
-    class DeliveryRequestLoadedState {
-
-    }
-
-    class PlanningComputationState {
-
-    }
-
-    class ComputedPlanningState {
-
-    }
-
-    DefaultState --|> State
-    InitState --|> DefaultState
-    CityMapLoadedState --|> DefaultState
-    DeliveryRequestLoadedState --|> DefaultState
-    ComputePlanningState --|> DefaultState
-    ComputedPlanningState --|> DefaultState
-
-    MainController --> State
 }
 
+package "components" {
+    package "application" {
+        class MainController extends BorderPane {
+            -cityMap: SimpleObjectProperty<CityMap>
+            -deliveryRequest: SimpleObjectProperty<DeliveryRequest>
+            -planning: SimpleObjectProperty<Planning>
+            -state: SimpleObjectProperty<MainControllerState>
+            +cityMapProperty(): SimpleObjectProperty<CityMap>
+            +getCityMap(): CityMap
+            +setCityMap(cityMap: CityMap)
+            +deliveryRequestProperty(): SimpleObjectProperty<DeliveryRequest>
+            +getDeliveryRequest(): DeliveryRequest
+            +setDeliveryRequest(deliveryRequest: DeliveryRequest)
+            +planningProperty(): SimpleObjectProperty<Planning>
+            +getPlanning(): Planning
+            +setPlanning(planning: Planning)
+            +stateProperty(): SimpleObjectProperty<MainControllerState>
+            +getState(): MainControllerState
+            -setState(nextState: MainControllerState): void
+            -applyState(nextState: MainControllerState): void
+            +onOpenCityMapButtonAction(event: ActionEvent): void
+            +onOpenDeliveryRequestButtonAction(event: ActionEvent): void
+            +onComputePlanningButtonAction(event: ActionEvent): void
+        }
 
+        note right of MainController
+            View:
+            - main.fxml
+            - main.css
+        end note
+
+        abstract MainControllerState {
+            +enterState(contoller: MainController): void
+            +leaveState(contoller: MainController): void
+            +onOpenCityMapButtonAction(contoller: MainController): MainControllerState
+            +onOpenDeliveryRequestButtonAction(controller: MainController): MainControllerState
+            +onComputePlanningButtonAction(controller: MainController): MainControllerState
+        }
+
+        class WaitOpenCityMapState extends MainControllerState {
+            +enterState(contoller: MainController): void
+            +leaveState(contoller: MainController): void
+            +onOpenCityMapButtonAction(contoller: MainController): MainControllerState
+        }
+
+        class WaitOpenDeliveryRequestState extends WaitOpenCityMapState {
+            +enterState(contoller: MainController): void
+            +leaveState(contoller: MainController): void
+            +onOpenDeliveryRequestButtonAction(controller: MainController): MainControllerState
+        }
+
+        class ReadyState extends WaitOpenDeliveryRequestState {
+            +enterState(contoller: MainController): void
+            +leaveState(contoller: MainController): void
+            +onComputePlanningButtonAction(controller: MainController): MainControllerState
+        }
+
+        class ComputingPlanningState extends WaitOpenDeliveryRequestState {
+            +enterState(contoller: MainController): void
+            +leaveState(contoller: MainController): void
+        }
+
+        MainController --> MainControllerState
+    }
+
+    package "mapcanvas" {
+        class MapCanvasController extends Canvas {
+            -cityMap: SimpleObjectProperty<CityMap>
+            -deliveryRequest: SimpleObjectProperty<DeliveryRequest>
+            -planning: SimpleObjectProperty<Planning>
+            -zoom: SimpleDoubleProperty
+            -offsetX: SimpleDoubleProperty
+            -offsetY: SimpleDoubleProperty
+
+            +cityMapProperty(): SimpleObjectProperty<CityMap>
+            +getCityMap(): CityMap
+            +setCityMap(cityMap: CityMap)
+
+            +deliveryRequestProperty(): SimpleObjectProperty<DeliveryRequest>
+            +getDeliveryRequest(): DeliveryRequest
+            +setDeliveryRequest(deliveryRequest: DeliveryRequest)
+
+            +planningProperty(): SimpleObjectProperty<Planning>
+            +getPlanning(): Planning
+            +setPlanning(planning: Planning)
+
+            +zoomProperty(): SimpleDoubleProperty
+            +getZoom(): double
+            +setZoom(zoom: double)
+
+            +offsetXProperty(): SimpleDoubleProperty
+            +getOffsetX(): double
+            +setOffsetX(offsetX: double)
+
+            +offsetYProperty(): SimpleDoubleProperty
+            +getOffsetY(): double
+            +setOffsetY(offsetY: double)
+
+            -draw(): void
+            -clear(): void
+            -updateTransform(): void
+            -drawCityMap(): void
+            -drawDeliveryRequest(): void
+            -drawPlanning(): void
+
+            +isResizable(): boolean
+            +prefWidth(parentWidth: double): double
+            +prefHeight(parentHeight: double): double
+        }
+    }
+
+    package "planningdetails" {
+        PlanningDetails --|> ListView: <<bind>> T::Route
+        class PlanningDetails {
+
+        }
+
+        class PlanningDetailsItem extends AnchorPane {
+            -route: SimpleObjectProperty<Route>
+
+            +routeProperty(): SimpleObjectProperty<Route>
+            +getRoute(): CityMap
+            +setRoute(route: Route)
+        }
+
+        note right of PlanningDetailsItem
+            View:
+            - PlanningDetailsItem.fxml
+        end note
+
+
+        PlanningDetails ..> PlanningDetailsItem
+    }
+
+    javafx.scene -[hidden]- components
+    PlanningDetails -[hidden]right- PlanningDetailsItem
+}
 
 @enduml
