@@ -39,6 +39,7 @@ activate CPS
     activate CM
 
     CPS <<-- CM: deliveryGraph
+    note right: <- This will be explained\nin another seqence diagram\n(see **sequence-diagram-dijkstra**)
     deactivate CM
 
     CPS -> TSP: solve(**deliveryGraph**)
