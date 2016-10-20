@@ -28,7 +28,14 @@ class PlanningDetailsItem extends AnchorPane {
             throw new RuntimeException(exception);
         }
 
-        routeProperty().addListener(event -> content.setText("Durée: " + getRoute().getDuration()));
+        routeProperty().addListener(event -> content.setText(
+            "Duration: " + getRoute().getDuration() + ", Street Sections: " + getRoute().getStreetSections().size()
+            + ", Start: (" + getRoute().getStartWaypoint().getIntersection().getX()
+            + ", " + getRoute().getStartWaypoint().getIntersection().getY()
+            + "), End: (" + getRoute().getEndWaypoint().getIntersection().getX()
+            + ", " + getRoute().getEndWaypoint().getIntersection().getY()
+            + ")"
+        ));
     }
 
     public final SimpleObjectProperty<Route> routeProperty() {
