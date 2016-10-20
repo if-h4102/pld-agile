@@ -2,7 +2,7 @@
 
 title Agile use cases
 
-rectangle "Use Cases" {
+rectangle "System" {
     usecase LoadCityMap
     usecase LoadDeliveryRequest
     usecase ComputePlanning
