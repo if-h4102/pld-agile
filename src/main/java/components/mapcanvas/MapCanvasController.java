@@ -84,7 +84,8 @@ public class MapCanvasController extends Canvas {
         double zoom = Math.min(zoomX,zoomY);
 
         gc.scale(zoom, zoom);
-        gc.translate(-xmin, -ymin);
+        
+        gc.translate(-xmin-8, -ymin-8); //offset
     }
 
 
