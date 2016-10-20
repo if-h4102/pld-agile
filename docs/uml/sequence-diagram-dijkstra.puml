@@ -9,11 +9,14 @@ participant "minimalGreyIntersection : Intersection" as MGI
 
 CPS -> CM : computeDeliveryGraph(**request**: DeliveryRequest)
 activate CM
+CM -> CM : mappedRoutes = new TreeMap<AbstractWayPoint, Map<AbstractWayPoint, Route>>();
 loop for (AbstractWayPoint startPoint : pointsContainedInRequest)
     CM -> SWP : getIntersection()
     activate SWP
     CM <- SWP : startWayPointIntersection
     deactivate SWP
+    CM -> CM : predecessors = new Intersection[intersections.size()]
+    CM -> CM : durations = new int[intersections.size()]
     CM -> CM : greys.add(startWayPointIntersection)
     loop while (greys.size() != 0)
         CM -> CM : minimalGreyIntersection = getMinimalGreyIntersection(index, greys, durations)
@@ -41,9 +44,12 @@ loop for (AbstractWayPoint startPoint : pointsContainedInRequest)
         deactivate MGI
         CM -> CM : blacks.put(minimalGreyIntersectionId, minimalGreyIntersection)
     end
+    note left of CM
+        use predecessors array to fill mappedRoutes
+    end note
 end
 create DG
-CM -> DG : <<create>>(Map<AbstractWayPoint, Map<AbstractWayPoint, Route>> routes)
+CM -> DG : <<create>>(mappedRoutes)
 CPS <- CM : deliveryGraph
 deactivate CM
 
