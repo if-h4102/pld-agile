@@ -31,7 +31,7 @@ activate TSP
                         Some subcalls are omitted here
                         for more clarity
                     end note
-                    TSP -> TSP : branchAndBound(**next**, **unseen**, **seen**, **deliveryGraph**, **newCost**)
+                    TSP -> TSP : branchAndBound(\n\t**next**: AbstractWayPoint,\n\t**unseen**: AbstractWayPoint[],\n\t**seen**: AbstractWayPoint[],\n\t**deliveryGraph**: DeliveryGraph,\n\t**newCost** : int)
                     activate TSP
                         note left : Recursive call
                     deactivate TSP
