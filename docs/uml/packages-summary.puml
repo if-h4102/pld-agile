@@ -33,22 +33,23 @@ package models {
 }
 
 package components {
+    package mapcanvas {
+    }
+
+    package planningdetails {
+    }
+
     package application {
         class MainController {
         }
     }
 }
 
-package view {
-    class MainView
-}
+MainController -up-> Parser
+MainController -down-> CityMap
+MainController -down-> Planning
+MainController -down-> DeliveryRequest
 
-MainController -left-> Parser
-MainController -right-> CityMap
-MainController -right-> Planning
-MainController -right-> DeliveryRequest
-MainController -up-> MainView
-
-MainController --> tsp
+MainController -up-> tsp
 
 @enduml
