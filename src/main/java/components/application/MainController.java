@@ -6,7 +6,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableObjectValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
@@ -15,17 +15,35 @@ import models.DeliveryRequest;
 import models.Planning;
 import services.xml.Parser;
 
-import java.net.URL;
+import java.io.IOException;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 
-public class MainController implements Initializable {
+public class MainController extends BorderPane {
     final private ReadOnlyObjectWrapper<MainControllerState> state = new ReadOnlyObjectWrapper<>();
     final private SimpleObjectProperty<CityMap> cityMap = new SimpleObjectProperty<>();
     final private SimpleObjectProperty<DeliveryRequest> deliveryRequest = new SimpleObjectProperty<>();
     final private SimpleObjectProperty<Planning> planning = new SimpleObjectProperty<>();
     final private Parser parserService = new Parser();
     final private SimpleDoubleProperty mapZoom = new SimpleDoubleProperty(1.0);
+
+    public MainController() {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/components/application/main.fxml"));
+        fxmlLoader.setResources(ResourceBundle.getBundle("locales.Locale", new Locale("en", "US")));
+        fxmlLoader.setRoot(this);
+        fxmlLoader.setController(this);
+
+        try {
+            fxmlLoader.load();
+        } catch (IOException exception) {
+            throw new RuntimeException(exception);
+        }
+
+        this.setState(new WaitOpenCityMapState());
+        this.openDeliveryRequestButton.disableProperty().bind(this.cityMap.isNull());
+        this.computePlanningButton.disableProperty().bind(this.deliveryRequest.isNull());
+    }
 
     @FXML
     private BorderPane root;
@@ -35,13 +53,6 @@ public class MainController implements Initializable {
     private Button openDeliveryRequestButton;
     @FXML
     private Button computePlanningButton;
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        this.setState(new WaitOpenCityMapState());
-        this.openDeliveryRequestButton.disableProperty().bind(this.cityMap.isNull());
-        this.computePlanningButton.disableProperty().bind(this.deliveryRequest.isNull());
-    }
 
     protected Parent getRoot() {
         return this.root;

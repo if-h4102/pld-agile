@@ -1,13 +1,11 @@
 package components.mapcanvas;
 
+import com.google.java.contract.Ensures;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import models.CityMap;
 import models.DeliveryAddress;
@@ -18,10 +16,7 @@ import models.Route;
 import models.StreetSection;
 import models.Warehouse;
 
-import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 public class MapCanvasController extends Canvas {
     private static final CityMap DEFAULT_CITY_MAP = null;
@@ -50,7 +45,7 @@ public class MapCanvasController extends Canvas {
     }
 
     @SuppressWarnings("restriction")
-    private void resetBuffer() {
+    private void clear() {
         double width = getWidth();
         double height = getHeight();
         GraphicsContext gc = getGraphicsContext2D();
@@ -59,7 +54,7 @@ public class MapCanvasController extends Canvas {
     }
 
     @SuppressWarnings("restriction")
-    private void refreshTransform() {
+    private void updateTransform() {
         double width = getWidth();
         double height = getHeight();
         GraphicsContext gc = getGraphicsContext2D();
@@ -95,13 +90,13 @@ public class MapCanvasController extends Canvas {
 
     @SuppressWarnings("restriction")
 	private void draw() {
-    	resetBuffer();
+    	clear();
 
     	if (getCityMap() == null) {
             return;
         }
 
-    	refreshTransform();
+    	updateTransform();
 
         drawCityMap();
         if(getDeliveryRequest() == null) {
@@ -116,6 +111,7 @@ public class MapCanvasController extends Canvas {
 
 
     @SuppressWarnings("restriction")
+    @Ensures("getCityMap() != null")
 	private void drawCityMap(){
         GraphicsContext gc = getGraphicsContext2D();
         CityMap map = getCityMap();
@@ -135,6 +131,7 @@ public class MapCanvasController extends Canvas {
     }
 
     @SuppressWarnings("restriction")
+    @Ensures("getDeliveryRequest() != null")
 	private void drawDeliveryRequest(){
     	GraphicsContext gc = getGraphicsContext2D();
     	DeliveryRequest deliveryRequest = getDeliveryRequest();
@@ -152,6 +149,7 @@ public class MapCanvasController extends Canvas {
     }
 
 	@SuppressWarnings("restriction")
+    @Ensures("getPlanning() != null")
 	private void drawPlanning(){
 
     	GraphicsContext gc = getGraphicsContext2D();

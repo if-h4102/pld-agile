@@ -1,5 +1,6 @@
 package main;
 
+import components.application.MainController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,9 +17,7 @@ public class Application extends javafx.application.Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/components/application/main.fxml"));
-        fxmlLoader.setResources(ResourceBundle.getBundle("locales.Locale", new Locale("en", "US")));
-        Parent root = fxmlLoader.load();
+        Parent root = new MainController();
         Scene scene = new Scene(root, 640, 480);
 
         primaryStage.setTitle("Delivery App");

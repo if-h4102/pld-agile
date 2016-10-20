@@ -19,13 +19,13 @@ public class WaitOpenDeliveryRequestState extends WaitOpenCityMapState {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Delivery Request");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Delivery Request file (*.xml)", "xml"));
-        File deliverRequestFile = fileChooser.showOpenDialog(mainController.getRoot().getScene().getWindow());
+        File deliveryRequestFile = fileChooser.showOpenDialog(mainController.getRoot().getScene().getWindow());
 
-        if (deliverRequestFile == null) { // User cancelled operation
+        if (deliveryRequestFile == null) { // User cancelled operation
             return this;
         }
 
-        DeliveryRequest currentDeliveryRequest = mainController.getParserService().getDeliveryRequest(deliverRequestFile, mainController.getCityMap());
+        DeliveryRequest currentDeliveryRequest = mainController.getParserService().getDeliveryRequest(deliveryRequestFile, mainController.getCityMap());
 
         mainController.setDeliveryRequest(currentDeliveryRequest);
         mainController.setPlanning(null);
