@@ -1,0 +1,94 @@
+@startuml
+
+package services {
+    package xml {
+        class Parser {
+        }
+    }
+
+    package tsp {
+        abstract class TspSolver {
+        }
+
+        class BasicTspSolver {
+        }
+
+        class AdvancedTspSolver {
+        }
+    }
+}
+
+package models {
+    class CityMap {
+    }
+
+    class DeliveryGraph {
+    }
+
+    class StreetSection {
+    }
+
+    class Intersection {
+    }
+
+    abstract class AbstractWayPoint {
+    }
+
+    class DeliveryAddress {
+    }
+
+    class Warehouse {
+    }
+
+    class Planning {
+    }
+
+    class DeliveryRequest {
+    }
+
+    class Route {
+    }
+}
+
+package components {
+    package application {
+        abstract MainControllerState {
+        }
+
+        class WaitOpenCityMapState {
+        }
+
+        class WaitOpenDeliveryRequestState {
+        }
+
+        class ReadyState {
+        }
+
+        class ComputingPlanningState {
+        }
+
+        class MainController {
+        }
+    }
+
+    package mapcanvas {
+        class MapCanvasController {
+        }
+    }
+
+    package planningdetails {
+        class PlanningDetails {
+        }
+
+        class PlanningDetailsItem {
+        }
+    }
+}
+
+MainController -up-> Parser
+MainController -down-> CityMap
+MainController -down-> Planning
+MainController -down-> DeliveryRequest
+MainController -up-> tsp
+
+@enduml

@@ -18,7 +18,7 @@ package services {
     }
 }
 
-package model {
+package models {
     class CityMap {
     }
 
@@ -29,8 +29,10 @@ package model {
     }
 }
 
-package controller {
-    class MainController {
+package components {
+    package application {
+        class MainController {
+        }
     }
 }
 
