@@ -7,11 +7,11 @@ participant "it: Iterator" as it
 CPS -> TSP : solve(**deliveryGraph**: DeliveryGraph)
 activate TSP
 
-    TSP -> TSP : branchAndBound(**lastSeen**, **unseen**, **seen**, **deliveryGraph**, **cost**)
+    TSP -> TSP : branchAndBound(\n\t**lastSeen**: AbstractWayPoint,\n\t**unseen**: AbstractWayPoint[],\n\t**seen**: AbstractWayPoint[],\n\t**deliveryGraph**: DeliveryGraph,\n\t**cost** : int)
     activate TSP
 
         alt unseen.size() == 0
-            TSP -> TSP : cost += lastSeen.getCost()
+            TSP -> TSP : cost += lastSeen.getDuration()
             alt betterCost(**cost**)
                 TSP -> TSP : updateBestCost(**cost**)
             end
