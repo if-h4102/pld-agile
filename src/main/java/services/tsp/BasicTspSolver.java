@@ -6,7 +6,7 @@ import java.util.*;
 public class BasicTspSolver extends AbstractTspSolver {
 
     private AbstractWayPoint startPoint;
-    
+
     /**
      * The constructor for a basic TSP solver. It doesn't need anything for now.
      */
@@ -16,7 +16,7 @@ public class BasicTspSolver extends AbstractTspSolver {
 
     /**
      * Solve the TSP problem for the given DeliveryGraph.
-     * 
+     *
      * @param graph
      *            The (complete) graph representing all delivery points and the warehouse.
      * @return The delivery plan (Planning) associated to the given DeliveryGraph.
@@ -49,7 +49,7 @@ public class BasicTspSolver extends AbstractTspSolver {
             });
             costs.put(startPoint.getKey(), costsFromStartPoint);
         });
-        
+
         // Get the time needed to deliver each way point
         Map<AbstractWayPoint, Integer> deliveryDurations = graph.getDeliveryDurations();
         // Compute solution
@@ -64,7 +64,7 @@ public class BasicTspSolver extends AbstractTspSolver {
 
     /**
      * Basic branch an bound algorithm
-     * 
+     *
      * @param lastSeenNode
      *            the last explored node.
      * @param unseen
@@ -107,14 +107,15 @@ public class BasicTspSolver extends AbstractTspSolver {
 
     /**
      * The most basic bounding algorithm.
-     * 
+     *
      * @param lastSeenNode
      * @param unseen
      * @param costs
      * @param deliveryDurations
      * @return
      */
-    private int bound(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen,
+    @Override
+    protected int bound(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen,
             Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs, Map<AbstractWayPoint, Integer> deliveryDurations) {
         // TODO: improve that, or is this enough for this solver ?
         return 0; // The most basic bound
@@ -122,7 +123,7 @@ public class BasicTspSolver extends AbstractTspSolver {
 
     /**
      * Return a very basic iterator on the given collection.
-     * 
+     *
      * @param lastSeenNode
      * @param unseen
      *            the collection in which you want to iterate.
@@ -130,8 +131,9 @@ public class BasicTspSolver extends AbstractTspSolver {
      * @param deliveryDurations
      * @return
      */
-    private Iterator<AbstractWayPoint> iterator(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen,
-            Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs, Map<AbstractWayPoint, Integer> deliveryDurations) {
+    @Override
+    protected Iterator<AbstractWayPoint> iterator(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen,
+                                                Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs, Map<AbstractWayPoint, Integer> deliveryDurations) {
         // NOTE: for the moment, this just returns a basic iterator,
         // which won't look for the best node to return.
         return new WayPointIterator(unseen);

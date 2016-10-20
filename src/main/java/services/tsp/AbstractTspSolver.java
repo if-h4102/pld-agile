@@ -4,6 +4,10 @@ import models.AbstractWayPoint;
 import models.DeliveryGraph;
 import models.Planning;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
+
 public abstract class AbstractTspSolver {
 
     protected AbstractWayPoint[] bestSolution;
@@ -15,4 +19,10 @@ public abstract class AbstractTspSolver {
      * @return The delivery plan (Planning) associated to the given DeliveryGraph.
      */
     public abstract Planning solve(DeliveryGraph graph);
+
+    protected abstract Iterator<AbstractWayPoint> iterator(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen,
+                                                  Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs, Map<AbstractWayPoint, Integer> deliveryDurations);
+
+    protected abstract int bound(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen,
+                      Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs, Map<AbstractWayPoint, Integer> deliveryDurations);
 }

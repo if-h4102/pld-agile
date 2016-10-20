@@ -13,19 +13,29 @@ package services {
             #bestSolution: List<int>
             #bestSolutionCost: int
             +{abstract} Planning solve(graph: DeliveryGraph)
+            #{abstract} WayPointIterator iterator(collection: AbstractWayPoint[], graph: DeliveryGraph)
+            #{abstract} int bound(point: AbstractWayPoint, graph: DeliveryGraph)
         }
 
         class BasicTspSolver {
             +Planning solve(graph: DeliveryGraph)
+            #WayPointIterator iterator(collection: AbstractWayPoint[], graph: DeliveryGraph)
+            #int bound(point: AbstractWayPoint, graph: DeliveryGraph)
         }
 
         class AdvancedTspSolver {
             +Planning solve(graph: DeliveryGraph)
+            #WayPointIterator iterator(collection: AbstractWayPoint[], graph: DeliveryGraph)
+            #int bound(point: AbstractWayPoint, graph: DeliveryGraph)
+        }
+
+        class WayPointIterator {
+            +AbstractWayPoint next()
+            +boolean hasNext()
         }
 
         TspSolver <|-- BasicTspSolver
         TspSolver <|-- AdvancedTspSolver
-
     }
 }
 
