@@ -2,33 +2,48 @@
 actor "Caller\n(anyone or anything)" as CPS
 participant CityMap as CM
 participant DeliveryGraph as DG
+participant "startWayPoint : AbstractWayPoint" as SWP
+participant "successor : Intersection" as S
+participant "minimalGreyIntersection : Intersection" as MGI
 
 
 CPS -> CM : computeDeliveryGraph(**request**: DeliveryRequest)
 activate CM
 loop for (AbstractWayPoint startPoint : pointsContainedInRequest)
-    CM -> CM : greys.add(startWayPoint.getIntersection())
+    CM -> SWP : getIntersection()
+    activate SWP
+    CM <- SWP : startWayPointIntersection
+    deactivate SWP
+    CM -> CM : greys.add(startWayPointIntersection)
     loop while (greys.size() != 0)
         CM -> CM : minimalGreyIntersection = getMinimalGreyIntersection(index, greys, durations)
         loop for (Intersection successor : getNeighbourIntersection(minimalGreyIntersection))
-            alt !blacks.containsKey(successor.getId())
+            CM -> S : getId()
+            activate S
+            CM <- S : successorId
+            deactivate S
+            alt !blacks.containsKey(successorId)
                 CM -> CM : streetSection = getStreetSection(minimalGreyIntersection, successor)
                 CM -> CM : release(index, streetSection, predecessors, durations)
                 note left
                     durations and predecessors arrays are updated here
                 end note
-                alt whites.containsKey(successor.getId())
-                    CM -> CM : whites.remove(successor.getId())
+                alt whites.containsKey(successorId)
+                    CM -> CM : whites.remove(successorId)
                     CM -> CM : greys.add(successor)
                 end
             end
         end
         CM -> CM : greys.remove(minimalGreyIntersection)
-        CM -> CM : blacks.put(minimalGreyIntersection.getId(), minimalGreyIntersection)
+        CM -> MGI : getId()
+        activate MGI
+        CM <- MGI : minimalGreyIntersectionId
+        deactivate MGI
+        CM -> CM : blacks.put(minimalGreyIntersectionId, minimalGreyIntersection)
     end
 end
 create DG
-CM -> DG : <<create>>
+CM -> DG : <<create>>(Map<AbstractWayPoint, Map<AbstractWayPoint, Route>> routes)
 CPS <- CM : deliveryGraph
 deactivate CM
 
