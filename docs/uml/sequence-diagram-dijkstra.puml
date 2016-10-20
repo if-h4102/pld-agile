@@ -1,0 +1,35 @@
+@startuml
+actor "Caller\n(anyone or anything)" as CPS
+participant CityMap as CM
+participant DeliveryGraph as DG
+
+
+CPS -> CM : computeDeliveryGraph(**request**: DeliveryRequest)
+activate CM
+loop for (AbstractWayPoint startPoint : pointsContainedInRequest)
+    CM -> CM : greys.add(startWayPoint.getIntersection())
+    loop while (greys.size() != 0)
+        CM -> CM : minimalGreyIntersection = getMinimalGreyIntersection(index, greys, durations)
+        loop for (Intersection successor : getNeighbourIntersection(minimalGreyIntersection))
+            alt !blacks.containsKey(successor.getId())
+                CM -> CM : streetSection = getStreetSection(minimalGreyIntersection, successor)
+                CM -> CM : release(index, streetSection, predecessors, durations)
+                note left
+                    duration and predecessor arrays are updated here
+                end note
+                alt whites.containsKey(successor.getId())
+                    CM -> CM : whites.remove(successor.getId())
+                    CM -> CM : greys.add(successor)
+                end
+            end
+        end
+        CM -> CM : greys.remove(minimalGreyIntersection)
+        CM -> CM : blacks.put(minimalGreyIntersection.getId(), minimalGreyIntersection)
+    end
+end
+create DG
+CM -> DG : <<create>>
+CPS <- CM : deliveryGraph
+deactivate CM
+
+@enduml
