@@ -8,6 +8,9 @@ import models.Route;
 public class PlanningDetails extends ListView<Route> {
     public PlanningDetails() {
         super();
+        String cssPath = getClass().getResource("/components/planningdetails/planningDetails.css").toExternalForm();
+        this.getStylesheets().add(cssPath);
+
         setCellFactory(view -> new ListCell<Route>() {
             @Override
             public void updateItem(Route newValue, boolean empty) {

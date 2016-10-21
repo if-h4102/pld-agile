@@ -1,0 +1,18 @@
+#root {
+    -fx-border-style: solid;
+    -fx-border-width: 3px;
+    -fx-border-color: chocolate;
+    -fx-end-margin: 10px;
+    position: relative;
+}
+
+#rmBtn {
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#root:hover #rmBtn {
+    visibility: visible;
+}

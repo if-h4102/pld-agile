@@ -15,6 +15,9 @@
       <Button fx:id="openDeliveryRequestButton" mnemonicParsing="false"
               onAction="#onOpenDeliveryRequestButtonAction"
               text="%open_delivery_request"/>
+      <Button fx:id="computePlanningButton" mnemonicParsing="false"
+              onAction="#onComputePlanningButtonAction"
+              text="%compute_planning"/>
     </ToolBar>
   </top>
   <center>
@@ -38,9 +41,7 @@
             <ButtonBar prefHeight="40.0" prefWidth="200.0"
                        BorderPane.alignment="CENTER">
               <buttons>
-                <Button fx:id="computePlanningButton" mnemonicParsing="false"
-                        onAction="#onComputePlanningButtonAction"
-                        text="%compute_planning"/>
+
               </buttons>
             </ButtonBar>
           </bottom>
@@ -51,13 +52,6 @@
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0"
                                 prefHeight="180.0" prefWidth="200.0">
-                        <ListView layoutX="-46.0" layoutY="26.0"
-                                  prefHeight="200.0" prefWidth="200.0"
-                                  AnchorPane.bottomAnchor="0"
-                                  AnchorPane.leftAnchor="0"
-                                  AnchorPane.rightAnchor="0"
-                                  AnchorPane.topAnchor="0"
-                                  items="${controller.planning.routes}"/>
                     </AnchorPane>
                   </content>
                 </TitledPane>

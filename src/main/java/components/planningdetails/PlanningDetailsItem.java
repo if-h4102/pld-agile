@@ -4,12 +4,12 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import models.Route;
 
 import java.io.IOException;
 
-class PlanningDetailsItem extends AnchorPane {
+class PlanningDetailsItem extends StackPane {
     private static final Route DEFAULT_ROUTE = null;
     @FXML
     protected Label content;

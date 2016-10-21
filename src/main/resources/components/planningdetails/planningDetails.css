@@ -1,0 +1,12 @@
+.root {
+    -fx-background-color: blue;
+    -fx-padding: 20px;
+}
+
+.list-cell {
+    -fx-border-style: solid;
+    -fx-border-width: 3px;
+    -fx-border-color: #d23d27;
+    -fx-end-margin: 10px;
+    -fx-padding: 10;
+}
