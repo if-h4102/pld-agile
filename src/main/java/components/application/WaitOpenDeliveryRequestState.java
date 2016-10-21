@@ -3,8 +3,9 @@ package components.application;
 
 import javafx.stage.FileChooser;
 import models.DeliveryRequest;
-
+import services.xml.exception.ParserException;
 import java.io.File;
+import java.io.IOException;
 
 public class WaitOpenDeliveryRequestState extends WaitOpenCityMapState {
     public void enterState(MainController mainController) {
@@ -25,7 +26,13 @@ public class WaitOpenDeliveryRequestState extends WaitOpenCityMapState {
             return this;
         }
 
-        DeliveryRequest currentDeliveryRequest = mainController.getParserService().getDeliveryRequest(deliveryRequestFile, mainController.getCityMap());
+        DeliveryRequest currentDeliveryRequest = null;
+        try {
+            currentDeliveryRequest = mainController.getParserService().getDeliveryRequest(deliveryRequestFile, mainController.getCityMap());
+        } catch (IOException | ParserException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
         mainController.setDeliveryRequest(currentDeliveryRequest);
         mainController.setPlanning(null);

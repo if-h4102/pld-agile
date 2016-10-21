@@ -6,10 +6,12 @@ import models.DeliveryRequest;
 import models.Intersection;
 import models.StreetSection;
 import models.Warehouse;
+import services.xml.exception.ParserException;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -19,7 +21,7 @@ import java.util.List;
 public class ParserTest {
 
     @Test
-    public void parseCityMapTestByEquals() throws URISyntaxException {
+    public void parseCityMapTestByEquals() throws URISyntaxException, IOException, ParserException {
         List<Intersection> intersections = new LinkedList<>();
         intersections.add(new Intersection(0, 134, 193));
         intersections.add(new Intersection(1, 195, 291));
@@ -48,7 +50,7 @@ public class ParserTest {
     }
 
     @Test
-    public void parseDeliveryRequestTest() throws URISyntaxException {
+    public void parseDeliveryRequestTest() throws URISyntaxException, IOException, ParserException {
         Parser parser = new Parser();
 
         File testMapFile = getFile("/services/xml/test-city-map-2x2.xml");
