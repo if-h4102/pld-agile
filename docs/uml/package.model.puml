@@ -35,7 +35,11 @@ package model {
     }
 
     abstract class AbstractWayPoint {
+    	-deliveryTimeStart: int
+    	-deliveryTimeEnd: int
         +{abstract} int getDuration()
+        +int getDeliveryTimeStart()
+        +int getDeliveryTimeEnd()
         +Intersection getIntersection()
         +int getX()
         +int getY()

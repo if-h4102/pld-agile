@@ -5,12 +5,22 @@ import com.google.java.contract.Requires;
 public abstract class AbstractWayPoint implements Comparable<AbstractWayPoint> {
 
     final protected Intersection intersection;
+    private int deliveryTimeStart;
+    private int deliveryTimeEnd;
 
     public AbstractWayPoint(Intersection intersection) {
         this.intersection = intersection; // TODO clone to avoid a later modification?
     }
 
     public abstract int getDuration();
+    
+    public int getDeliveryTimeStart() {
+    	return deliveryTimeStart;
+    }
+    
+    public int getDeliveryTimeEnd() {
+    	return deliveryTimeEnd;
+    }
 
     public Intersection getIntersection() {
         return intersection;
