@@ -40,7 +40,7 @@ package services {
 
     package command {
         class CommandManager {
-            +void do(command: AbstractCommand)
+            +void execute(command: AbstractCommand)
             +void undo()
             +void redo()
         }
