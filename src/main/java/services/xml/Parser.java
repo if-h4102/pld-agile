@@ -1,11 +1,12 @@
 package services.xml;
 
 import models.*;
+import services.xml.exception.ParserException;
+import services.xml.exception.ParserSyntaxException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
@@ -39,24 +40,27 @@ public class Parser {
     private static final String NAME_ATTRIBUTE_DELIVERY_REQUEST_ID = "adresse";
     private static final String NAME_ATTRIBUTE_DELIVERY_REQUEST_DURATION = "duree";
 
-    public CityMap getCityMap(File xmlFile) {
+    public CityMap getCityMap(File xmlFile) throws IOException, ParserException {
         TreeMap<Integer, Intersection> intersections = new TreeMap<Integer, Intersection>();
         ArrayList<StreetSection> streetSections = new ArrayList<StreetSection>();
 
+        Document cityMapDocument = null;
         try {
-            Document cityMapDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(xmlFile);
+            cityMapDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(xmlFile);
+        } catch (SAXException | ParserConfigurationException e) {
+            throw new ParserSyntaxException();
+        } catch (IOException e) {
+            throw e;
+        }
 
-            NodeList intersectionList = cityMapDocument.getElementsByTagName(INTERSECTION_NAME);
-            for (int i = 0; i < intersectionList.getLength(); i++) {
-                addIntersection((Element) intersectionList.item(i), intersections);
-            }
+        NodeList intersectionList = cityMapDocument.getElementsByTagName(INTERSECTION_NAME);
+        for (int i = 0; i < intersectionList.getLength(); i++) {
+            addIntersection((Element) intersectionList.item(i), intersections);
+        }
 
-            NodeList streetSectionList = cityMapDocument.getElementsByTagName(STREET_SECTION_NAME);
-            for (int i = 0; i < streetSectionList.getLength(); i++) {
-                streetSections.add(getStreetSection((Element) streetSectionList.item(i), intersections));
-            }
-        } catch (SAXException | IOException | ParserConfigurationException e) {
-            e.printStackTrace();
+        NodeList streetSectionList = cityMapDocument.getElementsByTagName(STREET_SECTION_NAME);
+        for (int i = 0; i < streetSectionList.getLength(); i++) {
+            streetSections.add(getStreetSection((Element) streetSectionList.item(i), intersections));
         }
 
         return new CityMap(intersections.values(), streetSections);
@@ -66,7 +70,7 @@ public class Parser {
         int id = Integer.parseInt(intersectionNode.getAttribute(NAME_ATTRIBUTE_INTERSECTION_ID));
         int x = Integer.parseInt(intersectionNode.getAttribute(NAME_ATTRIBUTE_INTERSECTION_X));
         int y = Integer.parseInt(intersectionNode.getAttribute(NAME_ATTRIBUTE_INTERSECTION_Y));
-        
+
         Intersection intersection = new Intersection(id, x, y);
         intersections.put(id, intersection);
     }
@@ -84,30 +88,32 @@ public class Parser {
         return new StreetSection(length, speed, streetName, intersectionStart, intersectionEnd);
     }
 
-    public DeliveryRequest getDeliveryRequest(File xmlFile, CityMap cityMap) {
+    public DeliveryRequest getDeliveryRequest(File xmlFile, CityMap cityMap) throws IOException, ParserException {
         Warehouse warehouse = null;
         Collection<DeliveryAddress> deliveryAddresses = new ArrayList<DeliveryAddress>();
         int startPlanningTimestamp = -1;
 
+        Document deliveryRequestDocument = null;
         try {
-            Document deliveryRequestDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(xmlFile);
+            deliveryRequestDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(xmlFile);
+        } catch (SAXException | ParserConfigurationException e) {
+            throw new ParserSyntaxException(e);
+        } catch (IOException e) {
+            throw e;
+        }
 
-            NodeList warehouseNode = deliveryRequestDocument.getElementsByTagName(WAREHOUSE_NAME);
-            if (warehouseNode.getLength() == 1) {
-                Element warehouseElement = (Element) (warehouseNode.item(0));
-                warehouse = getWarehouse(warehouseElement, cityMap);
-                startPlanningTimestamp = getStartPlanningTimestamp(warehouseElement);
-            } else {
-                // TODO throw exception
-            }
+        NodeList warehouseNode = deliveryRequestDocument.getElementsByTagName(WAREHOUSE_NAME);
+        if (warehouseNode.getLength() == 1) {
+            Element warehouseElement = (Element) (warehouseNode.item(0));
+            warehouse = getWarehouse(warehouseElement, cityMap);
+            startPlanningTimestamp = getStartPlanningTimestamp(warehouseElement);
+        } else {
+            // TODO throw exception
+        }
 
-            NodeList deliveryAddressesNode = deliveryRequestDocument.getElementsByTagName(DELIVERY_ADDRESS_NAME);
-            for (int i = 0; i < deliveryAddressesNode.getLength(); i++) {
-                deliveryAddresses.add(getDeliveryAddress((Element) deliveryAddressesNode.item(i), cityMap));
-            }
-
-        } catch (SAXException | IOException | ParserConfigurationException e) {
-            e.printStackTrace();
+        NodeList deliveryAddressesNode = deliveryRequestDocument.getElementsByTagName(DELIVERY_ADDRESS_NAME);
+        for (int i = 0; i < deliveryAddressesNode.getLength(); i++) {
+            deliveryAddresses.add(getDeliveryAddress((Element) deliveryAddressesNode.item(i), cityMap));
         }
 
         return new DeliveryRequest(warehouse, deliveryAddresses, startPlanningTimestamp);
@@ -136,7 +142,7 @@ public class Parser {
     private DeliveryAddress getDeliveryAddress(Element deliveryAddressElement, CityMap cityMap) {
         int idIntersection = Integer.parseInt(deliveryAddressElement.getAttribute(NAME_ATTRIBUTE_DELIVERY_REQUEST_ID));
         int deliveryDuration = Integer.parseInt(deliveryAddressElement.getAttribute(NAME_ATTRIBUTE_DELIVERY_REQUEST_DURATION));
-
+        // TODO construct with time constraints
         return new DeliveryAddress(cityMap.getIntersection(idIntersection), deliveryDuration);
     }
 }
