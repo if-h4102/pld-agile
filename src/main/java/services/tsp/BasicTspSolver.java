@@ -90,14 +90,21 @@ public class BasicTspSolver extends AbstractTspSolver {
                 seen.toArray(this.bestSolution);
                 this.bestSolutionCost = seenCost;
             }
-        } else if (seenCost + this.bound(lastSeenNode, unseen, costs, deliveryDurations) < this.bestSolutionCost) {
+        } //else if the estimation of time left show possible new best solution
+        else if (seenCost + this.bound(lastSeenNode, unseen, costs, deliveryDurations) < this.bestSolutionCost) {
             // We have a great candidate !
             Iterator<AbstractWayPoint> it = this.iterator(lastSeenNode, unseen, costs, deliveryDurations);
             while (it.hasNext()) {
                 AbstractWayPoint nextNode = it.next();
                 seen.add(nextNode);
                 unseen.remove(nextNode);
-                int costRouteAndDelivery = costs.get(lastSeenNode).get(nextNode) + deliveryDurations.get(nextNode);
+                int costRouteAndDelivery = costs.get(lastSeenNode).get(nextNode);
+                //if we can pass to the selected node
+                if(!nextNode.canBePassed(this.startPoint.getDeliveryTimeStart()+costRouteAndDelivery)){
+                    //add a one day cost (longer than the max delivery time)
+                    costRouteAndDelivery += 86400;
+                }
+                costRouteAndDelivery += deliveryDurations.get(nextNode);
                 branchAndBound(nextNode, unseen, seen, seenCost + costRouteAndDelivery, costs, deliveryDurations);
                 unseen.add(nextNode);
                 seen.remove(nextNode);

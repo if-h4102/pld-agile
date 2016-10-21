@@ -54,6 +54,18 @@ public abstract class AbstractWayPoint implements Comparable<AbstractWayPoint> {
         return getId() - other.getId();
     }
 
+    /**
+     * @param timeOfPassage
+     * @return true if tha time of passage is more than deliveryTimeStart and
+     * time of passage plus delivery duration is less than deliveryTimeEnd
+     * if timeOfPassage is greater than a day (86400 sec) is modulus by 86400
+     * is used.
+     */
+    public boolean canBePassed(int timeOfPassage){
+        timeOfPassage = timeOfPassage%86400;
+        return deliveryTimeStart < timeOfPassage && (deliveryTimeEnd+this.getDuration()) > timeOfPassage;
+    }
+
     protected int getId() {
         return this.intersection.getId();
     }
