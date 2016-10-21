@@ -37,6 +37,44 @@ package services {
         TspSolver <|-- BasicTspSolver
         TspSolver <|-- AdvancedTspSolver
     }
+
+    package command {
+        class CommandManager {
+            +void do(command: AbstractCommand)
+            +void undo()
+            +void redo()
+        }
+
+        interface Command {
+            +void execute()
+        }
+
+        abstract class AbstractCommand implements Command {
+            -reversible: boolean
+            +{abstract} void execute()
+            +{abstract} boolean isReversible()
+            +{abstract} AbstractCommand getReversed()
+        }
+
+        class AddWayPointCommand extends AbstractCommand {
+            -wayPoint: AbstractWayPoint
+            +void execute()
+            +boolean isReversible()
+            +AbstractCommand getReversed()
+        }
+
+        class RemoveWayPoint extends AbstractCommand {
+            -wayPoint: AbstractWayPoint
+            +void execute()
+            +boolean isReversible()
+            +AbstractCommand getReversed()
+        }
+
+        CommandManager o-left- AbstractCommand: done
+        CommandManager o-left- AbstractCommand: undone
+
+
+    }
 }
 
 
