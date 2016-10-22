@@ -2,9 +2,9 @@
 
 package model {
     class CityMap {
-       -List<Route> shortestPath(startWayPoint: AbstractWayPoint, endWayPoints: List<AbstractWayPoint>)
        -void release(streetSection: StreetSection, predecessors: Intersection[], duration: int[])
        -Collection<Intersection> getNeighbourIntersection(idIntersection: int)
+       #List<Route> shortestPath(startWayPoint: AbstractWayPoint, endWayPoints: List<AbstractWayPoint>)
        +DeliveryGraph computeDeliveryGraph(request: DeliveryRequest)
        +List<Intersection> getIntersections()
        +List<StreetSection> getStreetSections()
