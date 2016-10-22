@@ -9,7 +9,7 @@ public abstract class AbstractCommand implements Command {
     public abstract void execute();
 
     /**
-     * Whether or notthe current command is reversible.
+     * Whether or not the current command is reversible.
      * @return true only if the current command is reversible.
      * Return false otherwise.
      */

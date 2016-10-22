@@ -1,18 +1,21 @@
 package services.command;
 
 import models.AbstractWayPoint;
+import models.Planning;
 
 public class RemoveWayPointCommand extends AbstractCommand {
 
     private AbstractWayPoint wayPointToRemove;
+    private Planning planning;
 
-    public RemoveWayPointCommand(AbstractWayPoint wayPointToAdd) {
+    public RemoveWayPointCommand(AbstractWayPoint wayPointToAdd, Planning planning) {
         this.wayPointToRemove = wayPointToAdd;
+        this.planning = planning;
     }
 
     @Override
     public void execute() {
-        // TODO
+        this.planning.removeWayPoint(this.wayPointToRemove);
     }
 
     @Override
@@ -22,6 +25,6 @@ public class RemoveWayPointCommand extends AbstractCommand {
 
     @Override
     public AbstractCommand getReversed() {
-        return new AddWayPointCommand(this.wayPointToRemove);
+        return new AddWayPointCommand(this.wayPointToRemove, this.planning);
     }
 }
