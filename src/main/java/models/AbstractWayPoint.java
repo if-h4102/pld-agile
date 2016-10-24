@@ -10,6 +10,8 @@ public abstract class AbstractWayPoint implements Comparable<AbstractWayPoint> {
 
     public AbstractWayPoint(Intersection intersection) {
         this.intersection = intersection; // TODO clone to avoid a later modification?
+        deliveryTimeStart=0;
+        deliveryTimeEnd=8640;//end of a day
     }
 
     public abstract int getDuration();

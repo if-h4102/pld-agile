@@ -143,6 +143,6 @@ public class BasicTspSolver extends AbstractTspSolver {
                                                 Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs, Map<AbstractWayPoint, Integer> deliveryDurations) {
         // NOTE: for the moment, this just returns a basic iterator,
         // which won't look for the best node to return.
-        return new WayPointIterator(unseen);
+        return new WayPointIterator(unseen, costs.get(lastSeenNode));
     }
 }

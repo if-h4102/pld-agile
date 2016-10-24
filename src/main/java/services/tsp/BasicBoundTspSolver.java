@@ -3,6 +3,8 @@ package services.tsp;
 import models.AbstractWayPoint;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -23,17 +25,18 @@ public class BasicBoundTspSolver extends BasicTspSolver{
     @Override
     protected int bound(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen,
                         Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs, Map<AbstractWayPoint, Integer> deliveryDurations) {
-        int bound = 0;
+
+        //init bound with min cost to get out of lastSeenNode
+        Map<AbstractWayPoint,Integer> linkCosts = costs.get(lastSeenNode);
+        int bound = Collections.min(linkCosts.values());
+
+        //add to bound the min cost of each unseen node
         for (AbstractWayPoint wayPoint : unseen) {
-            Map<AbstractWayPoint,Integer> linkCosts = costs.get(wayPoint);
+            linkCosts = costs.get(wayPoint);
             int minCost = linkCosts.get(this.startPoint); //init using the cost of the warehouse
-            for (AbstractWayPoint destination : unseen){
-                if(wayPoint != destination){ //if everything is reference it work
-                    int cost = linkCosts.get(destination);
-                    if(cost < minCost)
-                        minCost = cost;
-                }
-            }
+            int cost = Collections.min(linkCosts.values());
+            if(cost < minCost)
+                minCost = cost;
             bound += wayPoint.getDuration();
             bound += minCost;
         }

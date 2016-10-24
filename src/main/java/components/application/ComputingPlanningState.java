@@ -13,7 +13,7 @@ public class ComputingPlanningState extends WaitOpenDeliveryRequestState {
     public void enterState(MainController mainController) {
         System.out.println("Computing...");
         AbstractTspSolver solver = new BasicBoundTspSolver();
-        //AbstractTspSolver solver = new BasicTspSolver();
+//        AbstractTspSolver solver = new BasicTspSolver();
         DeliveryRequest dg = mainController.getDeliveryRequest();
         CityMap cm = mainController.getCityMap();
         DeliveryGraph deliveryGraph = cm.computeDeliveryGraph(dg);
