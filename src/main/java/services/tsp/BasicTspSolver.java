@@ -5,7 +5,7 @@ import java.util.*;
 
 public class BasicTspSolver extends AbstractTspSolver {
 
-    private AbstractWayPoint startPoint;
+    protected AbstractWayPoint startPoint;
 
     /**
      * The constructor for a basic TSP solver. It doesn't need anything for now.

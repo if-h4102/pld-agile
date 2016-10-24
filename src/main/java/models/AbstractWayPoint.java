@@ -13,11 +13,11 @@ public abstract class AbstractWayPoint implements Comparable<AbstractWayPoint> {
     }
 
     public abstract int getDuration();
-    
+
     public int getDeliveryTimeStart() {
     	return deliveryTimeStart;
     }
-    
+
     public int getDeliveryTimeEnd() {
     	return deliveryTimeEnd;
     }
@@ -63,7 +63,7 @@ public abstract class AbstractWayPoint implements Comparable<AbstractWayPoint> {
      */
     public boolean canBePassed(int timeOfPassage){
         timeOfPassage = timeOfPassage%86400;
-        return deliveryTimeStart < timeOfPassage && (deliveryTimeEnd+this.getDuration()) > timeOfPassage;
+        return deliveryTimeStart < timeOfPassage && deliveryTimeEnd > (timeOfPassage+this.getDuration());
     }
 
     protected int getId() {
