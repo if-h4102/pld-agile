@@ -206,6 +206,10 @@ public class CityMap {
     public Intersection getIntersection(int idIntersection) {
         return intersections.get(idIntersection);
     }
+    
+    public boolean isIntersectionInCityMap(int idIntersection) {
+        return intersections.containsKey(idIntersection);
+    }
 
     @Requires({"intersections.containsValue(startIntersection)", "intersections.containsValue(endIntersection)"})
     @Ensures({"result.getStartIntersection().equals(startIntersection)", "result.getEndIntersection().equals(endIntersection)"})

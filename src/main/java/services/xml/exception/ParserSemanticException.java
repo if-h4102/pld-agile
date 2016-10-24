@@ -1,14 +1,14 @@
 package services.xml.exception;
 
-public class ParserValueException extends ParserException {
+public class ParserSemanticException extends ParserException {
 
     private static final long serialVersionUID = 7238471110650199606L;
 
-    public ParserValueException() {
+    public ParserSemanticException() {
         super();
     }
 
-    public ParserValueException(Throwable e) {
+    public ParserSemanticException(Throwable e) {
         super(e);
     }
 }

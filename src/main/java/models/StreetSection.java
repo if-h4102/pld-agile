@@ -38,7 +38,6 @@ public class StreetSection {
             return false;
 
         StreetSection other = (StreetSection) obj;
-        return this.streetName.equals(other.streetName) && this.length == other.length && this.duration == other.duration
-                && this.start.equals(other.start) && this.end.equals(other.end);
+        return this.start.equals(other.start) && this.end.equals(other.end);
     }
 }

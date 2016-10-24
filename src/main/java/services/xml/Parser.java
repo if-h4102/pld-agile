@@ -1,7 +1,11 @@
 package services.xml;
 
 import models.*;
+import services.xml.exception.ParserDuplicateObjectException;
 import services.xml.exception.ParserException;
+import services.xml.exception.ParserIntegerValueException;
+import services.xml.exception.ParserNodesNumberException;
+import services.xml.exception.ParserShouldBeIntegerValueException;
 import services.xml.exception.ParserSyntaxException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -41,7 +45,7 @@ public class Parser {
     private static final String NAME_ATTRIBUTE_DELIVERY_REQUEST_DURATION = "duree";
 
     public CityMap getCityMap(File xmlFile) throws IOException, ParserException {
-        TreeMap<Integer, Intersection> intersections = new TreeMap<Integer, Intersection>();
+        Map<Integer, Intersection> intersections = new TreeMap<Integer, Intersection>();
         ArrayList<StreetSection> streetSections = new ArrayList<StreetSection>();
 
         Document cityMapDocument = null;
@@ -54,38 +58,84 @@ public class Parser {
         }
 
         NodeList intersectionList = cityMapDocument.getElementsByTagName(INTERSECTION_NAME);
+        if (intersectionList.getLength() == 0)
+            throw new ParserNodesNumberException(1, -1, 0, INTERSECTION_NAME);
+
         for (int i = 0; i < intersectionList.getLength(); i++) {
             addIntersection((Element) intersectionList.item(i), intersections);
         }
 
         NodeList streetSectionList = cityMapDocument.getElementsByTagName(STREET_SECTION_NAME);
+        if (streetSectionList.getLength() == 0)
+            throw new ParserNodesNumberException(1, -1, 0, STREET_SECTION_NAME);
+
         for (int i = 0; i < streetSectionList.getLength(); i++) {
-            streetSections.add(getStreetSection((Element) streetSectionList.item(i), intersections));
+            streetSections.add(getStreetSection((Element) streetSectionList.item(i), intersections, streetSections));
         }
 
         return new CityMap(intersections.values(), streetSections);
     }
 
-    private void addIntersection(Element intersectionNode, Map<Integer, Intersection> intersections) {
-        int id = Integer.parseInt(intersectionNode.getAttribute(NAME_ATTRIBUTE_INTERSECTION_ID));
-        int x = Integer.parseInt(intersectionNode.getAttribute(NAME_ATTRIBUTE_INTERSECTION_X));
-        int y = Integer.parseInt(intersectionNode.getAttribute(NAME_ATTRIBUTE_INTERSECTION_Y));
+    private void addIntersection(Element intersectionNode, Map<Integer, Intersection> intersections) throws ParserException {
+        int id;
+        int x;
+        int y;
+        try {
+            id = Integer.parseInt(intersectionNode.getAttribute(NAME_ATTRIBUTE_INTERSECTION_ID));
+            x = Integer.parseInt(intersectionNode.getAttribute(NAME_ATTRIBUTE_INTERSECTION_X));
+            y = Integer.parseInt(intersectionNode.getAttribute(NAME_ATTRIBUTE_INTERSECTION_Y));
+        } catch (NumberFormatException e) {
+            throw new ParserShouldBeIntegerValueException(e);
+        }
+
+        if (x < 0)
+            throw new ParserIntegerValueException(x);
+        if (y < 0)
+            throw new ParserIntegerValueException(y);
+        if (id < 0)
+            throw new ParserIntegerValueException(id);
 
         Intersection intersection = new Intersection(id, x, y);
+        if (intersections.containsKey(id))
+            throw new ParserDuplicateObjectException(intersection);
+
         intersections.put(id, intersection);
     }
 
-    private StreetSection getStreetSection(Element streetSectionNode, Map<Integer, Intersection> intersections) {
-        int idIntersectionStart = Integer.parseInt(streetSectionNode.getAttribute(NAME_ATTRIBUTE_STREET_SECTION_START));
-        int idIntersectionEnd = Integer.parseInt(streetSectionNode.getAttribute(NAME_ATTRIBUTE_STREET_SECTION_END));
-        int length = Integer.parseInt(streetSectionNode.getAttribute(NAME_ATTRIBUTE_STREET_SECTION_LENGTH));
+    private StreetSection getStreetSection(Element streetSectionNode, Map<Integer, Intersection> intersections,
+            Collection<StreetSection> streetSections) throws ParserException {
+        int idIntersectionStart;
+        int idIntersectionEnd;
+        int length;
+        int speed;
+        try {
+            idIntersectionStart = Integer.parseInt(streetSectionNode.getAttribute(NAME_ATTRIBUTE_STREET_SECTION_START));
+            idIntersectionEnd = Integer.parseInt(streetSectionNode.getAttribute(NAME_ATTRIBUTE_STREET_SECTION_END));
+            length = Integer.parseInt(streetSectionNode.getAttribute(NAME_ATTRIBUTE_STREET_SECTION_LENGTH));
+            speed = Integer.parseInt(streetSectionNode.getAttribute(NAME_ATTRIBUTE_STREET_SECTION_VELOCITY));
+        } catch (NumberFormatException e) {
+            throw new ParserShouldBeIntegerValueException(e);
+        }
         String streetName = streetSectionNode.getAttribute(NAME_ATTRIBUTE_STREET_SECTION_STREET_NAME);
-        int speed = Integer.parseInt(streetSectionNode.getAttribute(NAME_ATTRIBUTE_STREET_SECTION_VELOCITY));
+
+        if (!intersections.containsKey(idIntersectionStart))
+            throw new ParserIntegerValueException(idIntersectionStart);
+        if (!intersections.containsKey(idIntersectionEnd))
+            throw new ParserIntegerValueException(idIntersectionEnd);
+        if (length < 0)
+            throw new ParserIntegerValueException(length);
+        if (speed < 0)
+            throw new ParserIntegerValueException(speed);
+        // TODO test if time == 0?
 
         Intersection intersectionStart = intersections.get(idIntersectionStart);
         Intersection intersectionEnd = intersections.get(idIntersectionEnd);
 
-        return new StreetSection(length, speed, streetName, intersectionStart, intersectionEnd);
+        StreetSection streetSection =  new StreetSection(length, speed, streetName, intersectionStart, intersectionEnd);
+        if (streetSections.contains(streetSection))
+            throw new ParserDuplicateObjectException(streetSection);
+        
+        return streetSection;
     }
 
     public DeliveryRequest getDeliveryRequest(File xmlFile, CityMap cityMap) throws IOException, ParserException {
