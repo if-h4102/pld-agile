@@ -7,13 +7,18 @@ public class ParserDuplicateObjectException extends ParserSemanticException {
     
     private Object duplicate;
 
-    public ParserDuplicateObjectException(Object duplicate) {
-        super();
+    public ParserDuplicateObjectException(String message, Object duplicate) {
+        super(message);
         this.duplicate = duplicate;
     }
     
-    public ParserDuplicateObjectException(Throwable e, Object duplicate) {
-        super(e);
+    public ParserDuplicateObjectException(Throwable cause, Object duplicate) {
+        super(cause.getMessage(), cause);
+        this.duplicate = duplicate;
+    }
+    
+    public ParserDuplicateObjectException(String message, Throwable cause, Object duplicate) {
+        super(message, cause);
         this.duplicate = duplicate;
     }
     

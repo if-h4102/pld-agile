@@ -52,14 +52,15 @@ public class Parser {
         try {
             cityMapDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(xmlFile);
         } catch (SAXException | ParserConfigurationException e) {
-            throw new ParserSyntaxException();
+            throw new ParserSyntaxException(e);
         } catch (IOException e) {
             throw e;
         }
 
         NodeList intersectionList = cityMapDocument.getElementsByTagName(INTERSECTION_NAME);
-        if (intersectionList.getLength() == 0)
-            throw new ParserNodesNumberException(1, -1, 0, INTERSECTION_NAME);
+        if (intersectionList.getLength() <= 1)
+            throw new ParserNodesNumberException("There must be at least 2 intersections in a cityMap", 2, -1, intersectionList.getLength(),
+                    INTERSECTION_NAME);
 
         for (int i = 0; i < intersectionList.getLength(); i++) {
             addIntersection((Element) intersectionList.item(i), intersections);
@@ -67,7 +68,7 @@ public class Parser {
 
         NodeList streetSectionList = cityMapDocument.getElementsByTagName(STREET_SECTION_NAME);
         if (streetSectionList.getLength() == 0)
-            throw new ParserNodesNumberException(1, -1, 0, STREET_SECTION_NAME);
+            throw new ParserNodesNumberException("There must be at least 1 street section in a cityMap", 1, -1, 0, STREET_SECTION_NAME);
 
         for (int i = 0; i < streetSectionList.getLength(); i++) {
             streetSections.add(getStreetSection((Element) streetSectionList.item(i), intersections, streetSections));
@@ -89,15 +90,15 @@ public class Parser {
         }
 
         if (x < 0)
-            throw new ParserIntegerValueException(x);
+            throw new ParserIntegerValueException("The x value of an intersection must be positive", x);
         if (y < 0)
-            throw new ParserIntegerValueException(y);
+            throw new ParserIntegerValueException("The y value of an intersection must be positive", y);
         if (id < 0)
-            throw new ParserIntegerValueException(id);
+            throw new ParserIntegerValueException("The id of an intersection must be positive", id);
 
         Intersection intersection = new Intersection(id, x, y);
         if (intersections.containsKey(id))
-            throw new ParserDuplicateObjectException(intersection);
+            throw new ParserDuplicateObjectException("Two intersections with the id " + id + " exist", intersection);
 
         intersections.put(id, intersection);
     }
@@ -119,22 +120,23 @@ public class Parser {
         String streetName = streetSectionNode.getAttribute(NAME_ATTRIBUTE_STREET_SECTION_STREET_NAME);
 
         if (!intersections.containsKey(idIntersectionStart))
-            throw new ParserIntegerValueException(idIntersectionStart);
+            throw new ParserIntegerValueException("The start of a street section must exist", idIntersectionStart);
         if (!intersections.containsKey(idIntersectionEnd))
-            throw new ParserIntegerValueException(idIntersectionEnd);
+            throw new ParserIntegerValueException("The end of a street section must exist", idIntersectionEnd);
         if (length < 0)
-            throw new ParserIntegerValueException(length);
+            throw new ParserIntegerValueException("The length of a street section must be positive", length);
         if (speed < 0)
-            throw new ParserIntegerValueException(speed);
+            throw new ParserIntegerValueException("The speed of a street section must be positive", speed);
         // TODO test if time == 0?
 
         Intersection intersectionStart = intersections.get(idIntersectionStart);
         Intersection intersectionEnd = intersections.get(idIntersectionEnd);
 
-        StreetSection streetSection =  new StreetSection(length, speed, streetName, intersectionStart, intersectionEnd);
+        StreetSection streetSection = new StreetSection(length, speed, streetName, intersectionStart, intersectionEnd);
         if (streetSections.contains(streetSection))
-            throw new ParserDuplicateObjectException(streetSection);
-        
+            throw new ParserDuplicateObjectException("Two street sections begin at the intersection " + idIntersectionStart
+                    + " and end at the intersection " + idIntersectionEnd, streetSection);
+
         return streetSection;
     }
 

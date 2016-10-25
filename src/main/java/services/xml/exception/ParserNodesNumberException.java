@@ -9,17 +9,26 @@ public class ParserNodesNumberException extends ParserSyntaxException {
     private int actualNodesNumber;
     private String nodesName;
 
-    public ParserNodesNumberException(int minNodesNumberExpected, int maxNodesNumberExpected, int actualNodesNumber, String nodesName) {
-        super();
+    public ParserNodesNumberException(String message, int minNodesNumberExpected, int maxNodesNumberExpected, int actualNodesNumber, String nodesName) {
+        super(message);
         this.minNodesNumberExpected = minNodesNumberExpected;
         this.maxNodesNumberExpected = maxNodesNumberExpected;
         this.actualNodesNumber = actualNodesNumber;
         this.nodesName = nodesName;
     }
 
-    public ParserNodesNumberException(Throwable e, int minNodesNumberExpected, int maxNodesNumberExpected, int actualNodesNumber,
+    public ParserNodesNumberException(Throwable cause, int minNodesNumberExpected, int maxNodesNumberExpected, int actualNodesNumber,
             String nodesName) {
-        super(e);
+        super(cause.getMessage(), cause);
+        this.minNodesNumberExpected = minNodesNumberExpected;
+        this.maxNodesNumberExpected = maxNodesNumberExpected;
+        this.actualNodesNumber = actualNodesNumber;
+        this.nodesName = nodesName;
+    }
+    
+    public ParserNodesNumberException(String message, Throwable cause, int minNodesNumberExpected, int maxNodesNumberExpected, int actualNodesNumber,
+            String nodesName) {
+        super(message, cause);
         this.minNodesNumberExpected = minNodesNumberExpected;
         this.maxNodesNumberExpected = maxNodesNumberExpected;
         this.actualNodesNumber = actualNodesNumber;

@@ -17,7 +17,7 @@ public class Planning {
         for(Route r: this.routes) {
             fullTime += r.getDuration();
             if(r.getStartWaypoint() instanceof DeliveryAddress) {
-                fullTime += ((DeliveryAddress) r.getStartWaypoint()).getDeliveryDuration();
+                fullTime += ((DeliveryAddress) r.getStartWaypoint()).getDuration();
             }
         }
     }

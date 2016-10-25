@@ -6,13 +6,18 @@ public class ParserIntegerValueException extends ParserSemanticException {
     
     private int value;
 
-    public ParserIntegerValueException(int value) {
-        super();
+    public ParserIntegerValueException(String message, int value) {
+        super(message);
         this.value = value;
     }
 
-    public ParserIntegerValueException(Throwable e, int value) {
-        super(e);
+    public ParserIntegerValueException(String message, Throwable cause, int value) {
+        super(message, cause);
+        this.value = value;
+    }
+    
+    public ParserIntegerValueException(Throwable cause, int value) {
+        super(cause.getMessage(), cause);
         this.value = value;
     }
     

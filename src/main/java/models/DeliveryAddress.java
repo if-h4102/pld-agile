@@ -14,11 +14,6 @@ public class DeliveryAddress extends AbstractWayPoint {
         this.deliveryDuration = deliveryDuration;
     }
 
-    @Deprecated
-    public int getDeliveryDuration() {
-        return deliveryDuration;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof DeliveryAddress))
