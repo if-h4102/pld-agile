@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<demandeDeLivraisons>
+    <entrepot adresse="2" heureDepart="8:0:0"/>
+    <!-- The address of the first delivery address has been modified -->
+    <livraison adresse="addressDeliveryAddress" duree="100"/>
+    <livraison adresse="3" duree="250"/>
+</demandeDeLivraisons>

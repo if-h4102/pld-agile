@@ -19,8 +19,7 @@ public class DeliveryAddress extends AbstractWayPoint {
         if (!(obj instanceof DeliveryAddress))
             return false;
 
-        DeliveryAddress other = (DeliveryAddress) obj;
-        return this.deliveryDuration == other.deliveryDuration && super.equals(other);
+        return super.equals(obj);
     }
 
     @Override

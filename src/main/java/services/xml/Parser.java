@@ -4,9 +4,10 @@ import models.*;
 import services.xml.exception.ParserDuplicateObjectException;
 import services.xml.exception.ParserException;
 import services.xml.exception.ParserIntegerValueException;
+import services.xml.exception.ParserInvalidIdException;
+import services.xml.exception.ParserMalformedXmlException;
 import services.xml.exception.ParserNodesNumberException;
 import services.xml.exception.ParserShouldBeIntegerValueException;
-import services.xml.exception.ParserSyntaxException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -52,7 +53,7 @@ public class Parser {
         try {
             cityMapDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(xmlFile);
         } catch (SAXException | ParserConfigurationException e) {
-            throw new ParserSyntaxException(e);
+            throw new ParserMalformedXmlException(e);
         } catch (IOException e) {
             throw e;
         }
@@ -120,9 +121,11 @@ public class Parser {
         String streetName = streetSectionNode.getAttribute(NAME_ATTRIBUTE_STREET_SECTION_STREET_NAME);
 
         if (!intersections.containsKey(idIntersectionStart))
-            throw new ParserIntegerValueException("The start of a street section must exist", idIntersectionStart);
+            throw new ParserInvalidIdException("The start of a street section must exist");
         if (!intersections.containsKey(idIntersectionEnd))
-            throw new ParserIntegerValueException("The end of a street section must exist", idIntersectionEnd);
+            throw new ParserInvalidIdException("The end of a street section must exist");
+        if (idIntersectionStart == idIntersectionEnd)
+            throw new ParserInvalidIdException("A street section can not begin and end at the same intersection");
         if (length < 0)
             throw new ParserIntegerValueException("The length of a street section must be positive", length);
         if (speed < 0)
@@ -149,7 +152,7 @@ public class Parser {
         try {
             deliveryRequestDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(xmlFile);
         } catch (SAXException | ParserConfigurationException e) {
-            throw new ParserSyntaxException(e);
+            throw new ParserMalformedXmlException(e);
         } catch (IOException e) {
             throw e;
         }

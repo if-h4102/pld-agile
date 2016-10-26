@@ -33,6 +33,10 @@ public abstract class AbstractWayPoint implements Comparable<AbstractWayPoint> {
     public int getY() {
         return getIntersection().getY();
     }
+    
+    protected int getId() {
+        return this.intersection.getId();
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -52,9 +56,5 @@ public abstract class AbstractWayPoint implements Comparable<AbstractWayPoint> {
     @Requires({ "other != null" })
     public int compareTo(AbstractWayPoint other) {
         return getId() - other.getId();
-    }
-
-    protected int getId() {
-        return this.intersection.getId();
     }
 }

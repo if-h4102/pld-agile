@@ -1,0 +1,30 @@
+class Exception
+package services.xml.exception {
+
+    abstract class ParserException
+    abstract class ParserSemanticException
+    abstract class ParserSyntaxException
+    
+    abstract class ParserSemanticException
+    class ParserDuplicateObjectException
+    class ParserIntegerValueException
+    class ParserShouldBeIntegerValueException
+    
+    abstract class ParserSyntaxException
+    class ParserNodesNumberException
+    class ParserInvalidIdException
+    class ParserMalformedXmlException
+    
+    Exception <|-- ParserException
+    
+    ParserException <|-- ParserSyntaxException
+    ParserException <|-- ParserSemanticException
+    
+    ParserSemanticException <|-- ParserDuplicateObjectException
+    ParserSemanticException <|-- ParserIntegerValueException
+    ParserSemanticException <|-- ParserShouldBeIntegerValueException
+    
+    ParserSyntaxException <|-- ParserNodesNumberException
+    ParserSyntaxException <|-- ParserInvalidIdException
+    ParserSyntaxException <|-- ParserMalformedXmlException
+}
