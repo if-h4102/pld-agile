@@ -1,6 +1,6 @@
 package services.xml.exception;
 
-public class ParserInvalidIdException extends ParserSyntaxException {
+public class ParserInvalidIdException extends ParserSemanticException {
 
     private static final long serialVersionUID = -3443020224287103065L;
 

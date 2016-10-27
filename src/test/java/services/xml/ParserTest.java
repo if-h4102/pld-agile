@@ -6,12 +6,13 @@ import models.DeliveryRequest;
 import models.Intersection;
 import models.StreetSection;
 import models.Warehouse;
+import services.xml.exception.ParserBoundedNodesNumberException;
 import services.xml.exception.ParserDuplicateObjectException;
 import services.xml.exception.ParserException;
 import services.xml.exception.ParserIntegerValueException;
 import services.xml.exception.ParserInvalidIdException;
+import services.xml.exception.ParserLowerBoundedNodesNumberException;
 import services.xml.exception.ParserMalformedXmlException;
-import services.xml.exception.ParserNodesNumberException;
 import services.xml.exception.ParserShouldBeIntegerValueException;
 import services.xml.exception.ParserTimeSyntaxException;
 import org.junit.Rule;
@@ -80,7 +81,7 @@ public class ParserTest {
         Parser parser = new Parser();
         File cityMapXmlFile = getFile("/services/xml/cityMap/streetSection/withoutStreetSection.xml");
 
-        thrown.expect(ParserNodesNumberException.class);
+        thrown.expect(ParserLowerBoundedNodesNumberException.class);
         thrown.expectMessage("There must be at least 1 street section in a cityMap");
         parser.getCityMap(cityMapXmlFile);
     }
@@ -161,7 +162,7 @@ public class ParserTest {
         Parser parser = new Parser();
         File cityMapXmlFile = getFile("/services/xml/cityMap/intersection/withoutIntersection.xml");
 
-        thrown.expect(ParserNodesNumberException.class);
+        thrown.expect(ParserLowerBoundedNodesNumberException.class);
         thrown.expectMessage("There must be at least 2 intersections in a cityMap");
         parser.getCityMap(cityMapXmlFile);
     }
@@ -260,7 +261,7 @@ public class ParserTest {
         
         File deliveryRequestXmlFile = getFile("/services/xml/deliveryRequest/warehouse/withoutWarehouse.xml");
         
-        thrown.expect(ParserNodesNumberException.class);
+        thrown.expect(ParserBoundedNodesNumberException.class);
         thrown.expectMessage("There must be exactly 1 warehouse in a delivery request");
         parser.getDeliveryRequest(deliveryRequestXmlFile, cityMap);
     }
@@ -273,7 +274,7 @@ public class ParserTest {
         
         File deliveryRequestXmlFile = getFile("/services/xml/deliveryRequest/warehouse/withTwoWarehouse.xml");
         
-        thrown.expect(ParserNodesNumberException.class);
+        thrown.expect(ParserBoundedNodesNumberException.class);
         thrown.expectMessage("There must be exactly 1 warehouse in a delivery request");
         parser.getDeliveryRequest(deliveryRequestXmlFile, cityMap);
     }
@@ -286,7 +287,7 @@ public class ParserTest {
         
         File deliveryRequestXmlFile = getFile("/services/xml/deliveryRequest/warehouse/badAddress.xml");
         
-        thrown.expect(ParserIntegerValueException.class);
+        thrown.expect(ParserInvalidIdException.class);
         thrown.expectMessage("The address of a warehouse must exist in the city map");
         parser.getDeliveryRequest(deliveryRequestXmlFile, cityMap);
     }
@@ -356,7 +357,7 @@ public class ParserTest {
         
         File deliveryRequestXmlFile = getFile("/services/xml/deliveryRequest/deliveryAddress/withoutDeliveryAddress.xml");
         
-        thrown.expect(ParserNodesNumberException.class);
+        thrown.expect(ParserLowerBoundedNodesNumberException.class);
         thrown.expectMessage("There must be at least 1 delivery address in a delivery request");
         parser.getDeliveryRequest(deliveryRequestXmlFile, cityMap);
     }
@@ -369,8 +370,8 @@ public class ParserTest {
         
         File deliveryRequestXmlFile = getFile("/services/xml/deliveryRequest/deliveryAddress/badAddress.xml");
         
-        thrown.expect(ParserIntegerValueException.class);
-        thrown.expectMessage("There must be at least 1 delivery address in a delivery request");
+        thrown.expect(ParserInvalidIdException.class);
+        thrown.expectMessage("The address of a delivery request must exist in the city map");
         parser.getDeliveryRequest(deliveryRequestXmlFile, cityMap);
     }
     
@@ -382,8 +383,8 @@ public class ParserTest {
         
         File deliveryRequestXmlFile = getFile("/services/xml/deliveryRequest/deliveryAddress/duplicateDeliveryAddress.xml");
         
-        thrown.expect(ParserIntegerValueException.class);
-        thrown.expectMessage("There must be at least 1 delivery address in a delivery request");
+        thrown.expect(ParserDuplicateObjectException.class);
+        thrown.expectMessage("There are two delivery addresses with the address 0");
         parser.getDeliveryRequest(deliveryRequestXmlFile, cityMap);
     }
 

@@ -11,9 +11,13 @@ package services.xml.exception {
     class ParserShouldBeIntegerValueException
     
     abstract class ParserSyntaxException
-    class ParserNodesNumberException
+    abstract class ParserNodesNumberException
     class ParserInvalidIdException
     class ParserMalformedXmlException
+    
+    abstract class ParserNodesNumberException
+    class ParserBoundedNodesNumberException
+    class ParserLowerBoundedNodesNumberException
     
     Exception <|-- ParserException
     
@@ -23,8 +27,11 @@ package services.xml.exception {
     ParserSemanticException <|-- ParserDuplicateObjectException
     ParserSemanticException <|-- ParserIntegerValueException
     ParserSemanticException <|-- ParserShouldBeIntegerValueException
+    ParserSemanticException <|-- ParserInvalidIdException
     
     ParserSyntaxException <|-- ParserNodesNumberException
-    ParserSyntaxException <|-- ParserInvalidIdException
     ParserSyntaxException <|-- ParserMalformedXmlException
+    
+    ParserNodesNumberException <|-- ParserBoundedNodesNumberException
+    ParserNodesNumberException <|-- ParserLowerBoundedNodesNumberException
 }

@@ -24,7 +24,6 @@ public class DeliveryAddress extends AbstractWayPoint {
 
     @Override
     public String toString() {
-        //return "DeliveryAddress [intersection=" + intersection + ", deliveryDuration=" + deliveryDuration + "]";
         return "" + getId();
     }
 }

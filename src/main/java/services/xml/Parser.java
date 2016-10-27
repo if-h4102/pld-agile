@@ -1,13 +1,15 @@
 package services.xml;
 
 import models.*;
+import services.xml.exception.ParserBoundedNodesNumberException;
 import services.xml.exception.ParserDuplicateObjectException;
 import services.xml.exception.ParserException;
 import services.xml.exception.ParserIntegerValueException;
 import services.xml.exception.ParserInvalidIdException;
+import services.xml.exception.ParserLowerBoundedNodesNumberException;
 import services.xml.exception.ParserMalformedXmlException;
-import services.xml.exception.ParserNodesNumberException;
 import services.xml.exception.ParserShouldBeIntegerValueException;
+import services.xml.exception.ParserTimeSyntaxException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -60,8 +62,8 @@ public class Parser {
 
         NodeList intersectionList = cityMapDocument.getElementsByTagName(INTERSECTION_NAME);
         if (intersectionList.getLength() <= 1)
-            throw new ParserNodesNumberException("There must be at least 2 intersections in a cityMap", 2, -1, intersectionList.getLength(),
-                    INTERSECTION_NAME);
+            throw new ParserLowerBoundedNodesNumberException("There must be at least 2 intersections in a cityMap", 2,
+                    intersectionList.getLength(), INTERSECTION_NAME);
 
         for (int i = 0; i < intersectionList.getLength(); i++) {
             addIntersection((Element) intersectionList.item(i), intersections);
@@ -69,7 +71,8 @@ public class Parser {
 
         NodeList streetSectionList = cityMapDocument.getElementsByTagName(STREET_SECTION_NAME);
         if (streetSectionList.getLength() == 0)
-            throw new ParserNodesNumberException("There must be at least 1 street section in a cityMap", 1, -1, 0, STREET_SECTION_NAME);
+            throw new ParserLowerBoundedNodesNumberException("There must be at least 1 street section in a cityMap", 1, 0,
+                    STREET_SECTION_NAME);
 
         for (int i = 0; i < streetSectionList.getLength(); i++) {
             streetSections.add(getStreetSection((Element) streetSectionList.item(i), intersections, streetSections));
@@ -146,7 +149,7 @@ public class Parser {
     public DeliveryRequest getDeliveryRequest(File xmlFile, CityMap cityMap) throws IOException, ParserException {
         Warehouse warehouse = null;
         Collection<DeliveryAddress> deliveryAddresses = new ArrayList<DeliveryAddress>();
-        int startPlanningTimestamp = -1;
+        int startPlanningTimestamp;
 
         Document deliveryRequestDocument = null;
         try {
@@ -158,46 +161,84 @@ public class Parser {
         }
 
         NodeList warehouseNode = deliveryRequestDocument.getElementsByTagName(WAREHOUSE_NAME);
-        if (warehouseNode.getLength() == 1) {
-            Element warehouseElement = (Element) (warehouseNode.item(0));
-            warehouse = getWarehouse(warehouseElement, cityMap);
-            startPlanningTimestamp = getStartPlanningTimestamp(warehouseElement);
-        } else {
-            // TODO throw exception
-        }
+        if (warehouseNode.getLength() != 1)
+            throw new ParserBoundedNodesNumberException("There must be exactly 1 warehouse in a delivery request", 1, 1,
+                    warehouseNode.getLength(), WAREHOUSE_NAME);
 
-        NodeList deliveryAddressesNode = deliveryRequestDocument.getElementsByTagName(DELIVERY_ADDRESS_NAME);
-        for (int i = 0; i < deliveryAddressesNode.getLength(); i++) {
-            deliveryAddresses.add(getDeliveryAddress((Element) deliveryAddressesNode.item(i), cityMap));
+        Element warehouseElement = (Element) (warehouseNode.item(0));
+        warehouse = getWarehouse(warehouseElement, cityMap);
+        startPlanningTimestamp = getStartPlanningTimestamp(warehouseElement);
+
+        NodeList deliveryAddressesNodes = deliveryRequestDocument.getElementsByTagName(DELIVERY_ADDRESS_NAME);
+        if (deliveryAddressesNodes.getLength() < 1)
+            throw new ParserLowerBoundedNodesNumberException("There must be at least 1 delivery address in a delivery request", 1, 0,
+                    DELIVERY_ADDRESS_NAME);
+
+        for (int i = 0; i < deliveryAddressesNodes.getLength(); i++) {
+            deliveryAddresses.add(getDeliveryAddress((Element) deliveryAddressesNodes.item(i), cityMap, deliveryAddresses));
         }
 
         return new DeliveryRequest(warehouse, deliveryAddresses, startPlanningTimestamp);
     }
 
-    private Warehouse getWarehouse(Element warehouseElement, CityMap cityMap) {
-        int idIntersection = Integer.parseInt(warehouseElement.getAttribute(NAME_ATTRIBUTE_WAREHOUSE_ID));
+    private Warehouse getWarehouse(Element warehouseElement, CityMap cityMap) throws ParserException {
+        int idIntersection;
+        try {
+            idIntersection = Integer.parseInt(warehouseElement.getAttribute(NAME_ATTRIBUTE_WAREHOUSE_ID));
+        } catch (NumberFormatException e) {
+            throw new ParserShouldBeIntegerValueException(e);
+        }
+
+        if (!cityMap.isIntersectionInCityMap(idIntersection))
+            throw new ParserInvalidIdException("The address of a warehouse must exist in the city map");
+
         return new Warehouse(cityMap.getIntersection(idIntersection));
     }
 
-    private int getStartPlanningTimestamp(Element warehouseElement) {
+    private int getStartPlanningTimestamp(Element warehouseElement) throws ParserException {
         String stringStartTimestamp = warehouseElement.getAttribute(NAME_ATTRIBUTE_WAREHOUSE_START_TIME);
         String[] stringHoursMinutesSeconds = stringStartTimestamp.split(":");
 
-        if (stringHoursMinutesSeconds.length == 3) {
-            int[] hoursMinuesSeconds = new int[3];
-            hoursMinuesSeconds[0] = Integer.parseInt(stringHoursMinutesSeconds[0]);
-            hoursMinuesSeconds[1] = Integer.parseInt(stringHoursMinutesSeconds[1]);
-            hoursMinuesSeconds[2] = Integer.parseInt(stringHoursMinutesSeconds[2]);
+        if (stringHoursMinutesSeconds.length != 3)
+            throw new ParserTimeSyntaxException("The start delivery time must be on the format hh:mm:ss");
 
-            return hoursMinuesSeconds[0] * 3600 + hoursMinuesSeconds[1] * 60 + hoursMinuesSeconds[2];
-        } // else TODO throw exception
-        return -1;
+        int hours;
+        int minutes;
+        int seconds;
+        try {
+            hours = Integer.parseInt(stringHoursMinutesSeconds[0]);
+            minutes = Integer.parseInt(stringHoursMinutesSeconds[1]);
+            seconds = Integer.parseInt(stringHoursMinutesSeconds[2]);
+        } catch (NumberFormatException e) {
+            throw new ParserShouldBeIntegerValueException(e);
+        }
+
+        if (hours < 0 || hours >= 24 || minutes < 0 || minutes >= 60 || seconds < 0 || seconds >= 60)
+            throw new ParserTimeSyntaxException("The start delivery time must be on the format hh:mm:ss");
+
+        return hours * 3600 + minutes * 60 + seconds;
     }
 
-    private DeliveryAddress getDeliveryAddress(Element deliveryAddressElement, CityMap cityMap) {
-        int idIntersection = Integer.parseInt(deliveryAddressElement.getAttribute(NAME_ATTRIBUTE_DELIVERY_REQUEST_ID));
-        int deliveryDuration = Integer.parseInt(deliveryAddressElement.getAttribute(NAME_ATTRIBUTE_DELIVERY_REQUEST_DURATION));
+    private DeliveryAddress getDeliveryAddress(Element deliveryAddressElement, CityMap cityMap,
+            Collection<DeliveryAddress> deliveryAddresses) throws ParserException {
+        int idIntersection;
+        int deliveryDuration;
+        try {
+            idIntersection = Integer.parseInt(deliveryAddressElement.getAttribute(NAME_ATTRIBUTE_DELIVERY_REQUEST_ID));
+            deliveryDuration = Integer.parseInt(deliveryAddressElement.getAttribute(NAME_ATTRIBUTE_DELIVERY_REQUEST_DURATION));
+        } catch (NumberFormatException e) {
+            throw new ParserShouldBeIntegerValueException(e);
+        }
+
+        if (!cityMap.isIntersectionInCityMap(idIntersection))
+            throw new ParserInvalidIdException("The address of a delivery request must exist in the city map");
+
         // TODO construct with time constraints
-        return new DeliveryAddress(cityMap.getIntersection(idIntersection), deliveryDuration);
+        DeliveryAddress deliveryAddress = new DeliveryAddress(cityMap.getIntersection(idIntersection), deliveryDuration);
+        if (deliveryAddresses.contains(deliveryAddress))
+            throw new ParserDuplicateObjectException("There are two delivery addresses with the address " + idIntersection,
+                    deliveryAddress);
+
+        return deliveryAddress;
     }
 }
