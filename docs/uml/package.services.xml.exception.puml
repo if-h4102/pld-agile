@@ -9,6 +9,7 @@ package services.xml.exception {
     class ParserDuplicateObjectException
     class ParserIntegerValueException
     class ParserShouldBeIntegerValueException
+    class ParserMissingArgumentException
     
     abstract class ParserSyntaxException
     abstract class ParserNodesNumberException
@@ -19,19 +20,45 @@ package services.xml.exception {
     class ParserBoundedNodesNumberException
     class ParserLowerBoundedNodesNumberException
     
+    
     Exception <|-- ParserException
     
-    ParserException <|-- ParserSyntaxException
-    ParserException <|-- ParserSemanticException
+    ParserException <|-l- ParserSyntaxException
+    ParserException <|----- ParserSemanticException
     
-    ParserSemanticException <|-- ParserDuplicateObjectException
+    ParserSemanticException <|-l- ParserDuplicateObjectException
     ParserSemanticException <|-- ParserIntegerValueException
     ParserSemanticException <|-- ParserShouldBeIntegerValueException
     ParserSemanticException <|-- ParserInvalidIdException
+    ParserSemanticException <|-- ParserMissingArgumentException
     
     ParserSyntaxException <|-- ParserNodesNumberException
-    ParserSyntaxException <|-- ParserMalformedXmlException
+    ParserSyntaxException <|-l- ParserMalformedXmlException
     
     ParserNodesNumberException <|-- ParserBoundedNodesNumberException
-    ParserNodesNumberException <|-- ParserLowerBoundedNodesNumberException
+    ParserNodesNumberException <|-l- ParserLowerBoundedNodesNumberException
+    
+    
+    class ParserDuplicateObjectException {
+        -duplicate: Object
+    }
+    
+    class ParserIntegerValueException {
+        -value: int
+    }
+    
+    class ParserNodesNumberException {
+        -actualNodesNumber: int
+        -nodesName: String
+    }
+    
+    class ParserBoundedNodesNumberException {
+        -maxNodesNumberExpected: int
+        -minNodesNumberExpected: int
+    }
+    
+    class ParserLowerBoundedNodesNumberException {
+        -minNodesNumberExpected: int
+    }
+    
 }

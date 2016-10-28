@@ -128,18 +128,18 @@ public class CityMap {
     private List<Route> computeReturn(Map<Integer, Integer> index, Intersection[] predecessors, AbstractWayPoint startWayPoint, List<AbstractWayPoint> endWayPoints) {
         List<Route> result = new ArrayList<Route>();
         for (AbstractWayPoint endWayPoint : endWayPoints) {
-            List<StreetSection> streetSections = new LinkedList<StreetSection>();
+            List<StreetSection> streetSectionsInCurrentRoute = new LinkedList<StreetSection>();
 
             Intersection currentIntersection = endWayPoint.getIntersection();
             Intersection precedentIntersection = predecessors[index.get(currentIntersection.getId())];
 
             while(precedentIntersection != null) {
-                streetSections.add(0, getStreetSection(precedentIntersection, currentIntersection));
+                streetSectionsInCurrentRoute.add(0, getStreetSection(precedentIntersection, currentIntersection));
                 currentIntersection = precedentIntersection;
                 precedentIntersection = predecessors[index.get(currentIntersection.getId())];
             }
 
-            result.add(new Route(startWayPoint, endWayPoint, streetSections));
+            result.add(new Route(startWayPoint, endWayPoint, streetSectionsInCurrentRoute));
         }
         return result;
     }

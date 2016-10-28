@@ -8,6 +8,7 @@ import services.xml.exception.ParserIntegerValueException;
 import services.xml.exception.ParserInvalidIdException;
 import services.xml.exception.ParserLowerBoundedNodesNumberException;
 import services.xml.exception.ParserMalformedXmlException;
+import services.xml.exception.ParserMissingAttributeException;
 import services.xml.exception.ParserShouldBeIntegerValueException;
 import services.xml.exception.ParserTimeSyntaxException;
 import org.w3c.dom.Document;
@@ -81,14 +82,18 @@ public class Parser {
         return new CityMap(intersections.values(), streetSections);
     }
 
-    private void addIntersection(Element intersectionNode, Map<Integer, Intersection> intersections) throws ParserException {
+    private void addIntersection(Element intersectionElement, Map<Integer, Intersection> intersections) throws ParserException {
+        if (!attributeExist(intersectionElement, NAME_ATTRIBUTE_INTERSECTION_ID, NAME_ATTRIBUTE_INTERSECTION_X,
+                NAME_ATTRIBUTE_INTERSECTION_Y))
+            throw new ParserMissingAttributeException("An attribute is missing to construct the intersection");
+
         int id;
         int x;
         int y;
         try {
-            id = Integer.parseInt(intersectionNode.getAttribute(NAME_ATTRIBUTE_INTERSECTION_ID));
-            x = Integer.parseInt(intersectionNode.getAttribute(NAME_ATTRIBUTE_INTERSECTION_X));
-            y = Integer.parseInt(intersectionNode.getAttribute(NAME_ATTRIBUTE_INTERSECTION_Y));
+            id = Integer.parseInt(intersectionElement.getAttribute(NAME_ATTRIBUTE_INTERSECTION_ID));
+            x = Integer.parseInt(intersectionElement.getAttribute(NAME_ATTRIBUTE_INTERSECTION_X));
+            y = Integer.parseInt(intersectionElement.getAttribute(NAME_ATTRIBUTE_INTERSECTION_Y));
         } catch (NumberFormatException e) {
             throw new ParserShouldBeIntegerValueException(e);
         }
@@ -107,21 +112,25 @@ public class Parser {
         intersections.put(id, intersection);
     }
 
-    private StreetSection getStreetSection(Element streetSectionNode, Map<Integer, Intersection> intersections,
+    private StreetSection getStreetSection(Element streetSectionElement, Map<Integer, Intersection> intersections,
             Collection<StreetSection> streetSections) throws ParserException {
+        if (!attributeExist(streetSectionElement, NAME_ATTRIBUTE_STREET_SECTION_START, NAME_ATTRIBUTE_STREET_SECTION_END,
+                NAME_ATTRIBUTE_STREET_SECTION_LENGTH, NAME_ATTRIBUTE_STREET_SECTION_VELOCITY, NAME_ATTRIBUTE_STREET_SECTION_STREET_NAME))
+            throw new ParserMissingAttributeException("An attribute is missing to construct the street section");
+
         int idIntersectionStart;
         int idIntersectionEnd;
         int length;
         int speed;
         try {
-            idIntersectionStart = Integer.parseInt(streetSectionNode.getAttribute(NAME_ATTRIBUTE_STREET_SECTION_START));
-            idIntersectionEnd = Integer.parseInt(streetSectionNode.getAttribute(NAME_ATTRIBUTE_STREET_SECTION_END));
-            length = Integer.parseInt(streetSectionNode.getAttribute(NAME_ATTRIBUTE_STREET_SECTION_LENGTH));
-            speed = Integer.parseInt(streetSectionNode.getAttribute(NAME_ATTRIBUTE_STREET_SECTION_VELOCITY));
+            idIntersectionStart = Integer.parseInt(streetSectionElement.getAttribute(NAME_ATTRIBUTE_STREET_SECTION_START));
+            idIntersectionEnd = Integer.parseInt(streetSectionElement.getAttribute(NAME_ATTRIBUTE_STREET_SECTION_END));
+            length = Integer.parseInt(streetSectionElement.getAttribute(NAME_ATTRIBUTE_STREET_SECTION_LENGTH));
+            speed = Integer.parseInt(streetSectionElement.getAttribute(NAME_ATTRIBUTE_STREET_SECTION_VELOCITY));
         } catch (NumberFormatException e) {
             throw new ParserShouldBeIntegerValueException(e);
         }
-        String streetName = streetSectionNode.getAttribute(NAME_ATTRIBUTE_STREET_SECTION_STREET_NAME);
+        String streetName = streetSectionElement.getAttribute(NAME_ATTRIBUTE_STREET_SECTION_STREET_NAME);
 
         if (!intersections.containsKey(idIntersectionStart))
             throw new ParserInvalidIdException("The start of a street section must exist");
@@ -182,6 +191,9 @@ public class Parser {
     }
 
     private Warehouse getWarehouse(Element warehouseElement, CityMap cityMap) throws ParserException {
+        if (!attributeExist(warehouseElement, NAME_ATTRIBUTE_WAREHOUSE_ID))
+            throw new ParserMissingAttributeException("An attribute is missing to construct the warehouse");
+        
         int idIntersection;
         try {
             idIntersection = Integer.parseInt(warehouseElement.getAttribute(NAME_ATTRIBUTE_WAREHOUSE_ID));
@@ -196,6 +208,9 @@ public class Parser {
     }
 
     private int getStartPlanningTimestamp(Element warehouseElement) throws ParserException {
+        if (!attributeExist(warehouseElement, NAME_ATTRIBUTE_WAREHOUSE_START_TIME))
+            throw new ParserMissingAttributeException("An attribute is missing to construct the warehouse");
+        
         String stringStartTimestamp = warehouseElement.getAttribute(NAME_ATTRIBUTE_WAREHOUSE_START_TIME);
         String[] stringHoursMinutesSeconds = stringStartTimestamp.split(":");
 
@@ -221,6 +236,9 @@ public class Parser {
 
     private DeliveryAddress getDeliveryAddress(Element deliveryAddressElement, CityMap cityMap,
             Collection<DeliveryAddress> deliveryAddresses) throws ParserException {
+        if (!attributeExist(deliveryAddressElement, NAME_ATTRIBUTE_DELIVERY_REQUEST_DURATION, NAME_ATTRIBUTE_DELIVERY_REQUEST_ID))
+            throw new ParserMissingAttributeException("An attribute is missing to construct the delivery addresss");
+        
         int idIntersection;
         int deliveryDuration;
         try {
@@ -240,5 +258,13 @@ public class Parser {
                     deliveryAddress);
 
         return deliveryAddress;
+    }
+
+    private boolean attributeExist(Element element, String... attributes) {
+        for (String attribute : attributes) {
+            if (!element.hasAttribute(attribute))
+                return false;
+        }
+        return true;
     }
 }
