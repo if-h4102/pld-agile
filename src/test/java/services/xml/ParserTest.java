@@ -15,6 +15,7 @@ import services.xml.exception.ParserLowerBoundedNodesNumberException;
 import services.xml.exception.ParserMalformedXmlException;
 import services.xml.exception.ParserMissingAttributeException;
 import services.xml.exception.ParserShouldBeIntegerValueException;
+import services.xml.exception.ParserTimeConstraintsException;
 import services.xml.exception.ParserTimeSyntaxException;
 import org.junit.Rule;
 import org.junit.Test;
@@ -259,6 +260,25 @@ public class ParserTest {
         assertEquals(actualDeliveryRequest, expectedDeliveryRequest);
     }
 
+    @Test
+    public void parseDeliveryRequestNormalWithTimeConstraintsTest() throws URISyntaxException, IOException, ParserException {
+        Parser parser = new Parser();
+
+        File cityMapXmlFile = getFile("/services/xml/cityMap/cityMap2x2.xml");
+        CityMap cityMap = parser.getCityMap(cityMapXmlFile);
+
+        File deliveryRequestXmlFile = getFile("/services/xml/deliveryRequest/deliveryRequestWithTimeConstraints2x2-2.xml");
+        DeliveryRequest actualDeliveryRequest = parser.getDeliveryRequest(deliveryRequestXmlFile, cityMap);
+
+        Warehouse expectedW = new Warehouse(new Intersection(2, 140, 420));
+        List<DeliveryAddress> expectedDA = new ArrayList<DeliveryAddress>();
+        expectedDA.add(new DeliveryAddress(new Intersection(0, 134, 193), 100, 11 * 3600, 13 * 3600));
+        expectedDA.add(new DeliveryAddress(new Intersection(3, 132, 470), 250));
+        DeliveryRequest expectedDeliveryRequest = new DeliveryRequest(expectedW, expectedDA, 28_800);
+
+        assertEquals(actualDeliveryRequest, expectedDeliveryRequest);
+    }
+
     // -------------------------------------------------- Malformed xml------------------------------------------------
     @Test
     public void parseDeliveryRequestMalformedXmlTest() throws URISyntaxException, IOException, ParserException {
@@ -322,8 +342,7 @@ public class ParserTest {
         File deliveryRequestXmlFile = getFile("/services/xml/deliveryRequest/warehouse/timeOutsideADay.xml");
 
         thrown.expect(ParserTimeSyntaxException.class);
-        // TODO verify "start delivery time"
-        thrown.expectMessage("The start delivery time must be on the format hh:mm:ss");
+        thrown.expectMessage("The start planning time must be on the format hh:mm:ss");
         parser.getDeliveryRequest(deliveryRequestXmlFile, cityMap);
     }
 
@@ -336,8 +355,7 @@ public class ParserTest {
         File deliveryRequestXmlFile = getFile("/services/xml/deliveryRequest/warehouse/badSyntaxTime.xml");
 
         thrown.expect(ParserTimeSyntaxException.class);
-        // TODO verify "start delivery time"
-        thrown.expectMessage("The start delivery time must be on the format hh:mm:ss");
+        thrown.expectMessage("The start planning time must be on the format hh:mm:ss");
         parser.getDeliveryRequest(deliveryRequestXmlFile, cityMap);
     }
 
@@ -350,8 +368,7 @@ public class ParserTest {
         File deliveryRequestXmlFile = getFile("/services/xml/deliveryRequest/warehouse/negativeTime.xml");
 
         thrown.expect(ParserTimeSyntaxException.class);
-        // TODO verify "start delivery time"
-        thrown.expectMessage("The start delivery time must be on the format hh:mm:ss");
+        thrown.expectMessage("The start planning time must be on the format hh:mm:ss");
         parser.getDeliveryRequest(deliveryRequestXmlFile, cityMap);
     }
 
@@ -377,7 +394,7 @@ public class ParserTest {
         File deliveryRequestXmlFile = getFile("/services/xml/deliveryRequest/warehouse/missingAttribute.xml");
 
         thrown.expect(ParserMissingAttributeException.class);
-        thrown.expectMessage("An attribute is missing to construct the warehouse");
+        thrown.expectMessage("The start planning time is missing");
         parser.getDeliveryRequest(deliveryRequestXmlFile, cityMap);
     }
 
@@ -481,7 +498,7 @@ public class ParserTest {
 
         File deliveryRequestXmlFile = getFile("/services/xml/deliveryRequest/deliveryAddress/badSyntaxDeliveryTime.xml");
 
-        thrown.expect(ParserMissingAttributeException.class);
+        thrown.expect(ParserTimeSyntaxException.class);
         thrown.expectMessage("The delivery time must be at the format hh:mm:ss");
         parser.getDeliveryRequest(deliveryRequestXmlFile, cityMap);
     }
@@ -495,7 +512,7 @@ public class ParserTest {
 
         File deliveryRequestXmlFile = getFile("/services/xml/deliveryRequest/deliveryAddress/deliveryTimeStartAfterDeliveryTimeEnd.xml");
 
-        thrown.expect(ParserMissingAttributeException.class);
+        thrown.expect(ParserTimeConstraintsException.class);
         thrown.expectMessage("The delivery time start must be before the delivery time end");
         parser.getDeliveryRequest(deliveryRequestXmlFile, cityMap);
     }
@@ -508,7 +525,7 @@ public class ParserTest {
 
         File deliveryRequestXmlFile = getFile("/services/xml/deliveryRequest/deliveryAddress/notEnoughTimeToDeliver.xml");
 
-        thrown.expect(ParserMissingAttributeException.class);
+        thrown.expect(ParserTimeConstraintsException.class);
         thrown.expectMessage("The difference between delivery time start and delivery time end must be greater than the delivery duration");
         parser.getDeliveryRequest(deliveryRequestXmlFile, cityMap);
     }

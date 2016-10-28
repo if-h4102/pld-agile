@@ -11,9 +11,8 @@ public abstract class ParserSyntaxException extends ParserException {
     public ParserSyntaxException(Throwable cause) {
         super(cause.getMessage(), cause);
     }
-    
+
     public ParserSyntaxException(String message, Throwable cause) {
         super(message, cause);
     }
-
 }

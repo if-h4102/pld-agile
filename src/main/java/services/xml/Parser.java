@@ -10,6 +10,7 @@ import services.xml.exception.ParserLowerBoundedNodesNumberException;
 import services.xml.exception.ParserMalformedXmlException;
 import services.xml.exception.ParserMissingAttributeException;
 import services.xml.exception.ParserShouldBeIntegerValueException;
+import services.xml.exception.ParserTimeConstraintsException;
 import services.xml.exception.ParserTimeSyntaxException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -43,10 +44,12 @@ public class Parser {
     private static final String DELIVERY_ADDRESS_NAME = "livraison";
 
     private static final String NAME_ATTRIBUTE_WAREHOUSE_ID = "adresse";
-    private static final String NAME_ATTRIBUTE_WAREHOUSE_START_TIME = "heureDepart";
+    private static final String NAME_ATTRIBUTE_WAREHOUSE_START_PLANNING_TIME = "heureDepart";
 
     private static final String NAME_ATTRIBUTE_DELIVERY_REQUEST_ID = "adresse";
     private static final String NAME_ATTRIBUTE_DELIVERY_REQUEST_DURATION = "duree";
+    private static final String NAME_ATTRIBUTE_DELIVERY_REQUEST_START_DELIVERY_TIME = "debutPlage";
+    private static final String NAME_ATTRIBUTE_DELIVERY_REQUEST_END_DELIVERY_TIME = "finPlage";
 
     public CityMap getCityMap(File xmlFile) throws IOException, ParserException {
         Map<Integer, Intersection> intersections = new TreeMap<Integer, Intersection>();
@@ -193,7 +196,7 @@ public class Parser {
     private Warehouse getWarehouse(Element warehouseElement, CityMap cityMap) throws ParserException {
         if (!attributeExist(warehouseElement, NAME_ATTRIBUTE_WAREHOUSE_ID))
             throw new ParserMissingAttributeException("An attribute is missing to construct the warehouse");
-        
+
         int idIntersection;
         try {
             idIntersection = Integer.parseInt(warehouseElement.getAttribute(NAME_ATTRIBUTE_WAREHOUSE_ID));
@@ -208,37 +211,22 @@ public class Parser {
     }
 
     private int getStartPlanningTimestamp(Element warehouseElement) throws ParserException {
-        if (!attributeExist(warehouseElement, NAME_ATTRIBUTE_WAREHOUSE_START_TIME))
-            throw new ParserMissingAttributeException("An attribute is missing to construct the warehouse");
-        
-        String stringStartTimestamp = warehouseElement.getAttribute(NAME_ATTRIBUTE_WAREHOUSE_START_TIME);
-        String[] stringHoursMinutesSeconds = stringStartTimestamp.split(":");
+        if (!attributeExist(warehouseElement, NAME_ATTRIBUTE_WAREHOUSE_START_PLANNING_TIME))
+            throw new ParserMissingAttributeException("The start planning time is missing");
 
-        if (stringHoursMinutesSeconds.length != 3)
-            throw new ParserTimeSyntaxException("The start delivery time must be on the format hh:mm:ss");
-
-        int hours;
-        int minutes;
-        int seconds;
+        String stringStartTimestamp = warehouseElement.getAttribute(NAME_ATTRIBUTE_WAREHOUSE_START_PLANNING_TIME);
         try {
-            hours = Integer.parseInt(stringHoursMinutesSeconds[0]);
-            minutes = Integer.parseInt(stringHoursMinutesSeconds[1]);
-            seconds = Integer.parseInt(stringHoursMinutesSeconds[2]);
-        } catch (NumberFormatException e) {
-            throw new ParserShouldBeIntegerValueException(e);
+            return getTime(stringStartTimestamp);
+        } catch (ParserTimeSyntaxException e) {
+            throw new ParserTimeSyntaxException("The start planning time must be on the format hh:mm:ss");
         }
-
-        if (hours < 0 || hours >= 24 || minutes < 0 || minutes >= 60 || seconds < 0 || seconds >= 60)
-            throw new ParserTimeSyntaxException("The start delivery time must be on the format hh:mm:ss");
-
-        return hours * 3600 + minutes * 60 + seconds;
     }
 
     private DeliveryAddress getDeliveryAddress(Element deliveryAddressElement, CityMap cityMap,
             Collection<DeliveryAddress> deliveryAddresses) throws ParserException {
         if (!attributeExist(deliveryAddressElement, NAME_ATTRIBUTE_DELIVERY_REQUEST_DURATION, NAME_ATTRIBUTE_DELIVERY_REQUEST_ID))
             throw new ParserMissingAttributeException("An attribute is missing to construct the delivery addresss");
-        
+
         int idIntersection;
         int deliveryDuration;
         try {
@@ -251,8 +239,15 @@ public class Parser {
         if (!cityMap.isIntersectionInCityMap(idIntersection))
             throw new ParserInvalidIdException("The address of a delivery request must exist in the city map");
 
-        // TODO construct with time constraints
-        DeliveryAddress deliveryAddress = new DeliveryAddress(cityMap.getIntersection(idIntersection), deliveryDuration);
+        int[] timeConstraints;
+        try {
+            timeConstraints = getTimeConstraints(deliveryAddressElement, deliveryDuration);
+        } catch (ParserException e) {
+            throw e;
+        }
+
+        DeliveryAddress deliveryAddress = new DeliveryAddress(cityMap.getIntersection(idIntersection), deliveryDuration, timeConstraints[0],
+                timeConstraints[1]);
         if (deliveryAddresses.contains(deliveryAddress))
             throw new ParserDuplicateObjectException("There are two delivery addresses with the address " + idIntersection,
                     deliveryAddress);
@@ -260,11 +255,64 @@ public class Parser {
         return deliveryAddress;
     }
 
+    private int[] getTimeConstraints(Element deliveryAddressElement, int deliveryDuration) throws ParserException {
+        boolean isStartDeliveryTime = deliveryAddressElement.hasAttribute(NAME_ATTRIBUTE_DELIVERY_REQUEST_START_DELIVERY_TIME);
+        boolean isEndDeliveryTime = deliveryAddressElement.hasAttribute(NAME_ATTRIBUTE_DELIVERY_REQUEST_END_DELIVERY_TIME);
+        int[] result = { 0, 86400 };
+
+        if (!isStartDeliveryTime && !isEndDeliveryTime)
+            return result;
+        if (!isStartDeliveryTime)
+            throw new ParserMissingAttributeException("The delivery time start must be present if the delivery time end is present");
+        if (!isEndDeliveryTime)
+            throw new ParserMissingAttributeException("The delivery time end must be present if the delivery time start is present");
+
+        try {
+            result[0] = getTime(deliveryAddressElement.getAttribute(NAME_ATTRIBUTE_DELIVERY_REQUEST_START_DELIVERY_TIME));
+            result[1] = getTime(deliveryAddressElement.getAttribute(NAME_ATTRIBUTE_DELIVERY_REQUEST_END_DELIVERY_TIME));
+        } catch (ParserTimeSyntaxException e) {
+            throw new ParserTimeSyntaxException("The delivery time must be at the format hh:mm:ss", e);
+        }
+
+        if (result[0] > result[1])
+            throw new ParserTimeConstraintsException("The delivery time start must be before the delivery time end");
+        if (result[0] + deliveryDuration > result[1])
+            throw new ParserTimeConstraintsException(
+                    "The difference between delivery time start and delivery time end must be greater than the delivery duration");
+
+        return result;
+    }
+
+    // String... is as a String[] in this method, but is called with syntax : (string1, string2, string3)
     private boolean attributeExist(Element element, String... attributes) {
         for (String attribute : attributes) {
             if (!element.hasAttribute(attribute))
                 return false;
         }
         return true;
+    }
+
+    private int getTime(String stringTime) throws ParserTimeSyntaxException {
+        String errorMessage = "The format of a time must be hh:mm:ss";
+
+        String[] stringHoursMinutesSeconds = stringTime.split(":");
+        if (stringHoursMinutesSeconds.length != 3)
+            throw new ParserTimeSyntaxException(errorMessage);
+
+        int hours;
+        int minutes;
+        int seconds;
+        try {
+            hours = Integer.parseInt(stringHoursMinutesSeconds[0]);
+            minutes = Integer.parseInt(stringHoursMinutesSeconds[1]);
+            seconds = Integer.parseInt(stringHoursMinutesSeconds[2]);
+        } catch (NumberFormatException e) {
+            throw new ParserTimeSyntaxException(errorMessage);
+        }
+
+        if (hours < 0 || hours >= 24 || minutes < 0 || minutes >= 60 || seconds < 0 || seconds >= 60)
+            throw new ParserTimeSyntaxException(errorMessage);
+
+        return hours * 3600 + minutes * 60 + seconds;
     }
 }
