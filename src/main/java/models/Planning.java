@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Planning {
     /**
@@ -62,7 +63,29 @@ public class Planning {
      * @return the updated current planning.
      */
     public Planning addWayPoint(AbstractWayPoint point, CityMap map) {
-        // TODO
+        // Compute the best position to introduce the given way point
+        int bestTime = Integer.MAX_VALUE;
+        int bestPosition = 0;
+        Route[] newRoutes = new Route[2];
+        int index = 0;
+        for(Route r : this.routes) {
+            int time =
+                map.shortestPath(r.getStartWaypoint(), Collections.singletonList(point)).get(0).getDuration() +
+                map.shortestPath(point, Collections.singletonList(r.getEndWaypoint())).get(0).getDuration();
+            // TODO: style guide ?
+            if(time < bestTime) {
+                bestTime = time;
+                bestPosition = index;
+                newRoutes[0] = map.shortestPath(r.getStartWaypoint(), Collections.singletonList(point)).get(0);
+                newRoutes[1] = map.shortestPath(point, Collections.singletonList(r.getEndWaypoint())).get(0);
+            }
+        }
+        // Remove the now unnecessary route
+        this.routes.remove(bestPosition);
+        // Introduce the way point
+        this.routes.add(bestPosition, newRoutes[1]);
+        this.routes.add(bestPosition, newRoutes[0]);
+
         return this;
     }
 
@@ -84,7 +107,7 @@ public class Planning {
         AbstractWayPoint end = null;
         int index = 0;
         int[] routesToRemove = new int[2];
-        for(Route r : this.getRoutes()) {
+        for(Route r : this.routes) {
             if(start != null) {
                 // We just found the way point we were looking for in the previous iteration
                 // As the routes list must be sorted, we know have the other point we want
