@@ -52,7 +52,7 @@ public class CityMap {
     // TODO Complexity to improve by using a min-heap for the greys intersections
     @Requires({"startWayPoint != null", "endWayPoints != null",
         "intersections.containsValue(startWayPoint.getIntersection())"})
-    private List<Route> shortestPath(AbstractWayPoint startWayPoint, List<AbstractWayPoint> endWayPoints) {
+    protected List<Route> shortestPath(AbstractWayPoint startWayPoint, List<AbstractWayPoint> endWayPoints) {
         Map<Integer, Integer> index = new TreeMap<Integer, Integer>();
         int counter = 0;
         for(Map.Entry<Integer,Intersection> entry : intersections.entrySet()) {
