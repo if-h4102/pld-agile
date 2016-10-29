@@ -8,6 +8,16 @@ public class BasicTspSolver extends AbstractTspSolver {
     protected AbstractWayPoint startPoint;
 
     /**
+     * Branch and bound const (lossy branch cutting)
+     */
+    private final int MIN_EXPLORATION_WIDTH = 3; //min number of route tried from a given point
+    private final int EXPLORATION_WIDTH_DIVISOR = 1; //divisor of the total number of accessible points
+        //finale width exploration is: MIN_EXPLORATION_WIDTH + (number of accessible points) / EXPLORATION_WIDTH_DIVISOR
+        //set to 1 to disable width exploration limitation
+    private final int MAX_NUMBER_OF_MIN_COST = 1000; //branch cutted if cost of currant branch is bigger than this constant
+                                                  //multiply by the minimum cost to reach an accessible point.
+        //set to 1000 or a an other big value to disable, Interger.MAX_VALUE is too big as overflow problems
+    /**
      * The constructor for a basic TSP solver. It doesn't need anything for now.
      */
     public BasicTspSolver() {
@@ -94,11 +104,17 @@ public class BasicTspSolver extends AbstractTspSolver {
         else if (seenCost + this.bound(lastSeenNode, unseen, costs, deliveryDurations) < this.bestSolutionCost) {
             // We have a great candidate !
             Iterator<AbstractWayPoint> it = this.iterator(lastSeenNode, unseen, costs, deliveryDurations);
-            while (it.hasNext()) {
+            int i=0;
+            int minCost = Integer.MAX_VALUE;
+            while (it.hasNext() && i++ < unseen.size()/EXPLORATION_WIDTH_DIVISOR+MIN_EXPLORATION_WIDTH) {
                 AbstractWayPoint nextNode = it.next();
                 seen.add(nextNode);
                 unseen.remove(nextNode);
                 int costRouteAndDelivery = costs.get(lastSeenNode).get(nextNode);
+                if(i==1)
+                    minCost = costRouteAndDelivery;
+                else if(costRouteAndDelivery > MAX_NUMBER_OF_MIN_COST*minCost)
+                    break; //if currant cost is bigger than two time the min value cut the currant branch.
                 //if we can pass to the selected node
                 if(!nextNode.canBePassed(this.startPoint.getDeliveryTimeStart()+costRouteAndDelivery)){
                     //add a one day cost (longer than the max delivery time)
