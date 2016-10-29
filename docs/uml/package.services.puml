@@ -59,6 +59,7 @@ package services {
         class AddWayPointCommand extends AbstractCommand {
             -wayPoint: AbstractWayPoint
             -planning: Planning
+            -map: CityMap
             +void execute()
             +boolean isReversible()
             +AbstractCommand getReversed()
@@ -67,6 +68,7 @@ package services {
         class RemoveWayPoint extends AbstractCommand {
             -wayPoint: AbstractWayPoint
             -planning: Planning
+            -map: CityMap
             +void execute()
             +boolean isReversible()
             +AbstractCommand getReversed()
