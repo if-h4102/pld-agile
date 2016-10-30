@@ -33,6 +33,10 @@ public class MapCanvasController extends Canvas {
     private SimpleObjectProperty<DeliveryRequest> deliveryRequest;
     private SimpleObjectProperty<Planning> planning;
 
+    /**
+     * Construct a MapCanvasController
+     * by initializing properties and binding events.
+     */
     public MapCanvasController() {
         widthProperty().addListener(event -> draw());
         heightProperty().addListener(event -> draw());
@@ -44,25 +48,27 @@ public class MapCanvasController extends Canvas {
         planningProperty().addListener(event -> draw());
     }
 
+    /**
+     * Clear the current canvas.
+     */
     @SuppressWarnings("restriction")
     private void clear() {
-        double width = getWidth();
-        double height = getHeight();
         GraphicsContext gc = getGraphicsContext2D();
-        gc.setTransform(1, 0,  0, 1,0, 0);
-        gc.clearRect(0, 0, width, height);
+        gc.setTransform(1, 0, 0, 1, 0, 0);
+        gc.clearRect(0, 0, getWidth(), getHeight());
     }
 
+    /**
+     * Update the current canvas accordingly to the
+     * city map attribute.
+     */
     @SuppressWarnings("restriction")
     private void updateTransform() {
-        double width = getWidth();
-        double height = getHeight();
-        GraphicsContext gc = getGraphicsContext2D();
-        gc.setTransform(1, 0,  0, 1, 0, 0);
-        gc.clearRect(0, 0, width, height);
+        // Clear the view
+        clear();
 
-    	CityMap map = getCityMap();
-        List<Intersection> intersections = map.getIntersections();
+        // Look for the extremal coordinates of the map
+        List<Intersection> intersections = getCityMap().getIntersections();
         double xmax = 0;
         double ymax = 0;
         double xmin = 0;
@@ -75,38 +81,51 @@ public class MapCanvasController extends Canvas {
 			ymin = Math.min(ymin, inter.getY());
 		}
 
-        double mapWidth = xmax-xmin;
-        double mapHeight = ymax-ymin;
+		// Compute optimal zoom
+        double zoom = Math.min(getWidth()/(xmax-xmin), getHeight()/(ymax-ymin));
 
-        double zoomX = width/mapWidth;
-        double zoomY = height/mapHeight;
-
-        double zoom = Math.min(zoomX,zoomY);
-
+        // Update graphical context
+        GraphicsContext gc = getGraphicsContext2D();
         gc.scale(zoom, zoom);
-        
         gc.translate(-xmin-8, -ymin-8); //offset
+        // TODO: using a literal number is a bad practice. Replace it by a constant.
     }
 
-
+    /**
+     * Draw what need to be drawn in the current canvas.
+     */
+    // TODO: i don't understand why some action are done every time here (like updateTransform)
     @SuppressWarnings("restriction")
 	private void draw() {
+        // Clear the view
     	clear();
 
+        // If no city map is currently loaded, we have nothing to draw
     	if (getCityMap() == null) {
             return;
         }
+        // TODO: why checking if the city map exist here but not in updateTransform ?
 
+        // Update the view
     	updateTransform();
 
+        // Draw the current city map
         drawCityMap();
+
+        // If no delivery request is currently loaded, we have nothing else to draw
         if(getDeliveryRequest() == null) {
         	return;
         }
+
+        // Draw the current delivery request
         drawDeliveryRequest();
+
+        // If no planning is currently loaded, we have nothing else to draw
         if(getPlanning() == null){
         	return;
         }
+
+        // Draw the current planning
         drawPlanning();
     }
 
@@ -128,6 +147,7 @@ public class MapCanvasController extends Canvas {
 
 		for (Intersection inter : intersections){
 			gc.fillOval(inter.getX()-5, inter.getY()-5, 10, 10);
+            // TODO: literal numbers should be replaced with constants
 		}
     }
 
@@ -147,6 +167,7 @@ public class MapCanvasController extends Canvas {
     	gc.setFill(Color.RED);
     	gc.fillOval(warehouse.getIntersection().getX()-9, warehouse.getIntersection().getY()-9, 18, 18);
     	gc.setFill(Color.BLACK);
+        // TODO: literal numbers should be replaced with constants
     }
 
 	@SuppressWarnings("restriction")
@@ -179,7 +200,7 @@ public class MapCanvasController extends Canvas {
     		gc.strokeText(""+number, route.getStartWaypoint().getIntersection().getX(), route.getStartWaypoint().getIntersection().getY());
     		number++;
     	}
-
+        // TODO: literal numbers should be replaced with constants
     }
 
 
