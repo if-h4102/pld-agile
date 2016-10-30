@@ -1,12 +1,13 @@
-.root {
-    -fx-background-color: blue;
-    -fx-padding: 20px;
-}
+/*PlanningDetailsItem {*/
+    /*-fx-border-style: solid;*/
+    /*-fx-border-width: 3px;*/
+    /*-fx-border-color: #33d247;*/
+    /*-fx-end-margin: 10px;*/
+    /*-fx-padding: 10;*/
+    /*-fx-background-color: blue;*/
+/*}*/
 
-.list-cell {
-    -fx-border-style: solid;
-    -fx-border-width: 3px;
-    -fx-border-color: #d23d27;
-    -fx-end-margin: 10px;
-    -fx-padding: 10;
+VBox {
+    -fx-spacing: 15px;
+    -fx-padding: 10px;
 }

@@ -16,6 +16,12 @@
             <id>maven-cofoja-repo</id>
             <url>http://maven-cofoja.github.io/maven</url>
         </repository>
+
+        <repository>
+            <id>central</id>
+            <name>jcenter</name>
+            <url>http://jcenter.bintray.com</url>
+        </repository>
     </repositories>
 
     <properties>
@@ -49,6 +55,22 @@
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm-all</artifactId>
             <version>5.0.3</version>
+        </dependency>
+        <dependency>
+            <!--
+            Icon packs provider
+            -->
+            <groupId>org.kordamp.ikonli</groupId>
+            <artifactId>ikonli-javafx</artifactId>
+            <version>1.8.0</version>
+        </dependency>
+        <dependency>
+            <!--
+            Material icons pack
+            -->
+            <groupId>org.kordamp.ikonli</groupId>
+            <artifactId>ikonli-material-pack</artifactId>
+            <version>1.8.0</version>
         </dependency>
     </dependencies>
 
