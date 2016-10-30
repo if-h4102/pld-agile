@@ -6,19 +6,23 @@ import models.DeliveryGraph;
 import models.DeliveryRequest;
 import models.Planning;
 import services.tsp.AbstractTspSolver;
+import services.tsp.BasicBoundTspSolver;
 import services.tsp.BasicTspSolver;
 
 public class ComputingPlanningState extends WaitOpenDeliveryRequestState {
     public void enterState(MainController mainController) {
         System.out.println("Computing...");
-        AbstractTspSolver solver = new BasicTspSolver();
+        AbstractTspSolver solver = new BasicBoundTspSolver();
+//        AbstractTspSolver solver = new BasicTspSolver();
         DeliveryRequest dg = mainController.getDeliveryRequest();
         CityMap cm = mainController.getCityMap();
         DeliveryGraph deliveryGraph = cm.computeDeliveryGraph(dg);
+        long startTime = System.nanoTime();
         Planning planning = solver.solve(deliveryGraph);
+        long endTime = System.nanoTime();
         System.out.println(planning);
         mainController.setPlanning(planning);
-        System.out.println("Computed");
+        System.out.println("Computed in "+((endTime-startTime)/1000000)+" ms");
     }
 
     public void leaveState(MainController mainController) {

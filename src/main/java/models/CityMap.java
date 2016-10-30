@@ -168,9 +168,15 @@ public class CityMap {
         }
 
         Map<AbstractWayPoint, Map<AbstractWayPoint, Route>> mappedRoutes = new TreeMap<AbstractWayPoint, Map<AbstractWayPoint, Route>>();
-        for (AbstractWayPoint startPoint : pointsContainedInRequest) {
+        for (int i=0 ; i < pointsContainedInRequest.size() ; i++) {
+            //always get first element as it will be deleted and pushed back at the end of the list
+            AbstractWayPoint startPoint = pointsContainedInRequest.get(0);
             Map<AbstractWayPoint, Route> routesFromGivenStartPoint = new TreeMap<AbstractWayPoint, Route>();
+            //remove start point from list to prevent zero point route
+            pointsContainedInRequest.remove(0);//remove startPoint from the list
             List<Route> shortestPathRoutes = shortestPath(startPoint, pointsContainedInRequest);
+            pointsContainedInRequest.add(startPoint);//add startPoint back to the list (at the end)
+
             for (Route route : shortestPathRoutes) {
                 routesFromGivenStartPoint.put(route.getEndWaypoint(), route);
             }
