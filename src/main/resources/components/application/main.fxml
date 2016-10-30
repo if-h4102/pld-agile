@@ -15,6 +15,9 @@
       <Button fx:id="openDeliveryRequestButton" mnemonicParsing="false"
               onAction="#onOpenDeliveryRequestButtonAction"
               text="%open_delivery_request"/>
+      <Button fx:id="computePlanningButton" mnemonicParsing="false"
+              onAction="#onComputePlanningButtonAction"
+              text="%compute_planning"/>
     </ToolBar>
   </top>
   <center>
@@ -34,16 +37,6 @@
                   prefWidth="100.0">
         <BorderPane AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0"
                     AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-          <bottom>
-            <ButtonBar prefHeight="40.0" prefWidth="200.0"
-                       BorderPane.alignment="CENTER">
-              <buttons>
-                <Button fx:id="computePlanningButton" mnemonicParsing="false"
-                        onAction="#onComputePlanningButtonAction"
-                        text="%compute_planning"/>
-              </buttons>
-            </ButtonBar>
-          </bottom>
           <center>
             <Accordion BorderPane.alignment="CENTER">
               <panes>
