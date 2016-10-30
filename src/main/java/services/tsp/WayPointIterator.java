@@ -20,8 +20,8 @@ public class WayPointIterator implements Iterator<AbstractWayPoint> {
     public WayPointIterator(Collection<AbstractWayPoint> points, Map<AbstractWayPoint, Integer> costs){
         //call basic constructor
         this(points);
-        //sort array
-        Arrays.sort(wayPoints, (a,b) -> costs.get(a).compareTo(costs.get(b)));
+        //sort array the bigger cost first as the table is read end first
+        Arrays.sort(wayPoints, (a,b) -> costs.get(b).compareTo(costs.get(a)));
     }
     /**
      * Construct an iterator on the given structure.
