@@ -72,8 +72,7 @@ public class ParserTest {
         Parser parser = new Parser();
         File cityMapXmlFile = getFile("/services/xml/cityMap/malformedXml.xml");
 
-        thrown.expect(ParserMalformedXmlException.class);
-        thrown.expectMessage("Les structures de document XML doivent commencer et se terminer dans la même entité.");
+        thrown.expect(ParserMalformedXmlException.class); // No message expected, due to translation problems of the message
         parser.getCityMap(cityMapXmlFile);
     }
 
@@ -288,8 +287,7 @@ public class ParserTest {
 
         File deliveryRequestXmlFile = getFile("/services/xml/deliveryRequest/malformedXml.xml");
 
-        thrown.expect(ParserMalformedXmlException.class);
-        thrown.expectMessage("Les structures de document XML doivent commencer et se terminer dans la même entité.");
+        thrown.expect(ParserMalformedXmlException.class); // No message expected, due to translation problems of the message
         parser.getDeliveryRequest(deliveryRequestXmlFile, cityMap);
     }
 
