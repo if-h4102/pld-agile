@@ -76,8 +76,8 @@ public class CityMapTest {
         modifiedStreetSectionI.add(new Intersection(3, 1, 9));
         ArrayList<StreetSection> modifiedStreetSectionSS = new ArrayList<StreetSection>();
         // The first two streetSection have been modified
-        modifiedStreetSectionSS.add(new StreetSection(255, 23, "h2", modifiedStreetSectionI.get(0), modifiedStreetSectionI.get(1)));
-        modifiedStreetSectionSS.add(new StreetSection(255, 21, "h2", modifiedStreetSectionI.get(1), modifiedStreetSectionI.get(0)));
+        modifiedStreetSectionSS.add(new StreetSection(156, 23, "h0", baseI.get(2), baseI.get(3)));
+        modifiedStreetSectionSS.add(new StreetSection(156, 21, "h0", baseI.get(3), baseI.get(2)));
         modifiedStreetSectionSS.add(new StreetSection(125, 42, "h0", modifiedStreetSectionI.get(1), modifiedStreetSectionI.get(2)));
         modifiedStreetSectionSS.add(new StreetSection(125, 35, "h0", modifiedStreetSectionI.get(2), modifiedStreetSectionI.get(1)));
         modifiedStreetSectionSS.add(new StreetSection(431, 24, "h1", modifiedStreetSectionI.get(1), modifiedStreetSectionI.get(3)));
