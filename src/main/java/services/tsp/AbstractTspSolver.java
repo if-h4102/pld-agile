@@ -24,5 +24,6 @@ public abstract class AbstractTspSolver {
                                                   Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs, Map<AbstractWayPoint, Integer> deliveryDurations);
 
     protected abstract int bound(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen,
-                      Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs, Map<AbstractWayPoint, Integer> deliveryDurations);
+                                 Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs, Map<AbstractWayPoint, Integer> deliveryDurations,
+                                 int seenCost);
 }
