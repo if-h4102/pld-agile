@@ -56,24 +56,4 @@ public class WayPointIterator implements Iterator<AbstractWayPoint> {
     public AbstractWayPoint next() {
         return this.wayPoints[--wayPointsLeft];
     }
-
-    /**
-     * @param time the time at witch you want to get the "best" next node
-     * @return the next item in the collection available at the time given in parameter.
-     * if none satisfy this condition the first is returned.
-     */
-    @Requires("this.hasNext()")
-    public AbstractWayPoint next(int time) {
-        for(int i=wayPointsLeft-1 ; i>=0 ; i--) {
-            if(this.wayPoints[i].canBePassed(time)){
-                AbstractWayPoint ret = this.wayPoints[i];
-                for(int n=i ; n<wayPointsLeft-2 ; n++){
-                    wayPoints[n] = wayPoints[n+1];
-                }
-                this.wayPointsLeft--;
-                return ret;
-            }
-        }
-        return next();
-    }
 }
