@@ -3,8 +3,6 @@ package components.planningdetails;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -116,7 +114,7 @@ public class PlanningDetailsItem<E extends Route> extends AnchorPane {
         if (intersection == null) {
             return;
         }
-        setCoordinates("("+intersection.getX()+"; "+intersection.getY()+")");
+        setCoordinates("(" + intersection.getX() + "; " + intersection.getY() + ")");
     }
 
     public void updateWaypointName() {

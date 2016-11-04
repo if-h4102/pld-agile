@@ -8,7 +8,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
-import models.Intersection;
 import models.Route;
 
 import java.io.IOException;
@@ -34,7 +33,7 @@ public class PlanningDetails<E extends Route> extends ScrollPane {
         observeItems();
     }
 
-    public void observeItems () {
+    public void observeItems() {
         final ObservableList<Node> itemNodes = this.vBox.getChildren();
 
         itemsProperty().addListener(new ListChangeListener<E>() {
@@ -50,7 +49,7 @@ public class PlanningDetails<E extends Route> extends ScrollPane {
         });
     }
 
-    private void refreshAll () {
+    private void refreshAll() {
         final ObservableList<Node> itemNodes = this.vBox.getChildren();
         itemNodes.clear();
         final ObservableList<E> items = getItems();
@@ -59,7 +58,7 @@ public class PlanningDetails<E extends Route> extends ScrollPane {
         }
 
         int index = 0;
-        for (E item: items) {
+        for (E item : items) {
             final PlanningDetailsItem node = new PlanningDetailsItem();
             node.setIndex(index++);
             node.setItem(item);
