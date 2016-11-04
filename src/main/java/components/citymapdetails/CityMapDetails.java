@@ -1,9 +1,7 @@
 package components.citymapdetails;
 
 import components.intersectioncard.IntersectionCard;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -36,13 +34,13 @@ public class CityMapDetails extends ScrollPane {
         observeCityMap();
     }
 
-    public void observeCityMap () {
+    public void observeCityMap() {
         final ObservableList<Node> itemNodes = this.vBox.getChildren();
 
         cityMapProperty().addListener(event -> refreshAll());
     }
 
-    private void refreshAll () {
+    private void refreshAll() {
         final ObservableList<Node> itemNodes = this.vBox.getChildren();
         itemNodes.clear();
         final CityMap cityMap = getCityMap();
@@ -50,7 +48,7 @@ public class CityMapDetails extends ScrollPane {
             return;
         }
 
-        for (Intersection i: cityMap.getIntersections()) {
+        for (Intersection i : cityMap.getIntersections()) {
             final IntersectionCard node = new IntersectionCard();
             node.setIntersection(i);
 //            node.setIndex(index++);

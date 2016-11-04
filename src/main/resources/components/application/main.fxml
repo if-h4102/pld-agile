@@ -6,6 +6,7 @@
 <?import components.planningdetails.PlanningDetails?>
 <?import javafx.geometry.Insets?>
 <?import components.citymapdetails.CityMapDetails?>
+<?import components.deliveryrequestdetails.DeliveryRequestDetails?>
 <fx:root type="BorderPane" fx:id="root" prefHeight="480.0" prefWidth="640.0"
          stylesheets="/components/application/main.css"
          xmlns="http://javafx.com/javafx/8.0.65"
@@ -50,7 +51,7 @@
           <center>
             <Accordion BorderPane.alignment="CENTER">
               <panes>
-                <TitledPane animated="false" text="City Map Details">
+                <TitledPane animated="false" text="City Map">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0"
                                 prefHeight="180.0" prefWidth="200.0">
@@ -65,6 +66,24 @@
                         AnchorPane.topAnchor="0"
                         cityMap="${controller.cityMap}">
                       </CityMapDetails>
+                    </AnchorPane>
+                  </content>
+                </TitledPane>
+                <TitledPane animated="false" text="Delivery Request">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0"
+                                prefHeight="180.0" prefWidth="200.0">
+                      <padding>
+                        <Insets top="0" right="0" left="0" bottom="0"/>
+                      </padding>
+                      <DeliveryRequestDetails
+                        prefHeight="200.0" prefWidth="200.0"
+                        AnchorPane.bottomAnchor="0"
+                        AnchorPane.leftAnchor="0"
+                        AnchorPane.rightAnchor="0"
+                        AnchorPane.topAnchor="0"
+                        deliveryRequest="${controller.deliveryRequest}">
+                      </DeliveryRequestDetails>
                     </AnchorPane>
                   </content>
                 </TitledPane>
@@ -84,12 +103,6 @@
                                 items="${controller.planning.routes}">
                       </PlanningDetails>
                     </AnchorPane>
-                  </content>
-                </TitledPane>
-                <TitledPane animated="false" text="TODO">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0"
-                                prefHeight="180.0" prefWidth="200.0"/>
                   </content>
                 </TitledPane>
               </panes>

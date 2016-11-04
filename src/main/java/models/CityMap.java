@@ -157,10 +157,10 @@ public class CityMap {
         return neighbourIntersections;
     }
 
-    @Requires({"request != null", "request.getWareHouse() != null", "request.getDeliveryAddresses() != null"})
+    @Requires({"request != null", "request.getWarehouse() != null", "request.getDeliveryAddresses() != null"})
     public DeliveryGraph computeDeliveryGraph(DeliveryRequest request) {
         List<AbstractWayPoint> pointsContainedInRequest = new LinkedList<AbstractWayPoint>();
-        pointsContainedInRequest.add(request.getWareHouse());
+        pointsContainedInRequest.add(request.getWarehouse());
 
         Iterable<DeliveryAddress> adressContainedInRequest = request.getDeliveryAddresses();
         for (DeliveryAddress adress : adressContainedInRequest) {
@@ -212,7 +212,7 @@ public class CityMap {
     public Intersection getIntersection(int idIntersection) {
         return intersections.get(idIntersection);
     }
-    
+
     public boolean isIntersectionInCityMap(int idIntersection) {
         return intersections.containsKey(idIntersection);
     }
