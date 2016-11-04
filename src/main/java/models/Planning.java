@@ -16,7 +16,7 @@ public class Planning {
 
     /**
      * Construct a new Planning based on the given sorted list of routes, transforming it to suit JavaFX needs.
-     * 
+     *
      * @param routes
      *            an sorted list of routes.
      */
@@ -26,7 +26,7 @@ public class Planning {
 
     /**
      * Construct a new Planning based on the given sorted list of routes.
-     * 
+     *
      * @param routes
      *            an sorted list of routes.
      */
@@ -36,7 +36,7 @@ public class Planning {
 
     /**
      * Get the total amount of time that the delivery man will need to complete all deliveries and loads.
-     * 
+     *
      * @return the total amount of time needed to complete all deliveries and loads.
      */
     public int getFullTime() {
@@ -50,7 +50,7 @@ public class Planning {
 
     /**
      * Get all the routes of the current planning, wrapped for JavaFX.
-     * 
+     *
      * @return the current sorted list of routes.
      */
     public SimpleListProperty<Route> getRoutes() {
@@ -58,12 +58,10 @@ public class Planning {
     }
 
     /**
-     * Add a way point to the current planning, and update the current routes consequently.
-     * 
-     * @param point
-     *            the way point to add to the current planning.
-     * @param map
-     *            the map with which the soon to be created new routes will be computed.
+     * Add a way point to the current planning,
+     * and update the current routes consequently.
+     * @param point the way point to add to the current planning.
+     * @param map the map with which the soon to be created new routes will be computed.
      * @return the updated current planning.
      */
     public Planning addWayPoint(AbstractWayPoint point, CityMap map) {
@@ -90,12 +88,43 @@ public class Planning {
         this.routes.add(bestPosition, newRoutes[0]);
 
         return this;
+
+        // TODO: refactor this with the following method
+    }
+
+    /**
+     * Add a way point to the current planning after the given way point,
+     * and update the current routes consequently.
+     * @param point the way point to add to the current planning.
+     * @param afterPoint the way point after which the new way point must be added.
+     * @param map the map with which the soon to be created new routes will be computed.
+     * @return the updated current planning.
+     */
+    public Planning addWayPoint(AbstractWayPoint point, AbstractWayPoint afterPoint, CityMap map) {
+        // Look for the position of the given afterPoint
+        int position = 0;
+        for(int i = 0; i < this.routes.size(); i++){
+            Route route = this.routes.get(i);
+            if(route.getStartWaypoint().equals(afterPoint)) {
+                position = i;
+                break;
+            }
+        }
+        // Split the affected route
+        this.routes.remove(position);
+        this.routes.add(position, map.shortestPath(
+            this.routes.get(position).getStartWaypoint(),
+            Collections.singletonList(point)).get(0));
+        this.routes.add(position, map.shortestPath(
+            point,
+            Collections.singletonList(this.routes.get(position).getEndWaypoint())).get(0));
+        return this;
     }
 
     /**
      * Remove a way point to the current planning, and update the current routes consequently. Please not that the removed way point can't
      * be the first warehouse.
-     * 
+     *
      * @param point
      *            the way point to remove from the current planning.
      * @param map

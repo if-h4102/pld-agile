@@ -35,7 +35,7 @@ public class Intersection {
      *
      * @return Current value of `id`
      */
-    protected int getId() {
+    public int getId() {
         return id;
     }
 
@@ -52,5 +52,5 @@ public class Intersection {
     public String toString() {
         return "Intersection [x=" + x + ", y=" + y + ", id=" + id + "]";
     }
-    
+
 }
