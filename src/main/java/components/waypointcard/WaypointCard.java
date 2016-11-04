@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import models.AbstractWayPoint;
 import models.Intersection;
+import models.Warehouse;
 
 import java.io.IOException;
 
@@ -41,7 +42,7 @@ public class WaypointCard<E extends AbstractWayPoint> extends AnchorPane {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
-        waypointProperty().addListener(event -> updateCoordinates());
+        waypointProperty().addListener(event -> {updateCoordinates(); updateWaypointName();});
         edit.visibleProperty().bind(readOnlyProperty());
         remove.visibleProperty().bind(readOnlyProperty());
     }
@@ -119,7 +120,16 @@ public class WaypointCard<E extends AbstractWayPoint> extends AnchorPane {
     }
 
     public void updateWaypointName() {
-        setWaypointName("Waypoint");
+        String name;
+        AbstractWayPoint waypoint = getWaypoint();
+        if (waypoint == null) {
+            name = "";
+        } else if (waypoint instanceof Warehouse) {
+            name = "Warehouse";
+        } else {
+            name = "DeliveryAdress #" + waypoint.getIntersection().getId();
+        }
+        setWaypointName(name);
     }
 
     public final String getCoordinates() {
