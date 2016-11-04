@@ -187,4 +187,8 @@ public class MapScreenController extends AnchorPane {
     public final double getOffsetY() {
         return offsetY == null ? DEFAULT_OFFSET_Y : offsetY.getValue();
     }
+    
+    public void onIntersection() {
+    	this.getChildren().add(e)
+    }
 }

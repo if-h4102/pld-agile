@@ -38,7 +38,6 @@ public class MapCanvasController extends Canvas {
     private SimpleObjectProperty<CityMap> cityMap;
     private SimpleObjectProperty<DeliveryRequest> deliveryRequest;
     private SimpleObjectProperty<Planning> planning;
-    private List<Rectangle> zones;
     private List<Intersection> intersections;
     private double calZoom;
 
@@ -67,15 +66,17 @@ public class MapCanvasController extends Canvas {
 	        	   IntersectionInfo tooltip = null;
 	        	   for(Intersection inter : intersections){
 	        		   
-	        		   /*System.out.println((inter.getX()-DEFAULT_INTERSECTION_SIZE/2)+" "+(inter.getX()+DEFAULT_INTERSECTION_SIZE/2)+" "
-		        			   +(inter.getY()-DEFAULT_INTERSECTION_SIZE/2) + " " + (inter.getY() +DEFAULT_INTERSECTION_SIZE/2));*/
 	        		   
 	        		   if(eventX < inter.getX()+ DEFAULT_INTERSECTION_SIZE/2  && eventX > inter.getX()-DEFAULT_INTERSECTION_SIZE/2 
 	        				   && eventY < inter.getY() + DEFAULT_INTERSECTION_SIZE/2 && eventY > inter.getY() - DEFAULT_INTERSECTION_SIZE/2){
+	        			   
+	        			   
+	        			   
 	        			   if(tooltip == null) {
 	        				   tooltip = new IntersectionInfo(inter);
 		        			   tooltip.install();
 	        			   }
+	        			   
 	        			   System.out.println(tooltip);
 	        			   System.out.println("In the zone");
 	        			   
@@ -108,6 +109,7 @@ public class MapCanvasController extends Canvas {
 
     	CityMap map = getCityMap();
         intersections = map.getIntersections();
+        
         double xmax = 0;
         double ymax = 0;
         double xmin = 0;

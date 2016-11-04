@@ -13,6 +13,9 @@
                        offsetY="${controller.offsetY}"
                        cityMap="${controller.cityMap}"
                        deliveryRequest="${controller.deliveryRequest}"
-                       planning="${controller.planning}"
+                       planning="${controller.planning} onIntersectionClick="#intersectionClick"
   />
+  <Pane fx:id="tooltip">
+  	<Label fx:id="tooltip-label" text="">
+  </Pane>
 </fx:root>
