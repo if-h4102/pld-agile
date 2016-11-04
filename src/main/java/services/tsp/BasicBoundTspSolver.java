@@ -8,9 +8,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
-/**
- * Created by nicolas on 24/10/16.
- */
 public class BasicBoundTspSolver extends BasicTspSolver{
     /**
      * Bound using the sum of min cost per unseen node (including warehouse)

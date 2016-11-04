@@ -197,6 +197,7 @@ public class Parser {
         if (!attributeExist(warehouseElement, NAME_ATTRIBUTE_WAREHOUSE_ID))
             throw new ParserMissingAttributeException("An attribute is missing to construct the warehouse");
 
+        int startPlanningTime = getStartPlanningTimestamp(warehouseElement);
         int idIntersection;
         try {
             idIntersection = Integer.parseInt(warehouseElement.getAttribute(NAME_ATTRIBUTE_WAREHOUSE_ID));
@@ -207,7 +208,7 @@ public class Parser {
         if (!cityMap.isIntersectionInCityMap(idIntersection))
             throw new ParserInvalidIdException("The address of a warehouse must exist in the city map");
 
-        return new Warehouse(cityMap.getIntersection(idIntersection));
+        return new Warehouse(cityMap.getIntersection(idIntersection), startPlanningTime);
     }
 
     private int getStartPlanningTimestamp(Element warehouseElement) throws ParserException {

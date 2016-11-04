@@ -5,7 +5,7 @@ import java.util.*;
 
 public class BasicTspSolver extends AbstractTspSolver {
 
-    protected AbstractWayPoint startPoint;
+    protected Warehouse startPoint;
 
     /**
      * Branch and bound const (lossy branch cutting)
@@ -33,6 +33,7 @@ public class BasicTspSolver extends AbstractTspSolver {
      */
     @Override
     public Planning solve(DeliveryGraph graph) {
+        
         // Initialize solver parameters
         this.bestSolutionCost = Integer.MAX_VALUE;
         this.bestSolution = new AbstractWayPoint[graph.size()];
@@ -43,7 +44,7 @@ public class BasicTspSolver extends AbstractTspSolver {
         // Let's say that the starting point is the first warehouse found
         for (AbstractWayPoint point : unseen) {
             if (point instanceof Warehouse) {
-                startPoint = point;
+                startPoint = (Warehouse) point;
                 break;
             }
         }
