@@ -53,6 +53,49 @@ public class BasicBoundTspSolverTest {
         route = routes.get(4);
         assertTrue( route.getStartWaypoint().getId() == 3 );
         assertTrue( route.getEndWaypoint().getId() == 0 );
+
+        assertTrue( planning.getFullTime() == 840 );
+    }
+
+    @Test
+    public void testWaitingTime() throws URISyntaxException, IOException, ParserException {
+        Parser parser = new Parser();
+        File cityMapXmlFile = getFile("/services/tsp/timeConstraints/waitBeforeAWayPoint/cityMap.xml");
+        CityMap cityMap = parser.getCityMap(cityMapXmlFile);
+
+        File deliveryRequestXmlFile = getFile("/services/tsp/timeConstraints/waitBeforeAWayPoint/deliveryRequest.xml");
+        DeliveryRequest deliveryRequest = parser.getDeliveryRequest(deliveryRequestXmlFile,cityMap);
+
+        AbstractTspSolver solver = new BasicBoundTspSolver();
+        DeliveryGraph deliveryGraph = cityMap.computeDeliveryGraph(deliveryRequest);
+
+        Planning planning = solver.solve(deliveryGraph);
+
+        List<Route> routes = planning.getRoutes();
+
+        for(Route route : routes){
+            System.out.println("("+route.getStartWaypoint().getId()+"->"+route.getEndWaypoint().getId()+") duration: "+route.getDuration());
+        }
+        System.out.println("Total duration : "+planning.getFullTime());
+
+        //check the planning
+        Route route = routes.get(0);
+        assertTrue( route.getStartWaypoint().getId() == 0 );
+        assertTrue( route.getEndWaypoint().getId() == 2 );
+        route = routes.get(1);
+        assertTrue( route.getStartWaypoint().getId() == 2 );
+        assertTrue( route.getEndWaypoint().getId() == 4);
+        route = routes.get(2);
+        assertTrue( route.getStartWaypoint().getId() == 4);
+        assertTrue( route.getEndWaypoint().getId() == 1);
+        route = routes.get(3);
+        assertTrue( route.getStartWaypoint().getId() == 1 );
+        assertTrue( route.getEndWaypoint().getId() == 3 );
+        route = routes.get(4);
+        assertTrue( route.getStartWaypoint().getId() == 3 );
+        assertTrue( route.getEndWaypoint().getId() == 0 );
+
+        assertTrue( planning.getFullTime() == 900 );
     }
 
     // ================================================= Utility methods ==============================================
