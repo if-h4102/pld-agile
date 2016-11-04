@@ -20,15 +20,14 @@ public abstract class AbstractWayPoint implements Comparable<AbstractWayPoint> {
         this.deliveryTimeEnd = 86400; // end of a day
     }
 
-    // TODO put a @Requires ( {"timeOfPassage <= 86400", "timeOfPassage >= 0"} ) ? <- no: modulus is here to handle case where a malus is already added because of wrong passage time
     /**
      * @param timeOfPassage
      * @return true if the time of passage is more than deliveryTimeStart and time of passage plus delivery duration is less than
      *         deliveryTimeEnd if timeOfPassage is greater than a day (86400 sec) is modulus by 86400 is used.
      */
     public boolean canBePassed(int timeOfPassage) {
-        timeOfPassage = timeOfPassage % 86400;
-        return deliveryTimeStart < timeOfPassage && deliveryTimeEnd > (timeOfPassage + this.getDuration());
+        timeOfPassage %= 86400;
+        return deliveryTimeStart <= timeOfPassage && deliveryTimeEnd >= (timeOfPassage + this.getDuration());
     }
 
     public abstract int getDuration();
