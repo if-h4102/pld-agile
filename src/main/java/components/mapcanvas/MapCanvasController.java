@@ -43,6 +43,7 @@ public class MapCanvasController extends Canvas {
 
     @SuppressWarnings("restriction")
 	public MapCanvasController() {
+    	
         widthProperty().addListener(event -> draw());
         heightProperty().addListener(event -> draw());
         zoomProperty().addListener(event -> draw());
@@ -51,6 +52,7 @@ public class MapCanvasController extends Canvas {
         cityMapProperty().addListener(event -> draw());
         deliveryRequestProperty().addListener(event -> draw());
         planningProperty().addListener(event -> draw());
+        
         this.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 	           @Override
 	           public void handle(MouseEvent e) {
@@ -63,26 +65,16 @@ public class MapCanvasController extends Canvas {
 	        	   eventX += DEFAULT_OFFSET_X;
 	        	   eventY += DEFAULT_OFFSET_Y;
 	        	   System.out.println("coord"+eventX + " " + eventY);
-	        	   IntersectionInfo tooltip = null;
-	        	   for(Intersection inter : intersections){
-	        		   
-	        		   
+	        	   for(Intersection inter : intersections){   
 	        		   if(eventX < inter.getX()+ DEFAULT_INTERSECTION_SIZE/2  && eventX > inter.getX()-DEFAULT_INTERSECTION_SIZE/2 
 	        				   && eventY < inter.getY() + DEFAULT_INTERSECTION_SIZE/2 && eventY > inter.getY() - DEFAULT_INTERSECTION_SIZE/2){
-	        			   
-	        			   
-	        			   
-	        			   if(tooltip == null) {
-	        				   tooltip = new IntersectionInfo(inter);
-		        			   tooltip.install();
-	        			   }
-	        			   
-	        			   System.out.println(tooltip);
-	        			   System.out.println("In the zone");
-	        			   
+	        			   IntersectionSelectionEvent intersect = new IntersectionSelectionEvent(inter, e.getX(), e.getY());
+	        			   fireEvent(intersect);
+	        			   return;
 	        		   }
 	        	   }
-	               
+	        	   IntersectionSelectionEvent intersect = new IntersectionSelectionEvent(null, e.getX(), e.getY());
+    			   fireEvent(intersect);
 	           }
 	       });
         	       
@@ -92,6 +84,8 @@ public class MapCanvasController extends Canvas {
 
     @SuppressWarnings("restriction")
     private void clear() {
+    	
+    	
         double width = getWidth();
         double height = getHeight();
         GraphicsContext gc = getGraphicsContext2D();
