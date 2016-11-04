@@ -19,10 +19,10 @@ public class BasicBoundTspSolverTest {
     @Test
     public void testTimeConstraints() throws URISyntaxException, IOException, ParserException {
         Parser parser = new Parser();
-        File cityMapXmlFile = getFile("path/to/test/file/map");
+        File cityMapXmlFile = getFile("/services/tsp/timeConstraints/uniqueSolution/cityMap.xml");
         CityMap cityMap = parser.getCityMap(cityMapXmlFile);
 
-        File deliveryRequestXmlFile = getFile("path/to/test/file/delivery");
+        File deliveryRequestXmlFile = getFile("/services/tsp/timeConstraints/uniqueSolution/deliveryRequest.xml");
         DeliveryRequest deliveryRequest = parser.getDeliveryRequest(deliveryRequestXmlFile,cityMap);
 
         AbstractTspSolver solver = new BasicBoundTspSolver();
@@ -31,6 +31,11 @@ public class BasicBoundTspSolverTest {
         Planning planning = solver.solve(deliveryGraph);
 
         List<Route> routes = planning.getRoutes();
+
+        for(Route route : routes){
+            System.out.println("("+route.getStartWaypoint().getId()+"->"+route.getEndWaypoint().getId()+") duration: "+route.getDuration());
+        }
+        System.out.println("Total duration : "+planning.getFullTime());
 
         //check the planning
         Route route = routes.get(0);
