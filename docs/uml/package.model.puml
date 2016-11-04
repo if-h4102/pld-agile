@@ -36,8 +36,8 @@ package model {
     	-deliveryTimeStart: int
     	-deliveryTimeEnd: int
     	+{abstract} int getDuration()
-    	+int getDeliveryTimeStart()
-    	+int getDeliveryTimeEnd()
+    	+int getTimeStart()
+    	+int getTimeEnd()
     	+Intersection getIntersection()
     	+int getX()
     	+int getY()
