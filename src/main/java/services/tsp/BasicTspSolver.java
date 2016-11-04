@@ -123,12 +123,12 @@ public class BasicTspSolver extends AbstractTspSolver {
                 else if(costRouteAndDelivery > MAX_NUMBER_OF_MIN_COST*minCost)
                     break; //if currant cost is bigger than two time the min value cut the currant branch.
                 //if we can pass to the selected node
-                int arrivalTime=this.startPoint.getDeliveryTimeStart()+seenCost+costRouteAndDelivery;
+                int arrivalTime=this.startPoint.getTimeStart()+seenCost+costRouteAndDelivery;
                 arrivalTime %= 86400;
                 if(!nextNode.canBePassed(arrivalTime)){
-                    if( arrivalTime < nextNode.getDeliveryTimeStart()){
+                    if( arrivalTime < nextNode.getTimeStart()){
                         //wait until opening of the delivery point
-                        int waitingDuration = nextNode.getDeliveryTimeStart() - arrivalTime;
+                        int waitingDuration = nextNode.getTimeStart() - arrivalTime;
                         costRouteAndDelivery += waitingDuration;
                         wayPointWaitingTime.put(nextNode,waitingDuration);
                     }

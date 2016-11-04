@@ -1,26 +1,33 @@
 package components.waypointcard;
 
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import models.AbstractWayPoint;
 import models.Intersection;
-import models.Route;
+import models.Warehouse;
 
 import java.io.IOException;
 
 public class WaypointCard<E extends AbstractWayPoint> extends AnchorPane {
+
     @FXML
     protected Label content;
+    @FXML
+    protected Button edit;
+    @FXML
+    protected Button remove;
 
     private SimpleObjectProperty<E> waypoint;
     private SimpleStringProperty waypointName;
     private SimpleStringProperty coordinates;
+    private SimpleBooleanProperty readOnly;
 
     public WaypointCard() {
         updateWaypointName();
@@ -35,7 +42,9 @@ public class WaypointCard<E extends AbstractWayPoint> extends AnchorPane {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
-        waypointProperty().addListener(event -> updateCoordinates());
+        waypointProperty().addListener(event -> {updateCoordinates(); updateWaypointName();});
+        edit.visibleProperty().bind(readOnlyProperty());
+        remove.visibleProperty().bind(readOnlyProperty());
     }
 
     // Item
@@ -94,8 +103,33 @@ public class WaypointCard<E extends AbstractWayPoint> extends AnchorPane {
         setCoordinates("("+intersection.getX()+"; "+intersection.getY()+")");
     }
 
+    // Editable
+    public final SimpleBooleanProperty readOnlyProperty() {
+        if (readOnly == null) {
+            readOnly = new SimpleBooleanProperty(this, "readOnly", false);
+        }
+        return readOnly;
+    }
+
+    public final void setReadOnly(boolean value) {
+        readOnlyProperty().setValue(value);
+    }
+
+    public final boolean getReadOnly() {
+        return readOnly == null ? false : readOnlyProperty().getValue();
+    }
+
     public void updateWaypointName() {
-        setWaypointName("Waypoint");
+        String name;
+        AbstractWayPoint waypoint = getWaypoint();
+        if (waypoint == null) {
+            name = "";
+        } else if (waypoint instanceof Warehouse) {
+            name = "Warehouse";
+        } else {
+            name = "DeliveryAdress #" + waypoint.getIntersection().getId();
+        }
+        setWaypointName(name);
     }
 
     public final String getCoordinates() {

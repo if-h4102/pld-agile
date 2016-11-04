@@ -35,7 +35,7 @@ public class DeliveryRequest {
         assert removed;
     }
 
-    public Warehouse getWareHouse() {
+    public Warehouse getWarehouse() {
         return warehouse;
     }
 
