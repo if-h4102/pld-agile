@@ -1,0 +1,10 @@
+#root {
+    -fx-background-color: #FFFFFF;
+    -fx-border-radius: 2px;
+    -fx-text-fill: rgba(0,0,0,0.87);
+
+    -fx-effect:
+        dropshadow(gaussian, rgba(0,0,0,.2), 3, 0, 0, 1),
+        dropshadow(gaussian, rgba(0,0,0,.14), 1, 0, 0, 1),
+        dropshadow(gaussian, rgba(0,0,0,.12), 1, -1, 0, 2);
+}
