@@ -60,6 +60,7 @@ package model {
         +int getFullTime()
         +int getRoutes()
         +Planning addWayPoint(point: AbstractWayPoint, map: CityMap)
+        +Planning addWayPoint(point: AbstractWayPoint, afterPoint: AbstractWayPoint, map: CityMap)
         +Planning removeWayPoint(point: AbstractWayPoint, map: CityMap)
     }
 
