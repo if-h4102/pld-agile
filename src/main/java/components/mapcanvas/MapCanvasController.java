@@ -55,7 +55,7 @@ public class MapCanvasController extends Canvas {
         this.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 	           @Override
 	           public void handle(MouseEvent e) {
-	        	   
+
 	        	   System.out.println("");
 	        	   double eventX = e.getX();
 	        	   double eventY = e.getY();
@@ -65,21 +65,21 @@ public class MapCanvasController extends Canvas {
 	        	   eventY += DEFAULT_OFFSET_Y;
 	        	   System.out.println("coord"+eventX + " " + eventY);
 	        	   for(Intersection inter : intersections){
-	        		   
+
 	        		   System.out.println((inter.getX()-DEFAULT_INTERSECTION_SIZE/2)+" "+(inter.getX()+DEFAULT_INTERSECTION_SIZE/2)+" "
 		        			   +(inter.getY()-DEFAULT_INTERSECTION_SIZE/2) + " " + (inter.getY() +DEFAULT_INTERSECTION_SIZE/2));
-	        		   
-	        		   if(eventX < inter.getX()+ DEFAULT_INTERSECTION_SIZE/2  && eventX > inter.getX()-DEFAULT_INTERSECTION_SIZE/2 
+
+	        		   if(eventX < inter.getX()+ DEFAULT_INTERSECTION_SIZE/2  && eventX > inter.getX()-DEFAULT_INTERSECTION_SIZE/2
 	        				   && eventY < inter.getY() + DEFAULT_INTERSECTION_SIZE/2 && eventY > inter.getY() - DEFAULT_INTERSECTION_SIZE/2){
-	        			   
+
 	        			   System.out.println("In the zone");
-	        			   
+
 	        		   }
 	        	   }
 	               System.out.println("clicked");
 	           }
 	       });
-        	       
+
     }
 
     @SuppressWarnings("restriction")
@@ -120,10 +120,10 @@ public class MapCanvasController extends Canvas {
         double zoomY = height/mapHeight;
 
         double zoom = Math.min(zoomX,zoomY);
-        
+
         gc.scale(zoom, zoom);
         calZoom = zoom;
-        
+
         gc.translate(-xmin-DEFAULT_OFFSET_X, -ymin-DEFAULT_OFFSET_Y); //offset
     }
 
@@ -166,7 +166,7 @@ public class MapCanvasController extends Canvas {
 		}
 
 		for (Intersection inter : intersections){
-			gc.fillOval(inter.getX()-DEFAULT_INTERSECTION_SIZE/2, inter.getY()-DEFAULT_INTERSECTION_SIZE/2, 
+			gc.fillOval(inter.getX()-DEFAULT_INTERSECTION_SIZE/2, inter.getY()-DEFAULT_INTERSECTION_SIZE/2,
 					DEFAULT_INTERSECTION_SIZE, DEFAULT_INTERSECTION_SIZE);
 		}
     }
@@ -178,15 +178,15 @@ public class MapCanvasController extends Canvas {
     	DeliveryRequest deliveryRequest = getDeliveryRequest();
 
     	Iterable<DeliveryAddress> listDeliveryAddresses = deliveryRequest.getDeliveryAddresses();
-    	Warehouse warehouse = deliveryRequest.getWareHouse();
+    	Warehouse warehouse = deliveryRequest.getWarehouse();
 
     	for(DeliveryAddress delivery : listDeliveryAddresses){
     		gc.setFill(Color.BLUE);
-    		gc.fillOval(delivery.getIntersection().getX()-DEFAULT_DELIVERY_SIZE/2, delivery.getIntersection().getY()-DEFAULT_DELIVERY_SIZE/2, 
+    		gc.fillOval(delivery.getIntersection().getX()-DEFAULT_DELIVERY_SIZE/2, delivery.getIntersection().getY()-DEFAULT_DELIVERY_SIZE/2,
     				DEFAULT_DELIVERY_SIZE, DEFAULT_DELIVERY_SIZE);
     	}
     	gc.setFill(Color.RED);
-    	gc.fillOval(warehouse.getIntersection().getX()-DEFAULT_DELIVERY_SIZE/2, warehouse.getIntersection().getY()-DEFAULT_DELIVERY_SIZE/2, 
+    	gc.fillOval(warehouse.getIntersection().getX()-DEFAULT_DELIVERY_SIZE/2, warehouse.getIntersection().getY()-DEFAULT_DELIVERY_SIZE/2,
     			DEFAULT_DELIVERY_SIZE, DEFAULT_DELIVERY_SIZE);
     	gc.setFill(Color.BLACK);
     }
@@ -392,7 +392,7 @@ public class MapCanvasController extends Canvas {
 
     public void mousePressed(MouseEvent mouseEvent) {
         System.out.println("Start drag"+mouseEvent.getX()+" "+mouseEvent.getY());
-        
+
     }
 
     public void mouseDragged(MouseEvent mouseEvent) {
