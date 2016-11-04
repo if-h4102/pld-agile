@@ -17,6 +17,7 @@ import models.CityMap;
 import models.DeliveryRequest;
 import models.Intersection;
 import models.Planning;
+import services.command.CommandManager;
 import services.xml.Parser;
 
 import java.io.IOException;
@@ -32,6 +33,7 @@ public class MainController extends BorderPane {
     final private SimpleListProperty<Intersection> intersections = new SimpleListProperty<>(FXCollections.observableArrayList());
     final private Parser parserService = new Parser();
     final private SimpleDoubleProperty mapZoom = new SimpleDoubleProperty(1.0);
+    final private CommandManager commandManager = new CommandManager();
 
     public MainController() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/components/application/main.fxml"));
@@ -48,6 +50,8 @@ public class MainController extends BorderPane {
         this.setState(new WaitOpenCityMapState());
         this.openDeliveryRequestButton.disableProperty().bind(this.cityMap.isNull());
         this.computePlanningButton.disableProperty().bind(this.deliveryRequest.isNull());
+        /*this.undoButton.disabledProperty().bind(this.commandManager.isUndoable());
+        this.redoButton.disabledProperty().bind(this.commandManager.isRedoable());*/
     }
 
     @FXML
@@ -58,6 +62,10 @@ public class MainController extends BorderPane {
     private Button openDeliveryRequestButton;
     @FXML
     private Button computePlanningButton;
+    @FXML
+    private Button undoButton;
+    @FXML
+    private Button redoButton;
 
     protected Parent getRoot() {
         return this.root;
@@ -152,5 +160,13 @@ public class MainController extends BorderPane {
 
     public void onComputePlanningButtonAction(ActionEvent actionEvent) {
         this.applyState(this.getState().onComputePlanningButtonAction(this));
+    }
+    
+    public void onUndoButtonAction(ActionEvent actionEvent) {
+        commandManager.undo();
+    }
+    
+    public void onRedoButtonAction(ActionEvent actionEvent) {
+        commandManager.redo();
     }
 }

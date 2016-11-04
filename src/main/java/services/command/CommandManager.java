@@ -1,6 +1,7 @@
 package services.command;
 
 import java.util.Stack;
+import javafx.beans.property.*;
 
 public class CommandManager {
     /**
@@ -13,6 +14,9 @@ public class CommandManager {
      */
     private Stack<AbstractCommand> undone;
 
+    private SimpleBooleanProperty undoable;
+    private SimpleBooleanProperty redoable;
+    
     /**
      * Construct a new CommandManager.
      */
@@ -54,11 +58,13 @@ public class CommandManager {
         return true;
     }
     
-    public boolean isUndoable() {
-        return !this.done.isEmpty();
+    public SimpleBooleanProperty isUndoable() {
+        this.undoable.setValue(!this.done.isEmpty());
+        return this.undoable;
     }
     
-    public boolean isRedoable() {
-        return !this.undone.isEmpty();
+    public SimpleBooleanProperty isRedoable() {
+        this.redoable.setValue(!this.undone.isEmpty());
+        return this.redoable;
     }
 }

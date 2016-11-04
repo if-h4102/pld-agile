@@ -20,6 +20,11 @@
       <Button fx:id="computePlanningButton" mnemonicParsing="false"
               onAction="#onComputePlanningButtonAction"
               text="%compute_planning"/>
+      <Button fx:id="undoButton" mnemonicParsing="false"
+      		  onAction="#onUndoButtonAction" text="%undo"/>
+      <Button fx:id="redoButton" mnemonicParsing="false"
+  			  onAction="#onRedoButtonAction" text="%redo"/>
+      		  
     </ToolBar>
   </top>
   <center>
