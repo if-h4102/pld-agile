@@ -58,6 +58,8 @@ package model {
         -startTime: int
         +void addDeliveryAddress(address: DeliveryAddress)
         +void removeDeliveryAddress(address: DeliveryAddress)
+        +Warehouse getWarehouse()
+        +List<DeliveryAddress> getDeliveryAddresses()
     }
 
     class Planning {
