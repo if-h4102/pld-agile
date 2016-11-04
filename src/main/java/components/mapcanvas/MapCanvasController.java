@@ -38,7 +38,6 @@ public class MapCanvasController extends Canvas {
     private SimpleObjectProperty<CityMap> cityMap;
     private SimpleObjectProperty<DeliveryRequest> deliveryRequest;
     private SimpleObjectProperty<Planning> planning;
-    private List<Rectangle> zones;
     private List<Intersection> intersections;
     private double calZoom;
 
@@ -64,23 +63,24 @@ public class MapCanvasController extends Canvas {
 	        	   eventX += DEFAULT_OFFSET_X;
 	        	   eventY += DEFAULT_OFFSET_Y;
 	        	   System.out.println("coord"+eventX + " " + eventY);
+	        	   IntersectionInfo tooltip = null;
 	        	   for(Intersection inter : intersections){
-
 	        		   System.out.println((inter.getX()-DEFAULT_INTERSECTION_SIZE/2)+" "+(inter.getX()+DEFAULT_INTERSECTION_SIZE/2)+" "
 		        			   +(inter.getY()-DEFAULT_INTERSECTION_SIZE/2) + " " + (inter.getY() +DEFAULT_INTERSECTION_SIZE/2));
 
 	        		   if(eventX < inter.getX()+ DEFAULT_INTERSECTION_SIZE/2  && eventX > inter.getX()-DEFAULT_INTERSECTION_SIZE/2
 	        				   && eventY < inter.getY() + DEFAULT_INTERSECTION_SIZE/2 && eventY > inter.getY() - DEFAULT_INTERSECTION_SIZE/2){
-
 	        			   System.out.println("In the zone");
 
 	        		   }
 	        	   }
-	               System.out.println("clicked");
+
 	           }
 	       });
 
     }
+
+
 
     @SuppressWarnings("restriction")
     private void clear() {
@@ -101,6 +101,7 @@ public class MapCanvasController extends Canvas {
 
     	CityMap map = getCityMap();
         intersections = map.getIntersections();
+
         double xmax = 0;
         double ymax = 0;
         double xmin = 0;
@@ -390,6 +391,7 @@ public class MapCanvasController extends Canvas {
         return offsetY == null ? DEFAULT_OFFSET_Y : offsetY.getValue();
     }
 
+    /*
     public void mousePressed(MouseEvent mouseEvent) {
         System.out.println("Start drag"+mouseEvent.getX()+" "+mouseEvent.getY());
 
@@ -401,5 +403,5 @@ public class MapCanvasController extends Canvas {
 
     public void mouseReleased(MouseEvent mouseEvent) {
         System.out.println("Released");
-    }
+    }*/
 }

@@ -3,13 +3,20 @@ package components.mapscreen;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import models.CityMap;
 import models.DeliveryRequest;
+import models.Intersection;
 import models.Planning;
 
 import java.io.IOException;
+
+import components.intersectioncard.IntersectionCard;
 
 public class MapScreenController extends AnchorPane {
     private static final CityMap DEFAULT_CITY_MAP = null;
@@ -18,13 +25,16 @@ public class MapScreenController extends AnchorPane {
     private static final double DEFAULT_ZOOM = 1.0;
     private static final double DEFAULT_OFFSET_X = 0.0;
     private static final double DEFAULT_OFFSET_Y = 0.0;
-
+    
+	@FXML
+    protected IntersectionCard tooltip;
     private SimpleDoubleProperty zoom;
     private SimpleDoubleProperty offsetX;
     private SimpleDoubleProperty offsetY;
     private SimpleObjectProperty<CityMap> cityMap;
     private SimpleObjectProperty<DeliveryRequest> deliveryRequest;
     private SimpleObjectProperty<Planning> planning;
+    private SimpleObjectProperty<Intersection> activeIntersection;
 
     public MapScreenController() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/components/mapscreen/mapScreen.fxml"));
@@ -36,6 +46,15 @@ public class MapScreenController extends AnchorPane {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
+        
+        cityMapProperty().addListener(event -> {
+        	System.out.println("map changed");
+            if (getCityMap() != null) {
+            	setActiveIntersection(getCityMap().getIntersections().get(0));
+            }
+        });
+        
+        tooltip.visibleProperty().bind(activeIntersection.isNotNull());
     }
 
     /**
@@ -112,7 +131,35 @@ public class MapScreenController extends AnchorPane {
     public final Planning getPlanning() {
         return planning == null ? DEFAULT_PLANNING : planning.getValue();
     }
+    
+    /**
+     * The active interserction
+     *      *
+     * @return The cityMap property
+     */
+    public final SimpleObjectProperty<Intersection> activeIntersectionProperty() {
+        if (activeIntersection == null) {
+        	activeIntersection = new SimpleObjectProperty<>(this, "activeIntersection", null);
+        }
+        return activeIntersection;
+    }
 
+    /**
+     * Set the city map
+     *
+     * @param value
+     */
+    public final void setActiveIntersection(Intersection value) {
+    	activeIntersectionProperty().setValue(value);
+    }
+
+    public final Intersection getActiveIntersection() {
+        return activeIntersection == null ? null : activeIntersectionProperty().getValue();
+    }
+
+    public void updateTooltip () {
+    	
+    }
     /**
      * The zoom factor to use.
      *
@@ -186,5 +233,9 @@ public class MapScreenController extends AnchorPane {
 
     public final double getOffsetY() {
         return offsetY == null ? DEFAULT_OFFSET_Y : offsetY.getValue();
+    }
+    
+    public void onIntersection() {
+    	//this.getChildren().add()
     }
 }
