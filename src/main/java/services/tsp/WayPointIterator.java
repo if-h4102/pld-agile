@@ -17,6 +17,17 @@ public class WayPointIterator implements Iterator<AbstractWayPoint> {
      * @param points the collection in which you want to iterate.
      * @param costs the costs associated with points.
      */
+    public WayPointIterator(Collection<AbstractWayPoint> points, Map<AbstractWayPoint, Integer> costs, int seenCost){
+        //call basic constructor
+        this(points);
+        //sort array the bigger cost first as the table is read end first
+        Arrays.sort(wayPoints, (a,b) -> costs.get(b).compareTo(costs.get(a) - (a.canBePassed(seenCost+costs.get(a)) ? 86400 : 0)));
+    }
+    /**
+     * Construct an iterator on the given structure.
+     * @param points the collection in which you want to iterate.
+     * @param costs the costs associated with points.
+     */
     public WayPointIterator(Collection<AbstractWayPoint> points, Map<AbstractWayPoint, Integer> costs){
         //call basic constructor
         this(points);

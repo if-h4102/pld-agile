@@ -105,7 +105,7 @@ public class BasicTspSolver extends AbstractTspSolver {
         } //else if the estimation of time left show possible new best solution
         else if (seenCost + this.bound(lastSeenNode, unseen, costs, deliveryDurations,seenCost) < this.bestSolutionCost) {
             // We have a great candidate !
-            Iterator<AbstractWayPoint> it = this.iterator(lastSeenNode, unseen, costs, deliveryDurations);
+            Iterator<AbstractWayPoint> it = this.iterator(lastSeenNode, unseen, costs, deliveryDurations,seenCost);
             int i=0;
             int minCost = Integer.MAX_VALUE;
             while (it.hasNext() && i++ < unseen.size()/EXPLORATION_WIDTH_DIVISOR+MIN_EXPLORATION_WIDTH) {
@@ -161,7 +161,8 @@ public class BasicTspSolver extends AbstractTspSolver {
     @Override
     protected Iterator<AbstractWayPoint> iterator(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen,
                                                   Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs,
-                                                  Map<AbstractWayPoint, Integer> deliveryDurations) {
+                                                  Map<AbstractWayPoint, Integer> deliveryDurations,
+                                                  int seenCost) {
         // NOTE: for the moment, this just returns a basic iterator,
         // which won't look for the best node to return.
         return new WayPointIterator(unseen, costs.get(lastSeenNode));

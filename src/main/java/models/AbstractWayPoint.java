@@ -53,7 +53,7 @@ public abstract class AbstractWayPoint implements Comparable<AbstractWayPoint> {
         return intersection.getY();
     }
 
-    protected int getId() {
+    public int getId() {
         return intersection.getId();
     }
 

@@ -16,13 +16,14 @@ public class ComputingPlanningState extends WaitOpenDeliveryRequestState {
 //        AbstractTspSolver solver = new BasicTspSolver();
         DeliveryRequest dg = mainController.getDeliveryRequest();
         CityMap cm = mainController.getCityMap();
+        long beforeDijkstra = System.nanoTime();
         DeliveryGraph deliveryGraph = cm.computeDeliveryGraph(dg);
         long startTime = System.nanoTime();
         Planning planning = solver.solve(deliveryGraph);
         long endTime = System.nanoTime();
         System.out.println(planning);
         mainController.setPlanning(planning);
-        System.out.println("Computed in "+((endTime-startTime)/1000000)+" ms");
+        System.out.println("Computed in "+((endTime-beforeDijkstra)/1000000)+" ms (tsp: "+((endTime-startTime)/1000000)+" ms, dijktra: "+((startTime-beforeDijkstra)/1000000)+" ms)");
     }
 
     public void leaveState(MainController mainController) {
