@@ -79,9 +79,9 @@ public class BasicBoundTspSolver extends BasicTspSolver{
             bound += wayPoint.getDuration();
             bound += (minCost+secondMinCost)/2;
 
-            //if  endDeliveryTime is already passed, add a malus
+            //if endDeliveryTime is already passed, add a malus
             int deliveryFirstPossibleTime = startPoint.getDeliveryTimeStart() + seenCost + costs.get(lastSeenNode).get(wayPoint);
-            if( !wayPoint.canBePassed(deliveryFirstPossibleTime) )
+            if( deliveryFirstPossibleTime + wayPoint.getDuration() > wayPoint.getDeliveryTimeEnd() )
                 bound += 86400;
         }
         return bound; // Basic bound
