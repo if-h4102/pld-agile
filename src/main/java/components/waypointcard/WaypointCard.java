@@ -15,8 +15,9 @@ import models.Warehouse;
 
 import java.io.IOException;
 
-public class WaypointCard<E extends AbstractWayPoint> extends AnchorPane {
-
+public class WaypointCard<WP extends AbstractWayPoint> extends AnchorPane {
+    @FXML
+    protected AnchorPane timeConstraints;
     @FXML
     protected Label content;
     @FXML
@@ -24,9 +25,12 @@ public class WaypointCard<E extends AbstractWayPoint> extends AnchorPane {
     @FXML
     protected Button remove;
 
-    private SimpleObjectProperty<E> waypoint;
+    private SimpleObjectProperty<WP> waypoint;
     private SimpleStringProperty waypointName;
     private SimpleStringProperty coordinates;
+    private SimpleStringProperty deliveryDuration;
+    private SimpleStringProperty timeStart;
+    private SimpleStringProperty timeEnd;
     private SimpleBooleanProperty readOnly;
 
     public WaypointCard() {
@@ -42,24 +46,27 @@ public class WaypointCard<E extends AbstractWayPoint> extends AnchorPane {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
-        waypointProperty().addListener(event -> {updateCoordinates(); updateWaypointName();});
+        waypointProperty().addListener(event -> {
+            updateCoordinates();
+            updateWaypointName();
+        });
         edit.visibleProperty().bind(readOnlyProperty());
         remove.visibleProperty().bind(readOnlyProperty());
     }
 
     // Item
-    public final SimpleObjectProperty<E> waypointProperty() {
+    public final SimpleObjectProperty<WP> waypointProperty() {
         if (waypoint == null) {
             waypoint = new SimpleObjectProperty<>(this, "waypoint", null);
         }
         return waypoint;
     }
 
-    public final void setWaypoint(E value) {
+    public final void setWaypoint(WP value) {
         waypointProperty().setValue(value);
     }
 
-    public final E getWaypoint() {
+    public final WP getWaypoint() {
         return waypoint == null ? null : waypointProperty().getValue();
     }
 
@@ -100,7 +107,7 @@ public class WaypointCard<E extends AbstractWayPoint> extends AnchorPane {
         if (intersection == null) {
             return;
         }
-        setCoordinates("("+intersection.getX()+"; "+intersection.getY()+")");
+        setCoordinates("(" + intersection.getX() + "; " + intersection.getY() + ")");
     }
 
     // Editable

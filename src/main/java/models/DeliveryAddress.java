@@ -1,19 +1,18 @@
 package models;
 
 public class DeliveryAddress extends AbstractWayPoint {
-
     final private int deliveryDuration;
 
     public DeliveryAddress(Intersection intersection, int deliveryDuration) {
         super(intersection);
         this.deliveryDuration = deliveryDuration;
     }
-    
+
     public DeliveryAddress(Intersection intersection, int deliveryDuration, int deliveryTimeStart, int deliveryTimeEnd) {
         super(intersection, deliveryTimeStart, deliveryTimeEnd);
         this.deliveryDuration = deliveryDuration;
     }
-    
+
     @Override
     public int getDuration() {
         return this.deliveryDuration;
