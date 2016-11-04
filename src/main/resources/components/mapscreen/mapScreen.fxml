@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import components.mapcanvas.MapCanvasController?>
+<?import components.intersectioncard.IntersectionCard?>
 <?import javafx.scene.layout.*?>
+
 <fx:root fx:id="root" prefHeight="480.0" prefWidth="640.0"
          stylesheets="/components/mapscreen/mapScreen.css"
          type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.65"
@@ -13,9 +15,7 @@
                        offsetY="${controller.offsetY}"
                        cityMap="${controller.cityMap}"
                        deliveryRequest="${controller.deliveryRequest}"
-                       planning="${controller.planning} onIntersectionClick="#intersectionClick"
+                       planning="${controller.planning}"
   />
-  <Pane fx:id="tooltip">
-  	<Label fx:id="tooltip-label" text="">
-  </Pane>
+  <IntersectionCard fx:id="tooltip" intersection="${controller.activeIntersection}"/>
 </fx:root>
