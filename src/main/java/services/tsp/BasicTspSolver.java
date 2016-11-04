@@ -14,9 +14,9 @@ public class BasicTspSolver extends AbstractTspSolver {
     private final int EXPLORATION_WIDTH_DIVISOR = 1; //divisor of the total number of accessible points
         //finale width exploration is: MIN_EXPLORATION_WIDTH + (number of accessible points) / EXPLORATION_WIDTH_DIVISOR
         //set to 1 to disable width exploration limitation
-    private final int MAX_NUMBER_OF_MIN_COST = 1000; //branch cutted if cost of currant branch is bigger than this constant
+    private final int MAX_NUMBER_OF_MIN_COST = 1000; //branch cut if cost of currant branch is bigger than this constant
                                                   //multiply by the minimum cost to reach an accessible point.
-        //set to 1000 or a an other big value to disable, Interger.MAX_VALUE is too big as overflow problems
+        //set to 1000 or a an other big value to disable, Interger.MAX_VALUE is too big and has overflow problems
     /**
      * The constructor for a basic TSP solver. It doesn't need anything for now.
      */
@@ -88,8 +88,10 @@ public class BasicTspSolver extends AbstractTspSolver {
      * @param deliveryDurations
      *            the delivery duration of each node.
      */
-    private void branchAndBound(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen, ArrayList<AbstractWayPoint> seen,
-            int seenCost, Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs, Map<AbstractWayPoint, Integer> deliveryDurations) {
+    private void branchAndBound(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen,
+                                ArrayList<AbstractWayPoint> seen, int seenCost,
+                                Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs,
+                                Map<AbstractWayPoint, Integer> deliveryDurations) {
         if (unseen.size() == 0) {
             // All nodes have been seen
             // Just complete the circuit...
@@ -101,7 +103,7 @@ public class BasicTspSolver extends AbstractTspSolver {
                 this.bestSolutionCost = seenCost;
             }
         } //else if the estimation of time left show possible new best solution
-        else if (seenCost + this.bound(lastSeenNode, unseen, costs, deliveryDurations) < this.bestSolutionCost) {
+        else if (seenCost + this.bound(lastSeenNode, unseen, costs, deliveryDurations,seenCost) < this.bestSolutionCost) {
             // We have a great candidate !
             Iterator<AbstractWayPoint> it = this.iterator(lastSeenNode, unseen, costs, deliveryDurations);
             int i=0;
@@ -116,7 +118,7 @@ public class BasicTspSolver extends AbstractTspSolver {
                 else if(costRouteAndDelivery > MAX_NUMBER_OF_MIN_COST*minCost)
                     break; //if currant cost is bigger than two time the min value cut the currant branch.
                 //if we can pass to the selected node
-                if(!nextNode.canBePassed(this.startPoint.getDeliveryTimeStart()+costRouteAndDelivery)){
+                if(!nextNode.canBePassed(this.startPoint.getDeliveryTimeStart()+seenCost+costRouteAndDelivery)){
                     //add a one day cost (longer than the max delivery time)
                     costRouteAndDelivery += 86400;
                 }
@@ -139,7 +141,9 @@ public class BasicTspSolver extends AbstractTspSolver {
      */
     @Override
     protected int bound(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen,
-            Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs, Map<AbstractWayPoint, Integer> deliveryDurations) {
+                        Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs,
+                        Map<AbstractWayPoint, Integer> deliveryDurations,
+                        int seenCost) {
         // TODO: improve that, or is this enough for this solver ?
         return 0; // The most basic bound
     }
@@ -156,7 +160,8 @@ public class BasicTspSolver extends AbstractTspSolver {
      */
     @Override
     protected Iterator<AbstractWayPoint> iterator(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen,
-                                                Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs, Map<AbstractWayPoint, Integer> deliveryDurations) {
+                                                  Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs,
+                                                  Map<AbstractWayPoint, Integer> deliveryDurations) {
         // NOTE: for the moment, this just returns a basic iterator,
         // which won't look for the best node to return.
         return new WayPointIterator(unseen, costs.get(lastSeenNode));

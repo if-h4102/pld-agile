@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<reseau>
+    <noeud id="0" x="134" y="193"/>
+    <noeud id="1" x="195" y="291"/>
+    <noeud id="2" x="140" y="420"/>
+    <noeud id="3" x="132" y="470"/>
+</reseau>

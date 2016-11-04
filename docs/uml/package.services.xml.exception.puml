@@ -1,0 +1,68 @@
+class Exception
+package services.xml.exception {
+
+    abstract class ParserException
+    abstract class ParserSemanticException
+    abstract class ParserSyntaxException
+    
+    abstract class ParserSemanticException
+    class ParserDuplicateObjectException
+    class ParserIntegerValueException
+    class ParserShouldBeIntegerValueException
+    class ParserMissingAttributeException
+    class ParserInvalidIdException
+    class ParserTimeConstraintsException
+    
+    abstract class ParserSyntaxException
+    abstract class ParserNodesNumberException
+    class ParserMalformedXmlException
+    class ParserTimeSyntaxException
+    
+    abstract class ParserNodesNumberException
+    class ParserBoundedNodesNumberException
+    class ParserLowerBoundedNodesNumberException
+    
+    
+    Exception <|-- ParserException
+    
+    ParserException <|-l- ParserSyntaxException
+    ParserException <|----- ParserSemanticException
+    
+    ParserSemanticException <|-l- ParserDuplicateObjectException
+    ParserSemanticException <|-- ParserIntegerValueException
+    ParserSemanticException <|-- ParserShouldBeIntegerValueException
+    ParserSemanticException <|-- ParserInvalidIdException
+    ParserSemanticException <|-- ParserMissingAttributeException
+    ParserSemanticException <|-r- ParserTimeConstraintsException
+    
+    ParserSyntaxException <|-- ParserNodesNumberException
+    ParserSyntaxException <|-l- ParserMalformedXmlException
+    ParserSyntaxException <|-u- ParserTimeSyntaxException
+    
+    ParserNodesNumberException <|-- ParserBoundedNodesNumberException
+    ParserNodesNumberException <|-l- ParserLowerBoundedNodesNumberException
+    
+    
+    class ParserDuplicateObjectException {
+        -duplicate: Object
+    }
+    
+    class ParserIntegerValueException {
+        -value: int
+    }
+    
+    abstract class ParserNodesNumberException {
+        -actualNodesNumber: int
+        -nodesName: String
+    }
+    
+    class ParserBoundedNodesNumberException {
+        -maxNodesNumberExpected: int
+        -minNodesNumberExpected: int
+    }
+    
+    class ParserLowerBoundedNodesNumberException {
+        -minNodesNumberExpected: int
+    }
+    
+}

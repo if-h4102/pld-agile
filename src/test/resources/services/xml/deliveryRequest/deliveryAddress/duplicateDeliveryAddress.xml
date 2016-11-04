@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<demandeDeLivraisons>
+    <entrepot adresse="2" heureDepart="8:0:0"/>
+    <!-- The first delivery address has been duplicated -->
+    <livraison adresse="0" duree="200"/>
+    <livraison adresse="0" duree="100"/>
+    <livraison adresse="3" duree="250"/>
+</demandeDeLivraisons>

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class DeliveryGraph {
 
@@ -38,7 +37,7 @@ public class DeliveryGraph {
      * @return an array filled with the IDs of each graph's node.
      */
     public ArrayList<AbstractWayPoint> getNodes() {
-        ArrayList<AbstractWayPoint> nodes = new ArrayList();
+        ArrayList<AbstractWayPoint> nodes = new ArrayList<AbstractWayPoint>();
         this.routes.entrySet().forEach((entry) -> {
             nodes.add(entry.getKey());
         });

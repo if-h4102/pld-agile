@@ -2,8 +2,11 @@ package components.application;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableObjectValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import models.CityMap;
 import models.DeliveryRequest;
+import models.Intersection;
 import models.Planning;
 import services.xml.Parser;
 
@@ -25,6 +29,7 @@ public class MainController extends BorderPane {
     final private SimpleObjectProperty<CityMap> cityMap = new SimpleObjectProperty<>();
     final private SimpleObjectProperty<DeliveryRequest> deliveryRequest = new SimpleObjectProperty<>();
     final private SimpleObjectProperty<Planning> planning = new SimpleObjectProperty<>();
+    final private SimpleListProperty<Intersection> intersections = new SimpleListProperty<>(FXCollections.observableArrayList());
     final private Parser parserService = new Parser();
     final private SimpleDoubleProperty mapZoom = new SimpleDoubleProperty(1.0);
 

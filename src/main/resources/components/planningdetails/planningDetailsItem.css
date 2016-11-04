@@ -1,0 +1,33 @@
+#root {
+    -fx-background-color: #FFFFFF;
+    -fx-border-radius: 2px;
+    -fx-text-fill: rgba(0,0,0,0.87);
+
+    -fx-effect:
+        dropshadow(gaussian, rgba(0,0,0,.2), 3, 0, 0, 1),
+        dropshadow(gaussian, rgba(0,0,0,.14), 1, 0, 0, 1),
+        dropshadow(gaussian, rgba(0,0,0,.12), 1, -1, 0, 2);
+}
+
+#remove, #edit {
+    -fx-background-color: transparent;
+    -fx-padding: 0 0 0 0;
+    -fx-effect: none;
+    -fx-border: none;
+    -fx-pref-width: 32px;
+    -fx-pref-height: 32px;
+    visibility: hidden;
+}
+
+#remove FontIcon, #edit FontIcon {
+    -fx-icon-size: 32px;
+    -fx-icon-color: rgba(0, 0, 0, .5);
+}
+
+#root:hover #remove, #root:hover #edit {
+    visibility: visible;
+}
+
+#remove:hover FontIcon, #edit:hover FontIcon {
+    -fx-icon-color: rgba(0, 0, 0, .8);
+}

@@ -2,9 +2,6 @@ package models;
 
 import com.google.java.contract.Ensures;
 import com.google.java.contract.Requires;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleSetProperty;
-import javafx.collections.FXCollections;
 import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
