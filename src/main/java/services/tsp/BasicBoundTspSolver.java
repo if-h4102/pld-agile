@@ -1,6 +1,7 @@
 package services.tsp;
 
 import models.AbstractWayPoint;
+import models.Warehouse;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -82,7 +83,7 @@ public class BasicBoundTspSolver extends BasicTspSolver{
             bound += (minCost+secondMinCost)/2;
 
             //if  endDeliveryTime is already passed, add a malus
-            int deliveryFirstPossibleTime = seenCost+costs.get(lastSeenNode).get(wayPoint);
+            int deliveryFirstPossibleTime = startPoint.getDeliveryTimeStart() + seenCost + costs.get(lastSeenNode).get(wayPoint);
             if( !wayPoint.canBePassed(deliveryFirstPossibleTime) )
                 bound += 86400;
         }
