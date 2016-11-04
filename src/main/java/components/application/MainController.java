@@ -26,6 +26,18 @@ import java.util.ResourceBundle;
 
 
 public class MainController extends BorderPane {
+    @FXML
+    private BorderPane root;
+    @FXML
+    private Button openCityMapButton;
+    @FXML
+    private Button openDeliveryRequestButton;
+    @FXML
+    private Button computePlanningButton;
+    @FXML
+    private Button undoButton;
+    @FXML
+    private Button redoButton;
     final private ReadOnlyObjectWrapper<MainControllerState> state = new ReadOnlyObjectWrapper<>();
     final private SimpleObjectProperty<CityMap> cityMap = new SimpleObjectProperty<>();
     final private SimpleObjectProperty<DeliveryRequest> deliveryRequest = new SimpleObjectProperty<>();
@@ -50,22 +62,9 @@ public class MainController extends BorderPane {
         this.setState(new WaitOpenCityMapState());
         this.openDeliveryRequestButton.disableProperty().bind(this.cityMap.isNull());
         this.computePlanningButton.disableProperty().bind(this.deliveryRequest.isNull());
-        /*this.undoButton.disabledProperty().bind(this.commandManager.isUndoable());
-        this.redoButton.disabledProperty().bind(this.commandManager.isRedoable());*/
+        this.undoButton.disableProperty().bind(this.commandManager.undoableProperty().not());
+        this.redoButton.disableProperty().bind(this.commandManager.isRedoable().not());
     }
-
-    @FXML
-    private BorderPane root;
-    @FXML
-    private Button openCityMapButton;
-    @FXML
-    private Button openDeliveryRequestButton;
-    @FXML
-    private Button computePlanningButton;
-    @FXML
-    private Button undoButton;
-    @FXML
-    private Button redoButton;
 
     protected Parent getRoot() {
         return this.root;
@@ -161,11 +160,11 @@ public class MainController extends BorderPane {
     public void onComputePlanningButtonAction(ActionEvent actionEvent) {
         this.applyState(this.getState().onComputePlanningButtonAction(this));
     }
-    
+
     public void onUndoButtonAction(ActionEvent actionEvent) {
         commandManager.undo();
     }
-    
+
     public void onRedoButtonAction(ActionEvent actionEvent) {
         commandManager.redo();
     }

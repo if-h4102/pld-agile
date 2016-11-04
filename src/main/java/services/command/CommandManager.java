@@ -14,15 +14,16 @@ public class CommandManager {
      */
     private Stack<AbstractCommand> undone;
 
-    private SimpleBooleanProperty undoable;
-    private SimpleBooleanProperty redoable;
-    
+    private SimpleBooleanProperty undoable = new SimpleBooleanProperty(false);
+    private SimpleBooleanProperty redoable = new SimpleBooleanProperty(false);
+
     /**
      * Construct a new CommandManager.
      */
     public CommandManager() {
         this.done = new Stack<>();
         this.undone = new Stack<>();
+        this.setUndoable(false);
     }
 
     /**
@@ -57,12 +58,19 @@ public class CommandManager {
         this.done.push(this.undone.pop().getReversed()).execute();
         return true;
     }
-    
-    public SimpleBooleanProperty isUndoable() {
-        this.undoable.setValue(!this.done.isEmpty());
+
+    public SimpleBooleanProperty undoableProperty() {
         return this.undoable;
     }
-    
+
+    public boolean getUndoable() {
+        return undoableProperty().getValue();
+    }
+
+    public void setUndoable(boolean value) {
+        undoableProperty().setValue(value);
+    }
+
     public SimpleBooleanProperty isRedoable() {
         this.redoable.setValue(!this.undone.isEmpty());
         return this.redoable;
