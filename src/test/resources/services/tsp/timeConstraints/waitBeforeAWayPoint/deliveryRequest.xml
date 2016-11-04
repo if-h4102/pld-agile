@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<demandeDeLivraisons>
+    <entrepot adresse="0" heureDepart="8:0:0"/>
+    <!-- The start delivery time of the deliveryAddress 4 has been modified. The delivery man must wait 1min at this point -->
+    <livraison adresse="1" duree="60" debutPlage="8:9:0" finPlage="8:10:0"/>
+    <livraison adresse="2" duree="60" debutPlage="8:2:0" finPlage="8:3:0"/>
+    <livraison adresse="3" duree="60" debutPlage="8:12:0" finPlage="8:13:0"/>
+    <livraison adresse="4" duree="60" debutPlage="8:6:0" finPlage="8:7:0"/>
+</demandeDeLivraisons>

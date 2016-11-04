@@ -118,7 +118,7 @@ public class BasicTspSolver extends AbstractTspSolver {
                 else if(costRouteAndDelivery > MAX_NUMBER_OF_MIN_COST*minCost)
                     break; //if currant cost is bigger than two time the min value cut the currant branch.
                 //if we can pass to the selected node
-                if(!nextNode.canBePassed(this.startPoint.getDeliveryTimeStart()+seenCost+costRouteAndDelivery)){
+                if(!nextNode.canBePassed(this.startPoint.getTimeStart()+seenCost+costRouteAndDelivery)){
                     //add a one day cost (longer than the max delivery time)
                     costRouteAndDelivery += 86400;
                 }

@@ -69,15 +69,6 @@ public class MapCanvasController extends Canvas {
 
 	        		   if(eventX < inter.getX()+ DEFAULT_INTERSECTION_SIZE/2  && eventX > inter.getX()-DEFAULT_INTERSECTION_SIZE/2
 	        				   && eventY < inter.getY() + DEFAULT_INTERSECTION_SIZE/2 && eventY > inter.getY() - DEFAULT_INTERSECTION_SIZE/2){
-
-
-
-	        			   if(tooltip == null) {
-	        				   tooltip = new IntersectionInfo(inter);
-		        			   tooltip.install();
-	        			   }
-
-	        			   System.out.println(tooltip);
 	        			   System.out.println("In the zone");
 
 	        		   }
@@ -187,7 +178,7 @@ public class MapCanvasController extends Canvas {
     	DeliveryRequest deliveryRequest = getDeliveryRequest();
 
     	Iterable<DeliveryAddress> listDeliveryAddresses = deliveryRequest.getDeliveryAddresses();
-    	Warehouse warehouse = deliveryRequest.getWareHouse();
+    	Warehouse warehouse = deliveryRequest.getWarehouse();
 
     	for(DeliveryAddress delivery : listDeliveryAddresses){
     		gc.setFill(Color.BLUE);

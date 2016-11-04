@@ -35,13 +35,13 @@ package model {
     abstract class AbstractWayPoint {
     	-deliveryTimeStart: int
     	-deliveryTimeEnd: int
-        +{abstract} int getDuration()
-        +int getDeliveryTimeStart()
-        +int getDeliveryTimeEnd()
-        +Intersection getIntersection()
-        +int getX()
-        +int getY()
-        #int getId()
+    	+{abstract} int getDuration()
+    	+int getTimeStart()
+    	+int getTimeEnd()
+    	+Intersection getIntersection()
+    	+int getX()
+    	+int getY()
+    	#int getId()
     }
 
     class DeliveryAddress {
@@ -58,6 +58,8 @@ package model {
         -startTime: int
         +void addDeliveryAddress(address: DeliveryAddress)
         +void removeDeliveryAddress(address: DeliveryAddress)
+        +Warehouse getWarehouse()
+        +List<DeliveryAddress> getDeliveryAddresses()
     }
 
     class Planning {
