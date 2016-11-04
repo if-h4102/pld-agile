@@ -33,7 +33,7 @@ public class BasicTspSolver extends AbstractTspSolver {
      */
     @Override
     public Planning solve(DeliveryGraph graph) {
-        
+
         // Initialize solver parameters
         this.bestSolutionCost = Integer.MAX_VALUE;
         this.bestSolution = new AbstractWayPoint[graph.size()];
@@ -41,6 +41,8 @@ public class BasicTspSolver extends AbstractTspSolver {
         ArrayList<AbstractWayPoint> unseen = graph.getNodes();
         // Initialize seen nodes
         ArrayList<AbstractWayPoint> seen = new ArrayList<AbstractWayPoint>(graph.size());
+        // Initilize map of by node waiting time
+        Map<AbstractWayPoint, Integer> wayPointWaitingTime = new HashMap<>();
         // Let's say that the starting point is the first warehouse found
         for (AbstractWayPoint point : unseen) {
             if (point instanceof Warehouse) {
@@ -64,13 +66,13 @@ public class BasicTspSolver extends AbstractTspSolver {
         // Get the time needed to deliver each way point
         Map<AbstractWayPoint, Integer> deliveryDurations = graph.getDeliveryDurations();
         // Compute solution
-        branchAndBound(startPoint, unseen, seen, 0, costs, deliveryDurations);
+        branchAndBound(startPoint, unseen, seen, 0, costs, deliveryDurations, wayPointWaitingTime);
         // Construct Planning based on the previous result
         List<Route> routes = new ArrayList<>(graph.size());
         for (int i = 0; i < graph.size(); i++) {
             routes.add(graph.getRoute(this.bestSolution[i], this.bestSolution[(i + 1) % graph.size()]));
         }
-        return new Planning(routes);
+        return new Planning(routes, bestSolutionWaitingTime);
     }
 
     /**
@@ -92,7 +94,8 @@ public class BasicTspSolver extends AbstractTspSolver {
     private void branchAndBound(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen,
                                 ArrayList<AbstractWayPoint> seen, int seenCost,
                                 Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs,
-                                Map<AbstractWayPoint, Integer> deliveryDurations) {
+                                Map<AbstractWayPoint, Integer> deliveryDurations,
+                                Map<AbstractWayPoint, Integer> wayPointWaitingTime) {
         if (unseen.size() == 0) {
             // All nodes have been seen
             // Just complete the circuit...
@@ -101,6 +104,7 @@ public class BasicTspSolver extends AbstractTspSolver {
             if (seenCost < this.bestSolutionCost) {
                 // Indeed it was ! Let's update the previous one
                 seen.toArray(this.bestSolution);
+                bestSolutionWaitingTime = new HashMap<>(wayPointWaitingTime);
                 this.bestSolutionCost = seenCost;
             }
         } //else if the estimation of time left show possible new best solution
@@ -119,14 +123,25 @@ public class BasicTspSolver extends AbstractTspSolver {
                 else if(costRouteAndDelivery > MAX_NUMBER_OF_MIN_COST*minCost)
                     break; //if currant cost is bigger than two time the min value cut the currant branch.
                 //if we can pass to the selected node
-                if(!nextNode.canBePassed(this.startPoint.getDeliveryTimeStart()+seenCost+costRouteAndDelivery)){
-                    //add a one day cost (longer than the max delivery time)
-                    costRouteAndDelivery += 86400;
+                int arrivalTime=this.startPoint.getDeliveryTimeStart()+seenCost+costRouteAndDelivery;
+                arrivalTime %= 86400;
+                if(!nextNode.canBePassed(arrivalTime)){
+                    if( arrivalTime < nextNode.getDeliveryTimeStart()){
+                        //wait until opening of the delivery point
+                        int waitingDuration = nextNode.getDeliveryTimeStart() - arrivalTime;
+                        costRouteAndDelivery += waitingDuration;
+                        wayPointWaitingTime.put(nextNode,waitingDuration);
+                    }
+                    else{
+                        //add a one day cost (longer than the max delivery time)
+                        costRouteAndDelivery += 86400;
+                    }
                 }
                 costRouteAndDelivery += deliveryDurations.get(nextNode);
-                branchAndBound(nextNode, unseen, seen, seenCost + costRouteAndDelivery, costs, deliveryDurations);
+                branchAndBound(nextNode, unseen, seen, seenCost + costRouteAndDelivery, costs, deliveryDurations, wayPointWaitingTime);
                 unseen.add(nextNode);
                 seen.remove(nextNode);
+                wayPointWaitingTime.remove(nextNode); //remove the possible waiting time
             }
         }
     }

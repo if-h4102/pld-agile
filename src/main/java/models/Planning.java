@@ -14,14 +14,17 @@ public class Planning {
      */
     final private SimpleListProperty<Route> routes = new SimpleListProperty<>();
 
+
+    final private Map<AbstractWayPoint,Integer> wayPointWaitingTime;
+
     /**
      * Construct a new Planning based on the given sorted list of routes, transforming it to suit JavaFX needs.
      *
      * @param routes
      *            an sorted list of routes.
      */
-    public Planning(List<Route> routes) {
-        this(FXCollections.observableArrayList(routes)); // Copy the values in `routes` to an ObservableList
+    public Planning(List<Route> routes, Map<AbstractWayPoint,Integer> waitingTimes ) {
+        this(FXCollections.observableArrayList(routes), waitingTimes); // Copy the values in `routes` to an ObservableList
     }
 
     /**
@@ -30,8 +33,9 @@ public class Planning {
      * @param routes
      *            an sorted list of routes.
      */
-    public Planning(ObservableList<Route> routes) {
+    public Planning(ObservableList<Route> routes, Map<AbstractWayPoint,Integer> waitingTimes) {
         this.routes.setValue(routes);
+        this.wayPointWaitingTime = waitingTimes; //TODO: clone ?
     }
 
     /**
@@ -44,6 +48,9 @@ public class Planning {
         for (Route r : this.routes) {
             fullTime += r.getDuration();
             fullTime += r.getStartWaypoint().getDuration();
+        }
+        for(int waitingTime : wayPointWaitingTime.values()){
+            fullTime += waitingTime;
         }
         return fullTime;
     }

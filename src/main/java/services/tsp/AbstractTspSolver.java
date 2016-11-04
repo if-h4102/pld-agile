@@ -11,7 +11,9 @@ import java.util.Map;
 public abstract class AbstractTspSolver {
 
     protected AbstractWayPoint[] bestSolution;
+    protected Map<AbstractWayPoint,Integer> bestSolutionWaitingTime;
     protected int bestSolutionCost;
+
 
     /**
      * Solve the TSP problem for the given DeliveryGraph.
