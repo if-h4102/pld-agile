@@ -2,6 +2,7 @@ package models;
 
 import com.google.java.contract.Ensures;
 import com.google.java.contract.Requires;
+
 import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
@@ -64,11 +65,20 @@ public class DeliveryRequest {
     }
 
     /**
-     *
      * @return Map of the city containing the intersections of the way-points of this request.
      */
     public CityMap getCityMap() {
         return this.cityMap;
+    }
+
+    /**
+     * Compute a complete graph of routes between the way-points of this delivery graph.
+     *
+     * @return A complete graph containing all the routes between all the waypoints of this request.
+     */
+    public DeliveryGraph computeDeliveryGraph() {
+        // TODO: Move the computation of the delivery graph here ?
+        return this.getCityMap().computeDeliveryGraph(this);
     }
 
     @Override

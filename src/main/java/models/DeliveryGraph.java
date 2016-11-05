@@ -10,14 +10,17 @@ public class DeliveryGraph {
     /**
      * The matrix representing the complete graph.
      */
+    private final CityMap cityMap;
     private Map<AbstractWayPoint, Map<AbstractWayPoint, Route>> routes;
 
     /**
      * Construct a complete graph
      *
-     * @param routes
+     * @param cityMap The map of the city containing the intersections of the way-points of this delivery graph.
+     * @param routes  A matrix representing the complete graph
      */
-    public DeliveryGraph(Map<AbstractWayPoint, Map<AbstractWayPoint, Route>> routes) {
+    public DeliveryGraph(CityMap cityMap, Map<AbstractWayPoint, Map<AbstractWayPoint, Route>> routes) {
+        this.cityMap = cityMap;
         // TODO: compute matrix here ?
         this.routes = routes;
     }
@@ -45,7 +48,6 @@ public class DeliveryGraph {
     }
 
     /**
-     *
      * @return the map of the delivery duration for each node.
      */
     public Map<AbstractWayPoint, Integer> getDeliveryDurations() {
@@ -57,7 +59,6 @@ public class DeliveryGraph {
     }
 
     /**
-     *
      * @return an iterator on the graph.
      */
     public Iterator<Map.Entry<AbstractWayPoint, Map<AbstractWayPoint, Route>>> iterator() {
@@ -77,5 +78,12 @@ public class DeliveryGraph {
         } catch (NullPointerException e) {
             return null;
         }
+    }
+
+    /**
+     * @return Map of the city containing the intersections of the way-points of this delivery graph.
+     */
+    public CityMap getCityMap() {
+        return this.cityMap;
     }
 }

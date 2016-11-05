@@ -55,7 +55,7 @@ public class CityMap {
     protected List<Route> shortestPath(AbstractWayPoint startWayPoint, List<AbstractWayPoint> endWayPoints) {
         Map<Integer, Integer> index = new TreeMap<Integer, Integer>();
         int counter = 0;
-        for(Map.Entry<Integer,Intersection> entry : intersections.entrySet()) {
+        for (Map.Entry<Integer, Intersection> entry : intersections.entrySet()) {
             index.put(entry.getKey(), counter++);
         }
 
@@ -133,7 +133,7 @@ public class CityMap {
             Intersection currentIntersection = endWayPoint.getIntersection();
             Intersection precedentIntersection = predecessors[index.get(currentIntersection.getId())];
 
-            while(precedentIntersection != null) {
+            while (precedentIntersection != null) {
                 streetSectionsInCurrentRoute.add(0, getStreetSection(precedentIntersection, currentIntersection));
                 currentIntersection = precedentIntersection;
                 precedentIntersection = predecessors[index.get(currentIntersection.getId())];
@@ -168,7 +168,7 @@ public class CityMap {
         }
 
         Map<AbstractWayPoint, Map<AbstractWayPoint, Route>> mappedRoutes = new TreeMap<AbstractWayPoint, Map<AbstractWayPoint, Route>>();
-        for (int i=0 ; i < pointsContainedInRequest.size() ; i++) {
+        for (int i = 0; i < pointsContainedInRequest.size(); i++) {
             //always get first element as it will be deleted and pushed back at the end of the list
             AbstractWayPoint startPoint = pointsContainedInRequest.get(0);
             Map<AbstractWayPoint, Route> routesFromGivenStartPoint = new TreeMap<AbstractWayPoint, Route>();
@@ -182,7 +182,7 @@ public class CityMap {
             }
             mappedRoutes.put(startPoint, routesFromGivenStartPoint);
         }
-        return new DeliveryGraph(mappedRoutes);
+        return new DeliveryGraph(request.getCityMap(), mappedRoutes);
     }
 
     public List<Intersection> getIntersections() {

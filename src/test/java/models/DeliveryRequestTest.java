@@ -1,8 +1,10 @@
 package models;
 
 import static org.junit.Assert.assertTrue;
+
 import java.util.LinkedList;
 import java.util.List;
+
 import org.junit.Test;
 
 public class DeliveryRequestTest {
