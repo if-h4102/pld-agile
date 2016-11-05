@@ -42,7 +42,7 @@ public class BasicTspSolver extends AbstractTspSolver {
         // Initialize seen nodes
         ArrayList<AbstractWayPoint> seen = new ArrayList<AbstractWayPoint>(graph.size());
         // Initilize map of by node waiting time
-        Map<AbstractWayPoint, Integer> wayPointWaitingTime = new HashMap<>();
+        Map<AbstractWayPoint, Integer> wayPointWaitingTime = new HashMap<AbstractWayPoint,Integer>();
         // Let's say that the starting point is the first warehouse found
         for (AbstractWayPoint point : unseen) {
             if (point instanceof Warehouse) {
@@ -72,7 +72,7 @@ public class BasicTspSolver extends AbstractTspSolver {
         for (int i = 0; i < graph.size(); i++) {
             routes.add(graph.getRoute(this.bestSolution[i], this.bestSolution[(i + 1) % graph.size()]));
         }
-        return new Planning(routes, bestSolutionWaitingTime);
+        return new Planning(routes, bestSolutionWaitingTime, bestSolutionCost);
     }
 
     /**
@@ -104,7 +104,7 @@ public class BasicTspSolver extends AbstractTspSolver {
             if (seenCost < this.bestSolutionCost) {
                 // Indeed it was ! Let's update the previous one
                 seen.toArray(this.bestSolution);
-                bestSolutionWaitingTime = new HashMap<>(wayPointWaitingTime);
+                bestSolutionWaitingTime = new HashMap<AbstractWayPoint,Integer>(wayPointWaitingTime);
                 this.bestSolutionCost = seenCost;
             }
         } //else if the estimation of time left show possible new best solution

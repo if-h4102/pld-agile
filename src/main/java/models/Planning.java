@@ -14,8 +14,8 @@ public class Planning {
      */
     final private SimpleListProperty<Route> routes = new SimpleListProperty<>();
 
-
-    final private Map<AbstractWayPoint,Integer> wayPointWaitingTime;
+    private Map<AbstractWayPoint, Integer> wayPointWaitingTime;
+    private int fullTime;
 
     /**
      * Construct a new Planning based on the given sorted list of routes, transforming it to suit JavaFX needs.
@@ -23,8 +23,8 @@ public class Planning {
      * @param routes
      *            an sorted list of routes.
      */
-    public Planning(List<Route> routes, Map<AbstractWayPoint,Integer> waitingTimes ) {
-        this(FXCollections.observableArrayList(routes), waitingTimes); // Copy the values in `routes` to an ObservableList
+    public Planning(List<Route> routes, Map<AbstractWayPoint, Integer> waitingTimes, int fullTime) {
+        this(FXCollections.observableArrayList(routes), waitingTimes, fullTime); // Copy the values in `routes` to an ObservableList
     }
 
     /**
@@ -33,9 +33,10 @@ public class Planning {
      * @param routes
      *            an sorted list of routes.
      */
-    public Planning(ObservableList<Route> routes, Map<AbstractWayPoint,Integer> waitingTimes) {
+    public Planning(ObservableList<Route> routes, Map<AbstractWayPoint, Integer> waitingTimes, int fullTime) {
         this.routes.setValue(routes);
-        this.wayPointWaitingTime = waitingTimes; //TODO: clone ?
+        this.wayPointWaitingTime = waitingTimes; // TODO: clone ?
+        this.fullTime = fullTime;
     }
 
     /**
@@ -43,16 +44,30 @@ public class Planning {
      *
      * @return the total amount of time needed to complete all deliveries and loads.
      */
+    // The full time is now a parameter of planning, so the penalty are in it
     public int getFullTime() {
-        int fullTime = 0;
-        for (Route r : this.routes) {
-            fullTime += r.getDuration();
-            fullTime += r.getStartWaypoint().getDuration();
-        }
-        for(int waitingTime : wayPointWaitingTime.values()){
-            fullTime += waitingTime;
-        }
+//        int fullTime = 0;
+//        for (Route r : this.routes) {
+//            fullTime += r.getDuration();
+//            fullTime += r.getStartWaypoint().getDuration();
+//        }
+//        for (int waitingTime : wayPointWaitingTime.values()) {
+//            fullTime += waitingTime;
+//        }
         return fullTime;
+    }
+
+    /**
+     * Get the time that the delivery man must wait at the given way point
+     * 
+     * @param wayPoint
+     *            The wait point where the delivery man will wait
+     * @return The waiting time of the delivery man
+     */
+    public int getWaitingTimeAtWayPoint(AbstractWayPoint wayPoint) {
+        if (wayPointWaitingTime.containsKey(wayPoint)) // Avoid the nullPointerException if the wayPoint is not in the map
+            return wayPointWaitingTime.get(wayPoint);
+        return 0;
     }
 
     /**
@@ -65,10 +80,12 @@ public class Planning {
     }
 
     /**
-     * Add a way point to the current planning,
-     * and update the current routes consequently.
-     * @param point the way point to add to the current planning.
-     * @param map the map with which the soon to be created new routes will be computed.
+     * Add a way point to the current planning, and update the current routes consequently.
+     * 
+     * @param point
+     *            the way point to add to the current planning.
+     * @param map
+     *            the map with which the soon to be created new routes will be computed.
      * @return the updated current planning.
      */
     public Planning addWayPoint(AbstractWayPoint point, CityMap map) {
@@ -100,31 +117,30 @@ public class Planning {
     }
 
     /**
-     * Add a way point to the current planning after the given way point,
-     * and update the current routes consequently.
-     * @param point the way point to add to the current planning.
-     * @param afterPoint the way point after which the new way point must be added.
-     * @param map the map with which the soon to be created new routes will be computed.
+     * Add a way point to the current planning after the given way point, and update the current routes consequently.
+     * 
+     * @param point
+     *            the way point to add to the current planning.
+     * @param afterPoint
+     *            the way point after which the new way point must be added.
+     * @param map
+     *            the map with which the soon to be created new routes will be computed.
      * @return the updated current planning.
      */
     public Planning addWayPoint(AbstractWayPoint point, AbstractWayPoint afterPoint, CityMap map) {
         // Look for the position of the given afterPoint
         int position = 0;
-        for(int i = 0; i < this.routes.size(); i++){
+        for (int i = 0; i < this.routes.size(); i++) {
             Route route = this.routes.get(i);
-            if(route.getStartWaypoint().equals(afterPoint)) {
+            if (route.getStartWaypoint().equals(afterPoint)) {
                 position = i;
                 break;
             }
         }
         // Split the affected route
         this.routes.remove(position);
-        this.routes.add(position, map.shortestPath(
-            this.routes.get(position).getStartWaypoint(),
-            Collections.singletonList(point)).get(0));
-        this.routes.add(position, map.shortestPath(
-            point,
-            Collections.singletonList(this.routes.get(position).getEndWaypoint())).get(0));
+        this.routes.add(position, map.shortestPath(this.routes.get(position).getStartWaypoint(), Collections.singletonList(point)).get(0));
+        this.routes.add(position, map.shortestPath(point, Collections.singletonList(this.routes.get(position).getEndWaypoint())).get(0));
         return this;
     }
 
