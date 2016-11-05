@@ -5,11 +5,22 @@
 <?import components.waypointcard.WaypointCard?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.control.Button?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 <fx:root fx:id="root" prefHeight="80.0" prefWidth="250.0"
          stylesheets="/components/planningdetails/planningDetailsItem.css" type="AnchorPane"
          xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1">
-  <StackPane AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.bottomAnchor="0">
-    <WaypointCard waypoint="${controller.item.startWaypoint}" readOnly="true"/>
-    <Button mnemonicParsing="false" onAction="#onRemoveButtonAction" text="Remove"/>
-  </StackPane>
+    <WaypointCard waypoint="${controller.item.startWaypoint}" readOnly="true" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.bottomAnchor="0">
+      <cornerControls>
+        <Button fx:id="edit" graphicTextGap="2.0" mnemonicParsing="false" onAction="#onEditButtonAction" AnchorPane.rightAnchor="32" AnchorPane.topAnchor="0">
+          <graphic>
+            <FontIcon iconLiteral="gmi-edit" scaleX="0.75" scaleY="0.75" />
+          </graphic>
+        </Button>
+        <Button fx:id="remove" graphicTextGap="2.0" mnemonicParsing="false" onAction="#onRemoveButtonAction" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+          <graphic>
+            <FontIcon iconLiteral="gmi-clear" />
+          </graphic>
+        </Button>
+      </cornerControls>
+    </WaypointCard>
 </fx:root>

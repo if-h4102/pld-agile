@@ -3,12 +3,15 @@ package components.waypointcard;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import models.AbstractWayPoint;
 import models.Intersection;
 import models.Warehouse;
@@ -17,13 +20,9 @@ import java.io.IOException;
 
 public class WaypointCard<WP extends AbstractWayPoint> extends AnchorPane {
     @FXML
+    public HBox cornerControls;
+    @FXML
     protected AnchorPane timeConstraints;
-    @FXML
-    protected Label content;
-    @FXML
-    protected Button edit;
-    @FXML
-    protected Button remove;
 
     private SimpleObjectProperty<WP> waypoint;
     private SimpleStringProperty waypointName;
@@ -50,8 +49,8 @@ public class WaypointCard<WP extends AbstractWayPoint> extends AnchorPane {
             updateCoordinates();
             updateWaypointName();
         });
-        edit.visibleProperty().bind(readOnlyProperty());
-        remove.visibleProperty().bind(readOnlyProperty());
+        // edit.visibleProperty().bind(readOnlyProperty());
+        // remove.visibleProperty().bind(readOnlyProperty());
     }
 
     // Item
@@ -139,15 +138,11 @@ public class WaypointCard<WP extends AbstractWayPoint> extends AnchorPane {
         setWaypointName(name);
     }
 
+    public ObservableList<Node> getCornerControls() {
+        return cornerControls.getChildren();
+    }
+
     public final String getCoordinates() {
         return coordinatesProperty().getValue();
-    }
-
-    public void onRemoveButtonAction(ActionEvent actionEvent) {
-        System.out.println("Remove waypoint ...");
-    }
-
-    public void onEditButtonAction(ActionEvent actionEvent) {
-        System.out.println("Edit waypoint ...");
     }
 }

@@ -14,6 +14,7 @@
     -fx-pref-width: 32px;
     -fx-pref-height: 32px;
     visibility: hidden;
+    -fx-border-radius: 2px;
 }
 
 #remove FontIcon, #edit FontIcon {
@@ -23,6 +24,10 @@
 
 #root:hover #remove, #root:hover #edit {
     visibility: visible;
+}
+
+#remove:hover, #edit:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.2);
 }
 
 #remove:hover FontIcon, #edit:hover FontIcon {
