@@ -6,13 +6,33 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
+/**
+ * A DeliveryRequest contains all the data to compute a planning matching the needs of a user.
+ * It contains the warehouse with the departure time and a set of addresses to deliver.
+ */
 public class DeliveryRequest {
-
+    /**
+     * The warehouse is the point where the delivery should start and end.
+     */
     private Warehouse warehouse;
+
+    /**
+     * The set of addresses where we should deliver goods.
+     */
     private Set<DeliveryAddress> deliveryAddresses;
+
+    /**
+     * The time at which the delivery starts from the warehouse.
+     */
     private int startPlanningTimestamp;
 
-    public DeliveryRequest(Warehouse warehouse, Collection<DeliveryAddress> deliveryAddresses, int startPlanningTimestamp) {
+    /**
+     * The map of the city containing the intersections of the way-points of this request.
+     */
+    private final CityMap cityMap;
+
+    public DeliveryRequest(CityMap cityMap, Warehouse warehouse, Collection<DeliveryAddress> deliveryAddresses, int startPlanningTimestamp) {
+        this.cityMap = cityMap;
         this.warehouse = warehouse; // TODO clone to avoid a later modification?
         this.deliveryAddresses = new TreeSet<DeliveryAddress>();
         for (DeliveryAddress deliveryAddress : deliveryAddresses) {
@@ -41,6 +61,14 @@ public class DeliveryRequest {
 
     public Iterable<DeliveryAddress> getDeliveryAddresses() {
         return deliveryAddresses;
+    }
+
+    /**
+     *
+     * @return Map of the city containing the intersections of the way-points of this request.
+     */
+    public CityMap getCityMap() {
+        return this.cityMap;
     }
 
     @Override
