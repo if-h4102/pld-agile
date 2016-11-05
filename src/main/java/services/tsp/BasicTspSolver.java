@@ -72,7 +72,7 @@ public class BasicTspSolver extends AbstractTspSolver {
         for (int i = 0; i < graph.size(); i++) {
             routes.add(graph.getRoute(this.bestSolution[i], this.bestSolution[(i + 1) % graph.size()]));
         }
-        return new Planning(routes, bestSolutionWaitingTime, bestSolutionCost);
+        return new Planning(graph.getCityMap(), routes, bestSolutionWaitingTime, bestSolutionCost);
     }
 
     /**
