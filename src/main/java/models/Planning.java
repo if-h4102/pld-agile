@@ -194,8 +194,8 @@ public class Planning {
         Route newRoute = this.getCityMap().shortestPath(start, Collections.singletonList(end)).get(0);
         // TODO: handle errors
         // Now we can remove the two old routes using the way point we want to remove
-        this.routes.remove(routesToRemove[0]);
         this.routes.remove(routesToRemove[1]);
+        this.routes.remove(routesToRemove[0]);
         // Finally we can add the previously created route
         this.routes.add(routesToRemove[0], newRoute);
     }

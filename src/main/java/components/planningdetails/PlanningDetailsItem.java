@@ -1,12 +1,12 @@
 package components.planningdetails;
 
+import components.events.RemoveWaypointEvent;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import models.AbstractWayPoint;
 import models.Intersection;
@@ -14,11 +14,9 @@ import models.Route;
 
 import java.io.IOException;
 
-public class PlanningDetailsItem<E extends Route> extends AnchorPane {
+public class PlanningDetailsItem extends AnchorPane {
     @FXML
-    protected Label content;
-
-    private SimpleObjectProperty<E> item;
+    private SimpleObjectProperty<Route> item;
     private SimpleIntegerProperty index;
     private SimpleStringProperty waypointName;
     private SimpleStringProperty coordinates;
@@ -42,18 +40,18 @@ public class PlanningDetailsItem<E extends Route> extends AnchorPane {
     }
 
     // Item
-    public final SimpleObjectProperty<E> itemProperty() {
+    public final SimpleObjectProperty<Route> itemProperty() {
         if (item == null) {
             item = new SimpleObjectProperty<>(this, "item", null);
         }
         return item;
     }
 
-    public final void setItem(E value) {
+    public final void setItem(Route value) {
         itemProperty().setValue(value);
     }
 
-    public final E getItem() {
+    public final Route getItem() {
         return item == null ? null : itemProperty().getValue();
     }
 
@@ -126,7 +124,15 @@ public class PlanningDetailsItem<E extends Route> extends AnchorPane {
     }
 
     public void onRemoveButtonAction(ActionEvent actionEvent) {
-        System.out.println("Remove waypoint ...");
+        Route item = getItem();
+        if (item == null) {
+            return;
+        }
+        AbstractWayPoint startWaypoint = item.getStartWaypoint();
+        if (startWaypoint == null) {
+            return;
+        }
+        fireEvent(new RemoveWaypointEvent(startWaypoint));
     }
 
     public void onEditButtonAction(ActionEvent actionEvent) {
