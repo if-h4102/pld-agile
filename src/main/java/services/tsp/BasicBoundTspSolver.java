@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
-public class BasicBoundTspSolver extends BasicTspSolver{
+public class BasicBoundTspSolver extends ThreadedTspSolver{
     /**
      * Bound using the sum of min cost per unseen node (including warehouse)
      * plus the cost of the node.
