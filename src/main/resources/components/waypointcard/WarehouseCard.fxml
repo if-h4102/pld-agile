@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
+<?import components.timefield.TimeField?>
 <fx:root xmlns:fx="http://javafx.com/fxml/1" fx:id="root" prefHeight="50.0" prefWidth="200.0"
          stylesheets="/components/waypointcard/WarehouseCard.css" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.102-ea">
   <VBox AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
@@ -10,7 +11,7 @@
       <Label text="Coordinates"/>
       <Label text="${controller.coordinates}"/>
     </HBox>
-    <Label text="${controller.waypoint.timeStart}"/>
+    <TimeField time="${controller.waypoint.timeStart}"/>
   </VBox>
   <AnchorPane AnchorPane.rightAnchor="8" AnchorPane.topAnchor="8">
     <HBox alignment="TOP_RIGHT" fx:id="cornerControls">

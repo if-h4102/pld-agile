@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import components.timefield.TimeField?>
 <fx:root xmlns:fx="http://javafx.com/fxml/1" fx:id="root" prefHeight="80.0" prefWidth="250.0"
          stylesheets="/components/waypointcard/DeliveryAddressCard.css" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.102-ea">
   <VBox AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
@@ -22,9 +23,9 @@
         </rowConstraints>
         <children>
           <Label text="Time constraint start" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-          <Label text="10h" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+          <TimeField time="${controller.waypoint.timeStart}" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
           <Label text="Time constraint end" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-          <Label text="20h" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+          <TimeField time="${controller.waypoint.timeEnd}" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
         </children>
       </GridPane>
     </AnchorPane>
