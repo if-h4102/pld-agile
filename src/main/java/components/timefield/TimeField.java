@@ -1,14 +1,11 @@
 package components.timefield;
 
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.HBox;
-import javafx.util.converter.NumberStringConverter;
 
 import java.io.IOException;
 
@@ -44,10 +41,6 @@ public class TimeField extends HBox {
         hoursField.disableProperty().bind(this.disableProperty());
         minutesField.disableProperty().bind(this.disableProperty());
         secondsField.disableProperty().bind(this.disableProperty());
-
-//        hoursField.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
-//        minutesField.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
-//        secondsField.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
 
         timeProperty().addListener((observable, oldValue, newValue) -> this.onTimeChange(oldValue.intValue(), newValue.intValue()));
         hoursProperty().addListener((observable, oldValue, newValue) -> this.onHoursChange(oldValue.intValue(), newValue.intValue()));
