@@ -39,6 +39,7 @@ public class MapCanvasController extends Canvas {
     private SimpleObjectProperty<DeliveryRequest> deliveryRequest;
     private SimpleObjectProperty<Planning> planning;
     private List<Intersection> intersections;
+    private Iterable<DeliveryAddress> listDeliveryAddresses;
     private double calZoom;
 
     @SuppressWarnings("restriction")
@@ -61,8 +62,21 @@ public class MapCanvasController extends Canvas {
                 eventY /= calZoom;
                 eventX += DEFAULT_OFFSET_X;
                 eventY += DEFAULT_OFFSET_Y;
-//                System.out.println("");
-//                System.out.println("coord" + eventX + " " + eventY);
+                
+                if(getDeliveryRequest() != null){
+                	listDeliveryAddresses = getDeliveryRequest().getDeliveryAddresses();
+	                for(DeliveryAddress delivery : listDeliveryAddresses){
+	                	if (eventX < delivery.getX() + DEFAULT_DELIVERY_SIZE / 2 && eventX > delivery.getX() - DEFAULT_DELIVERY_SIZE / 2
+	                            && eventY < delivery.getY() + DEFAULT_DELIVERY_SIZE / 2 && eventY > delivery.getY() - DEFAULT_DELIVERY_SIZE / 2) {
+	                            DeliverySelectionEvent deliver = new DeliverySelectionEvent(delivery, e.getX(), e.getY());
+	                            fireEvent(deliver);
+	                            return;
+	                        }
+	                }
+                }
+                
+                
+                
                 for (Intersection inter : intersections) {
                     if (eventX < inter.getX() + DEFAULT_INTERSECTION_SIZE / 2 && eventX > inter.getX() - DEFAULT_INTERSECTION_SIZE / 2
                         && eventY < inter.getY() + DEFAULT_INTERSECTION_SIZE / 2 && eventY > inter.getY() - DEFAULT_INTERSECTION_SIZE / 2) {

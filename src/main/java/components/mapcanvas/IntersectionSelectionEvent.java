@@ -19,6 +19,8 @@ public class IntersectionSelectionEvent extends Event {
 		// TODO Auto-generated constructor stub
 	}
 	
+	
+	
 	public double getX(){
 		return canvasEventX;
 	}

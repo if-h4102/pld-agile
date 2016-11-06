@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<fx:root fx:id="root" prefHeight="80.0" prefWidth="250.0" stylesheets="/components/deliveryaddresscard/DeliveryAddressCard.css" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1">
+  <GridPane AnchorPane.rightAnchor="8" AnchorPane.topAnchor="8" AnchorPane.leftAnchor="8" AnchorPane.bottomAnchor="8">
+    <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+    </columnConstraints>
+    <rowConstraints>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    </rowConstraints>
+    <children>
+      <Label text="Delivery Address " GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+      <Label text="${controller.deliveryAddress.id}" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+      <Label text="Coordinate X" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+      <Label text="${controller.deliveryAddress.x}" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <Label text="Coordinate Y" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+      <Label text="${controller.deliveryAddress.y}" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <Label text="Duration" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+      <Label text="${controller.deliveryAddress.deliveryDuration}" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+    </children>
+  </GridPane>
+</fx:root>

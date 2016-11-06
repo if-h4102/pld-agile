@@ -2,6 +2,7 @@
 
 <?import components.mapcanvas.MapCanvasController?>
 <?import components.intersectioncard.IntersectionCard?>
+<?import components.deliveryaddresscard.DeliveryAddressCard?>
 <?import javafx.scene.layout.*?>
 
 <fx:root fx:id="root" prefHeight="480.0" prefWidth="640.0"
@@ -18,5 +19,6 @@
                        planning="${controller.planning}"
                        
   />
+  <DeliveryAddressCard fx:id="tooltipDelivery" deliveryAddress="${controller.activeDelivery}"/>
   <IntersectionCard fx:id="tooltip" intersection="${controller.activeIntersection}"/>
 </fx:root>

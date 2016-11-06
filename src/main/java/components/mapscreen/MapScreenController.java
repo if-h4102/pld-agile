@@ -11,14 +11,17 @@ import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import models.CityMap;
+import models.DeliveryAddress;
 import models.DeliveryRequest;
 import models.Intersection;
 import models.Planning;
+import components.mapcanvas.DeliverySelectionEvent;
 import components.mapcanvas.IntersectionSelectionEvent;
 
 import java.awt.Point;
 import java.io.IOException;
 
+import components.deliveryaddresscard.DeliveryAddressCard;
 import components.intersectioncard.IntersectionCard;
 import components.mapcanvas.MapCanvasController;
 
@@ -33,6 +36,8 @@ public class MapScreenController extends AnchorPane {
 	@FXML
     protected IntersectionCard tooltip;
 	@FXML
+    protected DeliveryAddressCard tooltipDelivery;
+	@FXML
 	protected MapCanvasController canvas;
     private SimpleDoubleProperty zoom;
     private SimpleDoubleProperty offsetX;
@@ -41,6 +46,7 @@ public class MapScreenController extends AnchorPane {
     private SimpleObjectProperty<DeliveryRequest> deliveryRequest;
     private SimpleObjectProperty<Planning> planning;
     private SimpleObjectProperty<Intersection> activeIntersection;
+    private SimpleObjectProperty<DeliveryAddress> activeDelivery;
 
     @SuppressWarnings("restriction")
 	public MapScreenController() {
@@ -55,11 +61,16 @@ public class MapScreenController extends AnchorPane {
         }
         
         canvas.addEventHandler(IntersectionSelectionEvent.INTERSECTION_SELECTION, event -> {
-        	System.out.println("handler");
-        	updateTooltip(event);
+        	System.out.println("handler intersection");
+        	updateIntersectionTooltip(event);
         });
         
+        canvas.addEventHandler(DeliverySelectionEvent.DELIVERY_SELECTION, event -> {
+        	System.out.println("handler delivery address");
+        	updateDeliveryTooltip(event);
+        });
         
+        tooltipDelivery.visibleProperty().bind(activeDelivery.isNotNull());
         tooltip.visibleProperty().bind(activeIntersection.isNotNull());
     }
 
@@ -167,7 +178,7 @@ public class MapScreenController extends AnchorPane {
      * Update the position of the tooltip
      *
      */
-    public void updateTooltip (IntersectionSelectionEvent event) {
+    public void updateIntersectionTooltip (IntersectionSelectionEvent event) {
     	tooltip = tooltipOptimalPosition(tooltip, event.getX(),event.getY());
     	
     	System.out.println(event.getIntersection());
@@ -175,18 +186,51 @@ public class MapScreenController extends AnchorPane {
     }
     
     /**
+     * The active interserction
+     *      *
+     * @return The cityMap property
+     */
+    public final SimpleObjectProperty<DeliveryAddress> activeDeliveryProperty() {
+        if (activeDelivery == null) {
+        	activeDelivery = new SimpleObjectProperty<>(this, "activeDelivery", null);
+        }
+        return activeDelivery;
+    }
+
+    /**
+     * 
+     *
+     * @param value
+     */
+    public final void setActiveDelivery(DeliveryAddress value) {
+    	activeDeliveryProperty().setValue(value);
+    }
+
+    public final DeliveryAddress getActiveDelivery() {
+        return activeDelivery == null ? null : activeDeliveryProperty().getValue();
+    }
+    /**
+     * Update the position of the tooltip
+     *
+     */
+    public void updateDeliveryTooltip (DeliverySelectionEvent event) {
+    	tooltipDelivery = tooltipDeliveryOptimalPosition(tooltipDelivery, event.getX(),event.getY());
+    	System.out.println(event.getDeliveryAddress());
+    	setActiveDelivery(event.getDeliveryAddress());
+    }
+    
+    
+    /**
      * Find the optimal origin for the tooltip
      *
      * @return The best point
      */
-    //TODO get the length and width of a tooltip
     public IntersectionCard tooltipOptimalPosition(IntersectionCard tooltip, double x, double y){
     	double h = canvas.getHeight();
     	double w = canvas.getWidth();
     	double htool = tooltip.getHeight();
     	double wtool = tooltip.getWidth();
-    	System.out.println(h + " " + w +" " + htool+" "+ wtool + " "+ x+ " "+ y);
-    	
+    	System.out.println(h + " " + w +" " + htool+" "+ wtool + " "+ x+ " "+ y);  	
     	if(x+wtool > w){
     		tooltip.setLayoutX(x-wtool-5);
     	}
@@ -203,6 +247,32 @@ public class MapScreenController extends AnchorPane {
     	return tooltip;
     }
     
+    /**
+     * Find the optimal origin for the tooltip
+     *
+     * @return The best point
+     */
+    public DeliveryAddressCard tooltipDeliveryOptimalPosition(DeliveryAddressCard tooltipDelivery, double x, double y){
+    	double h = canvas.getHeight();
+    	double w = canvas.getWidth();
+    	double htool = tooltipDelivery.getHeight();
+    	double wtool = tooltipDelivery.getWidth();
+    	System.out.println(h + " " + w +" " + htool+" "+ wtool + " "+ x+ " "+ y);  	
+    	if(x+wtool > w){
+    		tooltipDelivery.setLayoutX(x-wtool-5);
+    	}
+    	else {
+    		tooltipDelivery.setLayoutX(x+5);
+    	}
+    	if(y+htool > h){
+    		tooltipDelivery.setLayoutY(y-htool-5);
+    	}
+    	else{
+    		tooltipDelivery.setLayoutY(y+5);
+    	}
+    	
+    	return tooltipDelivery;
+    }
     
     
     /**
