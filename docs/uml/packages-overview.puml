@@ -16,7 +16,7 @@ package services {
         class AdvancedTspSolver {
         }
 
-        class WayPointIterator {
+        class WaypointIterator {
         }
     }
 }
@@ -34,7 +34,7 @@ package models {
     class Intersection {
     }
 
-    abstract class AbstractWayPoint {
+    abstract class AbstractWaypoint {
     }
 
     class DeliveryAddress {

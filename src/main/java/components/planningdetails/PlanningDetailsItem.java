@@ -8,7 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
-import models.AbstractWayPoint;
+import models.AbstractWaypoint;
 import models.Intersection;
 import models.Route;
 
@@ -104,7 +104,7 @@ public class PlanningDetailsItem extends AnchorPane {
         if (item == null) {
             return;
         }
-        final AbstractWayPoint waypoint = item.getStartWaypoint();
+        final AbstractWaypoint waypoint = item.getStartWaypoint();
         if (waypoint == null) {
             return;
         }
@@ -128,7 +128,7 @@ public class PlanningDetailsItem extends AnchorPane {
         if (item == null) {
             return;
         }
-        AbstractWayPoint startWaypoint = item.getStartWaypoint();
+        AbstractWaypoint startWaypoint = item.getStartWaypoint();
         if (startWaypoint == null) {
             return;
         }

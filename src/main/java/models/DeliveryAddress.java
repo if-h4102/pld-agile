@@ -1,6 +1,6 @@
 package models;
 
-public class DeliveryAddress extends AbstractWayPoint {
+public class DeliveryAddress extends AbstractWaypoint {
     final private int deliveryDuration;
 
     public DeliveryAddress(Intersection intersection, int deliveryDuration) {

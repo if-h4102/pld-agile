@@ -2,19 +2,19 @@ package components.events;
 
 import javafx.event.Event;
 import javafx.event.EventType;
-import models.AbstractWayPoint;
+import models.AbstractWaypoint;
 
 public class RemoveWaypointEvent extends Event {
 	public static final EventType<RemoveWaypointEvent> TYPE = new EventType<>("REMOVE_WAYPOINT");
 
-    private final AbstractWayPoint waypoint;
+    private final AbstractWaypoint waypoint;
 
-	public RemoveWaypointEvent(AbstractWayPoint waypoint) {
+	public RemoveWaypointEvent(AbstractWaypoint waypoint) {
 		super(RemoveWaypointEvent.TYPE);
         this.waypoint = waypoint;
 	}
 
-	public AbstractWayPoint getWaypoint() {
+	public AbstractWaypoint getWaypoint() {
         return this.waypoint;
     }
 }

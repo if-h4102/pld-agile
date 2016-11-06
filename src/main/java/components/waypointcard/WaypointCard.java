@@ -4,21 +4,18 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import models.AbstractWayPoint;
+import models.AbstractWaypoint;
 import models.Intersection;
 import models.Warehouse;
 
 import java.io.IOException;
 
-public class WaypointCard<WP extends AbstractWayPoint> extends AnchorPane {
+public class WaypointCard<WP extends AbstractWaypoint> extends AnchorPane {
     @FXML
     public HBox cornerControls;
     @FXML
@@ -98,7 +95,7 @@ public class WaypointCard<WP extends AbstractWayPoint> extends AnchorPane {
     }
 
     public void updateCoordinates() {
-        final AbstractWayPoint waypoint = getWaypoint();
+        final AbstractWaypoint waypoint = getWaypoint();
         if (waypoint == null) {
             return;
         }
@@ -127,7 +124,7 @@ public class WaypointCard<WP extends AbstractWayPoint> extends AnchorPane {
 
     public void updateWaypointName() {
         String name;
-        AbstractWayPoint waypoint = getWaypoint();
+        AbstractWaypoint waypoint = getWaypoint();
         if (waypoint == null) {
             name = "";
         } else if (waypoint instanceof Warehouse) {

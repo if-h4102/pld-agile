@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import components.mapscreen.MapScreenController?>
+<?import components.mapscreen.MapScreen?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import components.planningdetails.PlanningDetails?>
@@ -25,21 +25,21 @@
       		  onAction="#onUndoButtonAction" text="%undo"/>
       <Button fx:id="redoButton" mnemonicParsing="false"
   			  onAction="#onRedoButtonAction" text="%redo"/>
-      		  
+
     </ToolBar>
   </top>
   <center>
     <SplitPane dividerPositions="0.75" prefHeight="160.0" prefWidth="200.0"
                BorderPane.alignment="CENTER">
       <AnchorPane BorderPane.alignment="CENTER">
-        <MapScreenController cityMap="${controller.cityMap}"
-                             deliveryRequest="${controller.deliveryRequest}"
-                             planning="${controller.planning}"
-                             AnchorPane.bottomAnchor="0"
-                             AnchorPane.leftAnchor="0"
-                             AnchorPane.rightAnchor="0"
-                             AnchorPane.topAnchor="0"/>
-        <!--<fx:include fx:id="mapView" source="mapScreen.fxml" />-->
+        <MapScreen cityMap="${controller.cityMap}"
+                   deliveryRequest="${controller.deliveryRequest}"
+                   planning="${controller.planning}"
+                   AnchorPane.bottomAnchor="0"
+                   AnchorPane.leftAnchor="0"
+                   AnchorPane.rightAnchor="0"
+                   AnchorPane.topAnchor="0"/>
+        <!--<fx:include fx:id="mapView" source="MapScreen.fxml" />-->
       </AnchorPane>
       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0"
                   prefWidth="100.0">

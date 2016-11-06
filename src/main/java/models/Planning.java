@@ -1,16 +1,13 @@
 package models;
 
 import com.google.java.contract.Requires;
-import javafx.beans.InvalidationListener;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleListProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Planning {
     /**
@@ -24,7 +21,7 @@ public class Planning {
     final private SimpleListProperty<Route> routes = new SimpleListProperty<>();
 
 
-    final private Map<AbstractWayPoint, Integer> wayPointWaitingTime;
+    final private Map<AbstractWaypoint, Integer> waypointWaitingTime;
 
     private int fullTime;
 
@@ -33,7 +30,7 @@ public class Planning {
      *
      * @param routes an sorted list of routes.
      */
-    public Planning(CityMap cityMap, List<Route> routes, Map<AbstractWayPoint, Integer> waitingTimes, int fullTime) {
+    public Planning(CityMap cityMap, List<Route> routes, Map<AbstractWaypoint, Integer> waitingTimes, int fullTime) {
         this(cityMap, FXCollections.observableArrayList(routes), waitingTimes, fullTime); // Copy the values in `routes` to an ObservableList
     }
 
@@ -42,10 +39,10 @@ public class Planning {
      *
      * @param routes an sorted list of routes.
      */
-    public Planning(CityMap cityMap, ObservableList<Route> routes, Map<AbstractWayPoint, Integer> waitingTimes, int fullTime) {
+    public Planning(CityMap cityMap, ObservableList<Route> routes, Map<AbstractWaypoint, Integer> waitingTimes, int fullTime) {
         this.cityMap = new ReadOnlyObjectWrapper<>(cityMap);
         this.routes.setValue(routes);
-        this.wayPointWaitingTime = waitingTimes; // TODO: clone ?
+        this.waypointWaitingTime = waitingTimes; // TODO: clone ?
         this.fullTime = fullTime;
     }
 
@@ -69,7 +66,7 @@ public class Planning {
 //            fullTime += r.getDuration();
 //            fullTime += r.getStartWaypoint().getDuration();
 //        }
-//        for (int waitingTime : wayPointWaitingTime.values()) {
+//        for (int waitingTime : waypointWaitingTime.values()) {
 //            fullTime += waitingTime;
 //        }
         return fullTime;
@@ -78,13 +75,13 @@ public class Planning {
     /**
      * Get the time that the delivery man must wait at the given way point
      *
-     * @param wayPoint
+     * @param waypoint
      *            The wait point where the delivery man will wait
      * @return The waiting time of the delivery man
      */
-    public int getWaitingTimeAtWayPoint(AbstractWayPoint wayPoint) {
-        if (wayPointWaitingTime.containsKey(wayPoint)) // Avoid the nullPointerException if the wayPoint is not in the map
-            return wayPointWaitingTime.get(wayPoint);
+    public int getWaitingTimeAtWaypoint(AbstractWaypoint waypoint) {
+        if (waypointWaitingTime.containsKey(waypoint)) // Avoid the nullPointerException if the waypoint is not in the map
+            return waypointWaitingTime.get(waypoint);
         return 0;
     }
 
@@ -114,7 +111,7 @@ public class Planning {
      * @param map   the map with which the soon to be created new routes will be computed.
      * @return the updated current planning.
      */
-    public Planning addWayPoint(AbstractWayPoint point, CityMap map) {
+    public Planning addWaypoint(AbstractWaypoint point, CityMap map) {
         // Compute the best position to introduce the given way point
         int bestTime = Integer.MAX_VALUE;
         int bestPosition = 0;
@@ -151,7 +148,7 @@ public class Planning {
      * @param map        the map with which the soon to be created new routes will be computed.
      * @return the updated current planning.
      */
-    public Planning addWayPoint(AbstractWayPoint point, AbstractWayPoint afterPoint, CityMap map) {
+    public Planning addWaypoint(AbstractWaypoint point, AbstractWaypoint afterPoint, CityMap map) {
         // Look for the position of the given afterPoint
         int position = 0;
         for (int i = 0; i < this.routes.size(); i++) {
@@ -175,11 +172,11 @@ public class Planning {
      * @param waypoint The waypoint to remove from the current planning.
      */
     @Requires("!(waypoint.equals(this.getRoutes().iterator().next()))")
-    public void removeWayPoint(AbstractWayPoint waypoint) {
+    public void removeWaypoint(AbstractWaypoint waypoint) {
         // NOTE: the following algorithm works only if the current list is already sorted
         // Let's look for the position of the given way point
-        AbstractWayPoint start = null;
-        AbstractWayPoint end = null;
+        AbstractWaypoint start = null;
+        AbstractWaypoint end = null;
         int index = 0;
         int[] routesToRemove = new int[2];
         for (Route r : this.routes) {

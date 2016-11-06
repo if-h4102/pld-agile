@@ -1,13 +1,11 @@
 package components.intersectioncard;
 
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
-import models.AbstractWayPoint;
 import models.Intersection;
 
 import java.io.IOException;
