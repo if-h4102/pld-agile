@@ -93,8 +93,17 @@ public class Planning {
      *
      * @return the current sorted list of routes.
      */
-    public SimpleListProperty<Route> getRoutes() {
+    public SimpleListProperty<Route> routesProperty() {
         return this.routes;
+    }
+
+    /**
+     * Get all the routes of the current planning.
+     *
+     * @return the current sorted list of routes.
+     */
+    public ObservableList<Route> getRoutes() {
+        return routesProperty().getValue();
     }
 
     /**

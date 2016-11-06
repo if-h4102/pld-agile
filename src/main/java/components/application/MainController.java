@@ -68,8 +68,6 @@ public class MainController extends BorderPane {
         this.root.addEventHandler(RemoveWaypointEvent.TYPE, removeWaypointEvent -> {
             Planning planning = this.getPlanning();
             planning.removeWayPoint(removeWaypointEvent.getWaypoint());
-            this.setPlanning(null);
-            this.setPlanning(planning);
         });
     }
 

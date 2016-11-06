@@ -4,6 +4,9 @@ import com.google.java.contract.Ensures;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -40,9 +43,14 @@ public class MapCanvasController extends Canvas {
     private SimpleObjectProperty<Planning> planning;
     private List<Intersection> intersections;
     private double calZoom;
+    private final ListChangeListener<Route> planningChangeListener;
 
     @SuppressWarnings("restriction")
     public MapCanvasController() {
+        final MapCanvasController self = this;
+
+        this.planningChangeListener = change -> self.draw();
+
         widthProperty().addListener(event -> draw());
         heightProperty().addListener(event -> draw());
         zoomProperty().addListener(event -> draw());
@@ -50,7 +58,15 @@ public class MapCanvasController extends Canvas {
         offsetYProperty().addListener(event -> draw());
         cityMapProperty().addListener(event -> draw());
         deliveryRequestProperty().addListener(event -> draw());
-        planningProperty().addListener(event -> draw());
+        planningProperty().addListener((observableValue, oldPlanning, newPlanning) -> {
+            if (oldPlanning != null) {
+                oldPlanning.routesProperty().removeListener(self.planningChangeListener);
+            }
+            if (newPlanning != null) {
+                newPlanning.routesProperty().addListener(self.planningChangeListener);
+            }
+            self.draw();
+        });
 
         this.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
