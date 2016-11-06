@@ -1,7 +1,5 @@
 package components.waypointcard;
 
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,22 +14,16 @@ import java.io.IOException;
 
 public class DeliveryAddressCard extends WaypointCardBase<DeliveryAddress> {
     @FXML
-    public HBox cornerControls;
+    protected HBox cornerControls;
     @FXML
     protected AnchorPane timeConstraints;
 
-    private SimpleObjectProperty<DeliveryAddress> waypoint;
-    private SimpleStringProperty waypointName;
     private SimpleStringProperty coordinates;
     private SimpleStringProperty deliveryDuration;
     private SimpleStringProperty timeStart;
     private SimpleStringProperty timeEnd;
-    private SimpleBooleanProperty readOnly;
 
     public DeliveryAddressCard() {
-        updateWaypointName();
-        updateCoordinates();
-
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/components/waypointcard/DeliveryAddressCard.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -41,42 +33,14 @@ public class DeliveryAddressCard extends WaypointCardBase<DeliveryAddress> {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
+
+        this.setName(this.computeName());
+        updateCoordinates();
+
         waypointProperty().addListener(event -> {
             updateCoordinates();
-            updateWaypointName();
+            this.setName(this.computeName());
         });
-    }
-
-    // Item
-    public final SimpleObjectProperty<DeliveryAddress> waypointProperty() {
-        if (waypoint == null) {
-            waypoint = new SimpleObjectProperty<>(this, "waypoint", null);
-        }
-        return waypoint;
-    }
-
-    public final void setWaypoint(DeliveryAddress value) {
-        waypointProperty().setValue(value);
-    }
-
-    public final DeliveryAddress getWaypoint() {
-        return waypoint == null ? null : waypointProperty().getValue();
-    }
-
-    // WaypointName
-    public final SimpleStringProperty waypointNameProperty() {
-        if (waypointName == null) {
-            waypointName = new SimpleStringProperty(this, "waypointName");
-        }
-        return waypointName;
-    }
-
-    public final void setWaypointName(String value) {
-        waypointNameProperty().setValue(value);
-    }
-
-    public final String getWaypointName() {
-        return waypointNameProperty().getValue();
     }
 
     // Coordinates
@@ -85,10 +49,6 @@ public class DeliveryAddressCard extends WaypointCardBase<DeliveryAddress> {
             coordinates = new SimpleStringProperty(this, "coordinates");
         }
         return coordinates;
-    }
-
-    public final void setCoordinates(String value) {
-        coordinatesProperty().setValue(value);
     }
 
     public void updateCoordinates() {
@@ -103,31 +63,16 @@ public class DeliveryAddressCard extends WaypointCardBase<DeliveryAddress> {
         setCoordinates("(" + intersection.getX() + "; " + intersection.getY() + ")");
     }
 
-    // Editable
-    public final SimpleBooleanProperty readOnlyProperty() {
-        if (readOnly == null) {
-            readOnly = new SimpleBooleanProperty(this, "readOnly", false);
-        }
-        return readOnly;
-    }
-
-    public final void setReadOnly(boolean value) {
-        readOnlyProperty().setValue(value);
-    }
-
-    public final boolean getReadOnly() {
-        return readOnly == null ? false : readOnlyProperty().getValue();
-    }
-
-    public void updateWaypointName() {
-        String name;
+    protected String computeName() {
         DeliveryAddress waypoint = getWaypoint();
         if (waypoint == null) {
-            name = "";
-        } else {
-            name = "DeliveryAdress #" + waypoint.getIntersection().getId();
+            return "";
         }
-        setWaypointName(name);
+        Intersection intersection = waypoint.getIntersection();
+        if (intersection == null) {
+            return "DeliveryAddress";
+        }
+        return "DeliveryAddress #" + intersection.getId();
     }
 
     public ObservableList<Node> getCornerControls() {
@@ -136,5 +81,9 @@ public class DeliveryAddressCard extends WaypointCardBase<DeliveryAddress> {
 
     public final String getCoordinates() {
         return coordinatesProperty().getValue();
+    }
+
+    public final void setCoordinates(String value) {
+        coordinatesProperty().setValue(value);
     }
 }

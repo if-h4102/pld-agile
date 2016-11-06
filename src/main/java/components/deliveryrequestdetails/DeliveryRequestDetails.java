@@ -45,12 +45,12 @@ public class DeliveryRequestDetails extends ScrollPane {
             return;
         }
 
-        final WaypointCard<Warehouse> warehouseNode = new WaypointCard<>();
+        final WaypointCard warehouseNode = new WaypointCard();
         warehouseNode.setWaypoint(deliveryRequest.getWarehouse());
         itemNodes.add(warehouseNode);
 
         for (DeliveryAddress da : deliveryRequest.getDeliveryAddresses()) {
-            final WaypointCard<DeliveryAddress> node = new WaypointCard<>();
+            final WaypointCard node = new WaypointCard();
             node.setWaypoint(da);
             itemNodes.add(node);
         }

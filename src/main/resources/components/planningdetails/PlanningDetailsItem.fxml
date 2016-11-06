@@ -9,7 +9,7 @@
 <fx:root fx:id="root" prefHeight="80.0" prefWidth="250.0"
          stylesheets="/components/planningdetails/PlanningDetailsItem.css" type="AnchorPane"
          xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1">
-    <WaypointCard waypoint="${controller.item.startWaypoint}" readOnly="true" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.bottomAnchor="0">
+    <WaypointCard waypoint="${controller.item.startWaypoint}" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.bottomAnchor="0">
       <cornerControls>
         <Button fx:id="edit" graphicTextGap="2.0" mnemonicParsing="false" onAction="#onEditButtonAction" AnchorPane.rightAnchor="32" AnchorPane.topAnchor="0">
           <graphic>

@@ -1,7 +1,6 @@
 package models;
 
 public class Warehouse extends AbstractWaypoint {
-
     public Warehouse(Intersection intersection) {
         super(intersection);
     }
