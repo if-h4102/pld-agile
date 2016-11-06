@@ -31,7 +31,6 @@ public class WaitOpenCityMapState extends MainControllerState {
         try {
             currentCityMap = mainController.getParserService().getCityMap(cityMapFile);
         } catch (IOException | ParserException e) {
-            e.printStackTrace();
             ExceptionWindow exceptionWindow = new ExceptionWindow(e.getMessage());
         }
 

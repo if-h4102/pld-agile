@@ -32,7 +32,6 @@ public class WaitOpenDeliveryRequestState extends WaitOpenCityMapState {
         try {
             currentDeliveryRequest = mainController.getParserService().getDeliveryRequest(deliveryRequestFile, mainController.getCityMap());
         } catch (IOException | ParserException e) {
-            e.printStackTrace();
             ExceptionWindow exceptionWindow = new ExceptionWindow(e.getMessage());
         }
 
