@@ -8,17 +8,17 @@ public abstract class ParserException extends Exception {
 
     public ParserException(String message) {
         super(message);
-        ExceptionWindow exceptionWindow = new ExceptionWindow(message);
+        //ExceptionWindow exceptionWindow = new ExceptionWindow(message);
     }
 
     public ParserException(String message, Throwable cause) {
         super(message, cause);
-        ExceptionWindow exceptionWindow = new ExceptionWindow(message);
+        //ExceptionWindow exceptionWindow = new ExceptionWindow(message);
     }
     
     public ParserException(Throwable cause) {
         super(cause.getMessage(), cause);
-        ExceptionWindow exceptionWindow = new ExceptionWindow(cause.getMessage());
+        //ExceptionWindow exceptionWindow = new ExceptionWindow(cause.getMessage());
     }
 
 }
