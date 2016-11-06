@@ -26,6 +26,11 @@ public class ThreadedTspSolver extends AbstractTspSolver implements Runnable {
         // Nothing to do
     }
 
+    /**
+     * Solve the last set DeliveryGraph
+     * the best result can be get using getBestPlanning(), during compute time it return the best found so far
+     * once compute finished it's the best the algo can found.
+     */
     public void run(){
         if(graph == null){
             System.err.println("Please set a deliveryGraph before trying to solve TSP");
@@ -67,12 +72,15 @@ public class ThreadedTspSolver extends AbstractTspSolver implements Runnable {
 
     }
 
+    /**
+     * Generate bestPlanning from bestSolution list, the city map, the waiting time and bestSolutionCost
+     */
     private void updateBestPlanning(){
         List<Route> routes = new ArrayList<>(graph.size());
         for (int i = 0; i < graph.size(); i++) {
             routes.add(graph.getRoute(this.bestSolution[i], this.bestSolution[(i + 1) % graph.size()]));
         }
-        bestPlanning = new Planning(routes,bestSolutionWaitingTime);
+        bestPlanning = new Planning(graph.getCityMap(), routes, bestSolutionWaitingTime, bestSolutionCost);
     }
 
     /**
@@ -210,6 +218,11 @@ public class ThreadedTspSolver extends AbstractTspSolver implements Runnable {
         return new WayPointIterator(unseen, costs.get(lastSeenNode));
     }
 
+    /**
+     * @return the currant best planning found
+     *      if computation is still in progress it's probably not the best the algo can found
+     *      (can be null if no computation had been run yet)
+     */
     public Planning getBestPlanning(){
         return bestPlanning;
     }
