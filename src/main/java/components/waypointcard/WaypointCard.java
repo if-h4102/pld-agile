@@ -16,6 +16,12 @@ import models.Warehouse;
 
 import java.io.IOException;
 
+/**
+ * This component is a wrapper for a DeliveryAddressCard or WarehouseCard.
+ * It chooses the best concrete card according to the type of the `waypoint` property.
+ *
+ * @param <WP> Concrete implementation of an AbstractWaypoint
+ */
 public class WaypointCard<WP extends AbstractWaypoint> extends AnchorPane {
     @FXML
     public HBox cornerControls;
@@ -108,5 +114,7 @@ public class WaypointCard<WP extends AbstractWaypoint> extends AnchorPane {
         }
 
         concreteCard.getChildren().add(concreteCardContent);
+        AnchorPane.setLeftAnchor(concreteCardContent, 0.0);
+        AnchorPane.setRightAnchor(concreteCardContent, 0.0);
     }
 }

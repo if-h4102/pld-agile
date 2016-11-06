@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<fx:root fx:id="root" prefHeight="80.0" prefWidth="250.0" stylesheets="/components/waypointcard/WarehouseCard.css"
+<fx:root fx:id="root" prefHeight="80.0" prefWidth="250.0" stylesheets="/components/waypointcard/DeliveryAddressCard.css"
          type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1">
   <VBox AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
     <Label text="DeliveryAddress"/>
