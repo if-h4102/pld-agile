@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<fx:root xmlns:fx="http://javafx.com/fxml/1" fx:id="root" prefHeight="80.0" prefWidth="250.0" type="HBox" xmlns="http://javafx.com/javafx/8.0.102-ea">
+  <TextField fx:id="hoursField" text="${controller.hoursText}" promptText="HH"/>
+  <Label text=":"/>
+  <TextField fx:id="minutesField" text="${controller.minutesText}" promptText="mm"/>
+  <Label text=":"/>
+  <TextField fx:id="secondsField" text="${controller.secondsText}" promptText="ss"/>
+</fx:root>
