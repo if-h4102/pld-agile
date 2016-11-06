@@ -1,4 +1,4 @@
-#root {
+DeliveryAddressCard {
     -fx-background-color: #ffffff;
     -fx-border-radius: 2px;
     -fx-text-fill: rgba(0, 0, 0, 0.87);
@@ -22,7 +22,7 @@
     -fx-icon-color: rgba(0, 0, 0, .5);
 }
 
-#root:hover #remove, #root:hover #edit {
+DeliveryAddressCard:hover #remove, DeliveryAddressCard:hover #edit {
     visibility: visible;
 }
 

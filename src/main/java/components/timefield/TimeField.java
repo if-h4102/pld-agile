@@ -1,5 +1,6 @@
 package components.timefield;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -36,6 +37,14 @@ public class TimeField extends HBox {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
+        hoursField.textProperty().bindBidirectional(this.hoursTextProperty());
+        minutesField.textProperty().bindBidirectional(this.minutesTextProperty());
+        secondsField.textProperty().bindBidirectional(this.secondsTextProperty());
+
+        hoursField.disableProperty().bind(this.disableProperty());
+        minutesField.disableProperty().bind(this.disableProperty());
+        secondsField.disableProperty().bind(this.disableProperty());
+
 //        hoursField.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
 //        minutesField.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
 //        secondsField.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));

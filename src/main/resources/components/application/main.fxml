@@ -25,7 +25,6 @@
       		  onAction="#onUndoButtonAction" text="%undo"/>
       <Button fx:id="redoButton" mnemonicParsing="false"
   			  onAction="#onRedoButtonAction" text="%redo"/>
-
     </ToolBar>
   </top>
   <center>

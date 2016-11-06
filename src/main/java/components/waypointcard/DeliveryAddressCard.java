@@ -112,7 +112,7 @@ public class DeliveryAddressCard extends WaypointCardBase<DeliveryAddress> {
             return;
         }
         int startTime = newValue.getTimeStart();
-        int endTime = newValue.getTimeStart();
+        int endTime = newValue.getTimeEnd();
         if (startTime == 0 && endTime == 86400) {
             setHasTimeContraints(false);
         } else {
