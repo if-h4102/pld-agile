@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import models.AbstractWaypoint;
+import models.DeliveryAddress;
 import models.Intersection;
 import models.Warehouse;
 
@@ -19,20 +20,11 @@ public class WaypointCard<WP extends AbstractWaypoint> extends AnchorPane {
     @FXML
     public HBox cornerControls;
     @FXML
-    protected AnchorPane timeConstraints;
-
+    protected AnchorPane concreteCard;
     private SimpleObjectProperty<WP> waypoint;
-    private SimpleStringProperty waypointName;
-    private SimpleStringProperty coordinates;
-    private SimpleStringProperty deliveryDuration;
-    private SimpleStringProperty timeStart;
-    private SimpleStringProperty timeEnd;
     private SimpleBooleanProperty readOnly;
 
     public WaypointCard() {
-        updateWaypointName();
-        updateCoordinates();
-
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/components/waypointcard/WaypointCard.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -42,15 +34,17 @@ public class WaypointCard<WP extends AbstractWaypoint> extends AnchorPane {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
-        waypointProperty().addListener(event -> {
-            updateCoordinates();
-            updateWaypointName();
+
+        this.waypointProperty().addListener(event -> {
+            try {
+                this.updateConcreteCard();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
-        // edit.visibleProperty().bind(readOnlyProperty());
-        // remove.visibleProperty().bind(readOnlyProperty());
     }
 
-    // Item
+    // Waypoint
     public final SimpleObjectProperty<WP> waypointProperty() {
         if (waypoint == null) {
             waypoint = new SimpleObjectProperty<>(this, "waypoint", null);
@@ -64,46 +58,6 @@ public class WaypointCard<WP extends AbstractWaypoint> extends AnchorPane {
 
     public final WP getWaypoint() {
         return waypoint == null ? null : waypointProperty().getValue();
-    }
-
-    // WaypointName
-    public final SimpleStringProperty waypointNameProperty() {
-        if (waypointName == null) {
-            waypointName = new SimpleStringProperty(this, "waypointName");
-        }
-        return waypointName;
-    }
-
-    public final void setWaypointName(String value) {
-        waypointNameProperty().setValue(value);
-    }
-
-    public final String getWaypointName() {
-        return waypointNameProperty().getValue();
-    }
-
-    // Coordinates
-    public final SimpleStringProperty coordinatesProperty() {
-        if (coordinates == null) {
-            coordinates = new SimpleStringProperty(this, "coordinates");
-        }
-        return coordinates;
-    }
-
-    public final void setCoordinates(String value) {
-        coordinatesProperty().setValue(value);
-    }
-
-    public void updateCoordinates() {
-        final AbstractWaypoint waypoint = getWaypoint();
-        if (waypoint == null) {
-            return;
-        }
-        final Intersection intersection = waypoint.getIntersection();
-        if (intersection == null) {
-            return;
-        }
-        setCoordinates("(" + intersection.getX() + "; " + intersection.getY() + ")");
     }
 
     // Editable
@@ -122,24 +76,37 @@ public class WaypointCard<WP extends AbstractWaypoint> extends AnchorPane {
         return readOnly == null ? false : readOnlyProperty().getValue();
     }
 
-    public void updateWaypointName() {
-        String name;
-        AbstractWaypoint waypoint = getWaypoint();
-        if (waypoint == null) {
-            name = "";
-        } else if (waypoint instanceof Warehouse) {
-            name = "Warehouse";
-        } else {
-            name = "DeliveryAdress #" + waypoint.getIntersection().getId();
-        }
-        setWaypointName(name);
-    }
-
+    // CornerControls
     public ObservableList<Node> getCornerControls() {
         return cornerControls.getChildren();
     }
 
-    public final String getCoordinates() {
-        return coordinatesProperty().getValue();
+    protected void updateConcreteCard() throws Exception {
+        AbstractWaypoint waypoint = getWaypoint();
+        if (waypoint == null) {
+            concreteCard.getChildren().clear();
+            return;
+        }
+        // TODO: check if value changed before clearing and replacing
+        concreteCard.getChildren().clear();
+
+        Node concreteCardContent;
+
+        if (waypoint instanceof Warehouse) {
+            Warehouse warehouse = (Warehouse) waypoint;
+            WarehouseCard node = new WarehouseCard();
+            node.setWaypoint(warehouse);
+            concreteCardContent = node;
+        } else if (waypoint instanceof DeliveryAddress) {
+            DeliveryAddress deliveryAddress = (DeliveryAddress) waypoint;
+            DeliveryAddressCard node = new DeliveryAddressCard();
+            node.setWaypoint(deliveryAddress);
+            concreteCardContent = node;
+        } else {
+            // TODO: real exception
+            throw new Exception("Unknown concrete waypoint");
+        }
+
+        concreteCard.getChildren().add(concreteCardContent);
     }
 }
