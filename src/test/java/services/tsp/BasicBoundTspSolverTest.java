@@ -4,13 +4,11 @@ import models.*;
 import org.junit.Test;
 import services.xml.Parser;
 import services.xml.exception.ParserException;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
-
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -18,84 +16,32 @@ public class BasicBoundTspSolverTest {
 
     @Test
     public void testTimeConstraints() throws URISyntaxException, IOException, ParserException {
-        Parser parser = new Parser();
-        File cityMapXmlFile = getFile("/services/tsp/timeConstraints/uniqueSolution/cityMap.xml");
-        CityMap cityMap = parser.getCityMap(cityMapXmlFile);
+        Planning planning = getPlanning("timeConstraints/uniqueSolution");
 
-        File deliveryRequestXmlFile = getFile("/services/tsp/timeConstraints/uniqueSolution/deliveryRequest.xml");
-        DeliveryRequest deliveryRequest = parser.getDeliveryRequest(deliveryRequestXmlFile,cityMap);
-
-        AbstractTspSolver solver = new BasicBoundTspSolver();
-        DeliveryGraph deliveryGraph = cityMap.computeDeliveryGraph(deliveryRequest);
-
-        Planning planning = solver.solve(deliveryGraph);
-
-        List<Route> routes = planning.getRoutes();
-
-        for(Route route : routes){
-            System.out.println("("+route.getStartWaypoint().getId()+"->"+route.getEndWaypoint().getId()+") duration: "+route.getDuration());
-        }
-        System.out.println("Total duration : "+planning.getFullTime());
-
-        //check the planning
-        Route route = routes.get(0);
-        assertTrue( route.getStartWaypoint().getId() == 0 );
-        assertTrue( route.getEndWaypoint().getId() == 2 );
-        route = routes.get(1);
-        assertTrue( route.getStartWaypoint().getId() == 2 );
-        assertTrue( route.getEndWaypoint().getId() == 4);
-        route = routes.get(2);
-        assertTrue( route.getStartWaypoint().getId() == 4);
-        assertTrue( route.getEndWaypoint().getId() == 1);
-        route = routes.get(3);
-        assertTrue( route.getStartWaypoint().getId() == 1 );
-        assertTrue( route.getEndWaypoint().getId() == 3 );
-        route = routes.get(4);
-        assertTrue( route.getStartWaypoint().getId() == 3 );
-        assertTrue( route.getEndWaypoint().getId() == 0 );
-
-        assertTrue( planning.getFullTime() == 840 );
+        int[] idWayPoints = { 0, 2, 4, 1, 3 };
+        int[] waitingTime = { 0, 0, 0, 0, 0 };
+        checkPlanning(idWayPoints, waitingTime, 840, planning);
     }
 
     @Test
     public void testWaitingTime() throws URISyntaxException, IOException, ParserException {
-        Parser parser = new Parser();
-        File cityMapXmlFile = getFile("/services/tsp/timeConstraints/waitBeforeAWayPoint/cityMap.xml");
-        CityMap cityMap = parser.getCityMap(cityMapXmlFile);
+        Planning planning = getPlanning("timeConstraints/waitBeforeAWayPoint");
 
-        File deliveryRequestXmlFile = getFile("/services/tsp/timeConstraints/waitBeforeAWayPoint/deliveryRequest.xml");
-        DeliveryRequest deliveryRequest = parser.getDeliveryRequest(deliveryRequestXmlFile,cityMap);
+        int[] idWayPoints = { 0, 2, 4, 1, 3 };
+        int[] waitingTime = { 0, 0, 60, 0, 0 };
+        checkPlanning(idWayPoints, waitingTime, 900, planning);
+    }
 
-        AbstractTspSolver solver = new BasicBoundTspSolver();
-        DeliveryGraph deliveryGraph = cityMap.computeDeliveryGraph(deliveryRequest);
+    @Test
+    public void testNoSolution() throws URISyntaxException, IOException, ParserException {
+        Planning planning = getPlanning("timeConstraints/noSolution");
 
-        Planning planning = solver.solve(deliveryGraph);
+        int[] idWayPoints = { 0, 4, 3, 2, 1 }; // As the solver is unable to create a planning respecting all time constraints, it creates
+                                               // the smaller planning possible
+        int[] waitingTime = { 0, 0, 0, 0, 0 };
 
-        List<Route> routes = planning.getRoutes();
-
-        for(Route route : routes){
-            System.out.println("("+route.getStartWaypoint().getId()+"->"+route.getEndWaypoint().getId()+") duration: "+route.getDuration());
-        }
-        System.out.println("Total duration : "+planning.getFullTime());
-
-        //check the planning
-        Route route = routes.get(0);
-        assertTrue( route.getStartWaypoint().getId() == 0 );
-        assertTrue( route.getEndWaypoint().getId() == 2 );
-        route = routes.get(1);
-        assertTrue( route.getStartWaypoint().getId() == 2 );
-        assertTrue( route.getEndWaypoint().getId() == 4);
-        route = routes.get(2);
-        assertTrue( route.getStartWaypoint().getId() == 4);
-        assertTrue( route.getEndWaypoint().getId() == 1);
-        route = routes.get(3);
-        assertTrue( route.getStartWaypoint().getId() == 1 );
-        assertTrue( route.getEndWaypoint().getId() == 3 );
-        route = routes.get(4);
-        assertTrue( route.getStartWaypoint().getId() == 3 );
-        assertTrue( route.getEndWaypoint().getId() == 0 );
-
-        assertTrue( planning.getFullTime() == 900 );
+        // The first term of the full time is the moving time, the second one is the delivery time, then the penalty
+        checkPlanning(idWayPoints, waitingTime, 5 * 100 + 4 * 60 + 4 * 86400, planning);
     }
 
     // ================================================= Utility methods ==============================================
@@ -107,5 +53,31 @@ public class BasicBoundTspSolverTest {
         File file = null;
         file = new File(testMapPath.toURI());
         return file;
+    }
+
+    private Planning getPlanning(String subLocation) throws URISyntaxException, IOException, ParserException {
+        String location = "/services/tsp/" + subLocation;
+        Parser parser = new Parser();
+        File cityMapXmlFile = getFile(location + "/cityMap.xml");
+        CityMap cityMap = parser.getCityMap(cityMapXmlFile);
+
+        File deliveryRequestXmlFile = getFile(location + "/deliveryRequest.xml");
+        DeliveryRequest deliveryRequest = parser.getDeliveryRequest(deliveryRequestXmlFile, cityMap);
+
+        DeliveryGraph deliveryGraph = cityMap.computeDeliveryGraph(deliveryRequest);
+
+        AbstractTspSolver solver = new BasicBoundTspSolver();
+        return solver.solve(deliveryGraph);
+    }
+
+    private void checkPlanning(int[] idWayPoints, int[] waitingTime, int fullTime, Planning planning) {
+        List<Route> routes = planning.getRoutes();
+        for (int i = 0; i < idWayPoints.length; i++) {
+            Route route = routes.get(i);
+            assertTrue(route.getStartWaypoint().getId() == idWayPoints[i]);
+            assertTrue(route.getEndWaypoint().getId() == idWayPoints[(i + 1) % idWayPoints.length]);
+            assertTrue(planning.getWaitingTimeAtWayPoint(route.getStartWaypoint()) == waitingTime[i]);
+        }
+        assertTrue(planning.getFullTime() == fullTime);
     }
 }

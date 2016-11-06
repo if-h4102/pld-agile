@@ -254,7 +254,7 @@ public class ParserTest {
         List<DeliveryAddress> expectedDA = new ArrayList<DeliveryAddress>();
         expectedDA.add(new DeliveryAddress(new Intersection(0, 134, 193), 100));
         expectedDA.add(new DeliveryAddress(new Intersection(3, 132, 470), 250));
-        DeliveryRequest expectedDeliveryRequest = new DeliveryRequest(expectedW, expectedDA, 28_800);
+        DeliveryRequest expectedDeliveryRequest = new DeliveryRequest(cityMap, expectedW, expectedDA, 28_800);
 
         assertEquals(actualDeliveryRequest, expectedDeliveryRequest);
     }
@@ -273,7 +273,7 @@ public class ParserTest {
         List<DeliveryAddress> expectedDA = new ArrayList<DeliveryAddress>();
         expectedDA.add(new DeliveryAddress(new Intersection(0, 134, 193), 100, 11 * 3600, 13 * 3600));
         expectedDA.add(new DeliveryAddress(new Intersection(3, 132, 470), 250));
-        DeliveryRequest expectedDeliveryRequest = new DeliveryRequest(expectedW, expectedDA, 28_800);
+        DeliveryRequest expectedDeliveryRequest = new DeliveryRequest(cityMap, expectedW, expectedDA, 28_800);
 
         assertEquals(actualDeliveryRequest, expectedDeliveryRequest);
     }

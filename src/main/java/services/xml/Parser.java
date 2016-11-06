@@ -190,7 +190,7 @@ public class Parser {
             deliveryAddresses.add(getDeliveryAddress((Element) deliveryAddressesNodes.item(i), cityMap, deliveryAddresses));
         }
 
-        return new DeliveryRequest(warehouse, deliveryAddresses, startPlanningTimestamp);
+        return new DeliveryRequest(cityMap, warehouse, deliveryAddresses, startPlanningTimestamp);
     }
 
     private Warehouse getWarehouse(Element warehouseElement, CityMap cityMap) throws ParserException {

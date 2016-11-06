@@ -1,6 +1,5 @@
 package components.deliveryrequestdetails;
 
-import components.intersectioncard.IntersectionCard;
 import components.waypointcard.WaypointCard;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
@@ -50,7 +49,7 @@ public class DeliveryRequestDetails extends ScrollPane {
         warehouseNode.setWaypoint(deliveryRequest.getWarehouse());
         itemNodes.add(warehouseNode);
 
-        for (DeliveryAddress da: deliveryRequest.getDeliveryAddresses()) {
+        for (DeliveryAddress da : deliveryRequest.getDeliveryAddresses()) {
             final WaypointCard<DeliveryAddress> node = new WaypointCard<>();
             node.setWaypoint(da);
             itemNodes.add(node);

@@ -3,9 +3,10 @@ package services.tsp;
 import com.google.java.contract.Requires;
 import models.AbstractWayPoint;
 
-import java.lang.reflect.Array;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
 
 public class WayPointIterator implements Iterator<AbstractWayPoint> {
 
