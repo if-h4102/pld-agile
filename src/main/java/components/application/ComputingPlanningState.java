@@ -14,10 +14,9 @@ public class ComputingPlanningState extends WaitOpenDeliveryRequestState {
         System.out.println("Computing...");
         AbstractTspSolver solver = new BasicBoundTspSolver();
 //        AbstractTspSolver solver = new BasicTspSolver();
-        DeliveryRequest dg = mainController.getDeliveryRequest();
-        CityMap cm = mainController.getCityMap();
+        DeliveryRequest deliveryRequest = mainController.getDeliveryRequest();
         long beforeDijkstra = System.nanoTime();
-        DeliveryGraph deliveryGraph = cm.computeDeliveryGraph(dg);
+        DeliveryGraph deliveryGraph = deliveryRequest.computeDeliveryGraph();
         long startTime = System.nanoTime();
         Planning planning = solver.solve(deliveryGraph);
         long endTime = System.nanoTime();

@@ -3,30 +3,33 @@ package components.waypointcard;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import models.AbstractWayPoint;
 import models.Intersection;
 import models.Warehouse;
 
 import java.io.IOException;
 
-public class WaypointCard<E extends AbstractWayPoint> extends AnchorPane {
+public class WaypointCard<WP extends AbstractWayPoint> extends AnchorPane {
+    @FXML
+    public HBox cornerControls;
+    @FXML
+    protected AnchorPane timeConstraints;
 
-    @FXML
-    protected Label content;
-    @FXML
-    protected Button edit;
-    @FXML
-    protected Button remove;
-
-    private SimpleObjectProperty<E> waypoint;
+    private SimpleObjectProperty<WP> waypoint;
     private SimpleStringProperty waypointName;
     private SimpleStringProperty coordinates;
+    private SimpleStringProperty deliveryDuration;
+    private SimpleStringProperty timeStart;
+    private SimpleStringProperty timeEnd;
     private SimpleBooleanProperty readOnly;
 
     public WaypointCard() {
@@ -42,24 +45,27 @@ public class WaypointCard<E extends AbstractWayPoint> extends AnchorPane {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
-        waypointProperty().addListener(event -> {updateCoordinates(); updateWaypointName();});
-        edit.visibleProperty().bind(readOnlyProperty());
-        remove.visibleProperty().bind(readOnlyProperty());
+        waypointProperty().addListener(event -> {
+            updateCoordinates();
+            updateWaypointName();
+        });
+        // edit.visibleProperty().bind(readOnlyProperty());
+        // remove.visibleProperty().bind(readOnlyProperty());
     }
 
     // Item
-    public final SimpleObjectProperty<E> waypointProperty() {
+    public final SimpleObjectProperty<WP> waypointProperty() {
         if (waypoint == null) {
             waypoint = new SimpleObjectProperty<>(this, "waypoint", null);
         }
         return waypoint;
     }
 
-    public final void setWaypoint(E value) {
+    public final void setWaypoint(WP value) {
         waypointProperty().setValue(value);
     }
 
-    public final E getWaypoint() {
+    public final WP getWaypoint() {
         return waypoint == null ? null : waypointProperty().getValue();
     }
 
@@ -100,7 +106,7 @@ public class WaypointCard<E extends AbstractWayPoint> extends AnchorPane {
         if (intersection == null) {
             return;
         }
-        setCoordinates("("+intersection.getX()+"; "+intersection.getY()+")");
+        setCoordinates("(" + intersection.getX() + "; " + intersection.getY() + ")");
     }
 
     // Editable
@@ -132,15 +138,11 @@ public class WaypointCard<E extends AbstractWayPoint> extends AnchorPane {
         setWaypointName(name);
     }
 
+    public ObservableList<Node> getCornerControls() {
+        return cornerControls.getChildren();
+    }
+
     public final String getCoordinates() {
         return coordinatesProperty().getValue();
-    }
-
-    public void onRemoveButtonAction(ActionEvent actionEvent) {
-        System.out.println("Remove waypoint ...");
-    }
-
-    public void onEditButtonAction(ActionEvent actionEvent) {
-        System.out.println("Edit waypoint ...");
     }
 }

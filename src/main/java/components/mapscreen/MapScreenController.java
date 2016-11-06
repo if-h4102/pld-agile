@@ -16,6 +16,7 @@ import models.Intersection;
 import models.Planning;
 import components.mapcanvas.IntersectionSelectionEvent;
 
+import java.awt.Point;
 import java.io.IOException;
 
 import components.intersectioncard.IntersectionCard;
@@ -162,11 +163,44 @@ public class MapScreenController extends AnchorPane {
         return activeIntersection == null ? null : activeIntersectionProperty().getValue();
     }
 
+    /**
+     * Update the position of the tooltip
+     *
+     */
     public void updateTooltip (IntersectionSelectionEvent event) {
-    	tooltip.setLayoutX(event.getX()+5);
-    	tooltip.setLayoutY(event.getY()+5);
+    	tooltip = tooltipOptimalPosition(tooltip, event.getX(),event.getY());
+    	
     	System.out.println(event.getIntersection());
     	setActiveIntersection(event.getIntersection());
+    }
+    
+    /**
+     * Find the optimal origin for the tooltip
+     *
+     * @return The best point
+     */
+    //TODO get the length and width of a tooltip
+    public IntersectionCard tooltipOptimalPosition(IntersectionCard tooltip, double x, double y){
+    	double h = canvas.getHeight();
+    	double w = canvas.getWidth();
+    	double htool = tooltip.getHeight();
+    	double wtool = tooltip.getWidth();
+    	System.out.println(h + " " + w +" " + htool+" "+ wtool + " "+ x+ " "+ y);
+    	
+    	if(x+wtool > w){
+    		tooltip.setLayoutX(x-wtool-5);
+    	}
+    	else {
+    		tooltip.setLayoutX(x+5);
+    	}
+    	if(y+htool > h){
+    		tooltip.setLayoutY(y-htool-5);
+    	}
+    	else{
+    		tooltip.setLayoutY(y+5);
+    	}
+    	
+    	return tooltip;
     }
     
     

@@ -18,7 +18,7 @@ public class RemoveWayPointCommand extends AbstractCommand {
 
     @Override
     public void execute() {
-        this.planning.removeWayPoint(this.wayPointToRemove, this.map);
+        this.planning.removeWayPoint(this.wayPointToRemove);
     }
 
     @Override
