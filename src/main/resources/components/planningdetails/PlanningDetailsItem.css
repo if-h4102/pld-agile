@@ -1,15 +1,4 @@
-PlanningDetailsItem {
-    -fx-background-color: #FFFFFF;
-    -fx-border-radius: 2px;
-    -fx-text-fill: rgba(0,0,0,0.87);
-
-    -fx-effect:
-        dropshadow(gaussian, rgba(0,0,0,.2), 3, 0, 0, 1),
-        dropshadow(gaussian, rgba(0,0,0,.14), 1, 0, 0, 1),
-        dropshadow(gaussian, rgba(0,0,0,.12), 1, -1, 0, 2);
-}
-
-#remove, #edit {
+#add, #remove, #edit {
     -fx-background-color: transparent;
     -fx-padding: 0 0 0 0;
     -fx-effect: none;
@@ -19,15 +8,15 @@ PlanningDetailsItem {
     visibility: hidden;
 }
 
-#remove FontIcon, #edit FontIcon {
+#remove FontIcon, #edit FontIcon, #add FontIcon {
     -fx-icon-size: 32px;
     -fx-icon-color: rgba(0, 0, 0, .5);
 }
 
-PlanningDetailsItem:hover #remove, PlanningDetailsItem:hover #edit {
+PlanningDetailsItem:hover #remove, PlanningDetailsItem:hover #edit, PlanningDetailsItem:hover #add {
     visibility: visible;
 }
 
-#remove:hover FontIcon, #edit:hover FontIcon {
+#remove:hover FontIcon, #edit:hover FontIcon, #add:hover FontIcon {
     -fx-icon-color: rgba(0, 0, 0, .8);
 }

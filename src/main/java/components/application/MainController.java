@@ -1,6 +1,6 @@
 package components.application;
 
-import components.events.RemoveWaypointEvent;
+import components.events.RemoveWaypointAction;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -65,9 +65,9 @@ public class MainController extends BorderPane {
         this.undoButton.disableProperty().bind(this.commandManager.undoableProperty().not());
         this.redoButton.disableProperty().bind(this.commandManager.isRedoable().not());
 
-        this.root.addEventHandler(RemoveWaypointEvent.TYPE, removeWaypointEvent -> {
+        this.root.addEventHandler(RemoveWaypointAction.TYPE, removeWaypointAction -> {
             Planning planning = this.getPlanning();
-            planning.removeWaypoint(removeWaypointEvent.getWaypoint());
+            planning.removeWaypoint(removeWaypointAction.getWaypoint());
         });
     }
 

@@ -1,30 +1,24 @@
 package components.planningdetails;
 
-import components.events.RemoveWaypointEvent;
+import components.events.AddWaypointAction;
+import components.events.RemoveWaypointAction;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 import models.AbstractWaypoint;
-import models.Intersection;
+import models.Planning;
 import models.Route;
 
 import java.io.IOException;
 
 public class PlanningDetailsItem extends AnchorPane {
-    @FXML
-    private SimpleObjectProperty<Route> item;
-    private SimpleIntegerProperty index;
-    private SimpleStringProperty waypointName;
-    private SimpleStringProperty coordinates;
+    private final SimpleObjectProperty<Route> item = new SimpleObjectProperty<>(this, "item", null);
+    private final SimpleObjectProperty<Planning> planning = new SimpleObjectProperty<>(this, "planning", null);
+    private final SimpleIntegerProperty index = new SimpleIntegerProperty(this, "index", 0);
 
     public PlanningDetailsItem() {
-        updateWaypointName();
-        updateCoordinates();
-
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/components/planningdetails/PlanningDetailsItem.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -34,97 +28,54 @@ public class PlanningDetailsItem extends AnchorPane {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
-
-        indexProperty().addListener(event -> updateWaypointName());
-        itemProperty().addListener(event -> updateCoordinates());
     }
 
-    // Item
+    /**
+     * @return The observable property for the route displayed by this item.
+     */
     public final SimpleObjectProperty<Route> itemProperty() {
-        if (item == null) {
-            item = new SimpleObjectProperty<>(this, "item", null);
-        }
-        return item;
+        return this.item;
     }
 
     public final void setItem(Route value) {
-        itemProperty().setValue(value);
+        this.itemProperty().setValue(value);
     }
 
     public final Route getItem() {
-        return item == null ? null : itemProperty().getValue();
+        return this.itemProperty().getValue();
+    }
+
+    /**
+     * @return The observable property for the planning containing the currently
+     * displayed item.
+     */
+    public final SimpleObjectProperty<Planning> planningProperty() {
+        return this.planning;
+    }
+
+    public final void setPlanning(Planning value) {
+        this.planningProperty().setValue(value);
+    }
+
+    public final Planning getPlanning() {
+        return this.planningProperty().getValue();
     }
 
     // Index
     public final SimpleIntegerProperty indexProperty() {
-        if (index == null) {
-            index = new SimpleIntegerProperty(this, "index");
-        }
-        return index;
+        return this.index;
     }
 
     public final void setIndex(int value) {
-        indexProperty().setValue(value);
+        this.indexProperty().setValue(value);
     }
 
     public final int getIndex() {
-        return indexProperty().getValue();
-    }
-
-    // WaypointName
-    public final SimpleStringProperty waypointNameProperty() {
-        if (waypointName == null) {
-            waypointName = new SimpleStringProperty(this, "waypointName");
-        }
-        return waypointName;
-    }
-
-    public final void setWaypointName(String value) {
-        waypointNameProperty().setValue(value);
-    }
-
-    public final String getWaypointName() {
-        return waypointNameProperty().getValue();
-    }
-
-    // Coordinates
-    public final SimpleStringProperty coordinatesProperty() {
-        if (coordinates == null) {
-            coordinates = new SimpleStringProperty(this, "coordinates");
-        }
-        return coordinates;
-    }
-
-    public final void setCoordinates(String value) {
-        coordinatesProperty().setValue(value);
-    }
-
-    public void updateCoordinates() {
-        final Route item = getItem();
-        if (item == null) {
-            return;
-        }
-        final AbstractWaypoint waypoint = item.getStartWaypoint();
-        if (waypoint == null) {
-            return;
-        }
-        final Intersection intersection = waypoint.getIntersection();
-        if (intersection == null) {
-            return;
-        }
-        setCoordinates("(" + intersection.getX() + "; " + intersection.getY() + ")");
-    }
-
-    public void updateWaypointName() {
-        setWaypointName("Waypoint #" + getIndex());
-    }
-
-    public final String getCoordinates() {
-        return coordinatesProperty().getValue();
+        return this.indexProperty().getValue();
     }
 
     public void onRemoveButtonAction(ActionEvent actionEvent) {
-        Route item = getItem();
+        Route item = this.getItem();
         if (item == null) {
             return;
         }
@@ -132,10 +83,15 @@ public class PlanningDetailsItem extends AnchorPane {
         if (startWaypoint == null) {
             return;
         }
-        fireEvent(new RemoveWaypointEvent(startWaypoint));
+        fireEvent(new RemoveWaypointAction(startWaypoint));
     }
 
     public void onEditButtonAction(ActionEvent actionEvent) {
         System.out.println("Edit waypoint ...");
+    }
+
+    public void onAddButtonAction(ActionEvent actionEvent) {
+        fireEvent(new AddWaypointAction(this.getIndex() + 1));
+        System.out.println("Add waypoint ...");
     }
 }
