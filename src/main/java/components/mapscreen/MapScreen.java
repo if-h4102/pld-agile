@@ -7,13 +7,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 import models.CityMap;
+import models.DeliveryAddress;
 import models.DeliveryRequest;
 import models.Intersection;
 import models.Planning;
+import components.mapcanvas.DeliverySelectionEvent;
 import components.mapcanvas.IntersectionSelectionEvent;
 
+import java.awt.Point;
 import java.io.IOException;
 
+import components.waypointcard.DeliveryAddressCard;
 import components.intersectioncard.IntersectionCard;
 import components.mapcanvas.MapCanvas;
 
@@ -25,10 +29,12 @@ public class MapScreen extends AnchorPane {
     private static final double DEFAULT_OFFSET_X = 0.0;
     private static final double DEFAULT_OFFSET_Y = 0.0;
 
-	@FXML
+    @FXML
     protected IntersectionCard tooltip;
-	@FXML
-	protected MapCanvas canvas;
+    @FXML
+    protected DeliveryAddressCard tooltipDelivery;
+    @FXML
+    protected MapCanvas canvas;
     private SimpleDoubleProperty zoom;
     private SimpleDoubleProperty offsetX;
     private SimpleDoubleProperty offsetY;
@@ -36,9 +42,10 @@ public class MapScreen extends AnchorPane {
     private SimpleObjectProperty<DeliveryRequest> deliveryRequest;
     private SimpleObjectProperty<Planning> planning;
     private SimpleObjectProperty<Intersection> activeIntersection;
+    private SimpleObjectProperty<DeliveryAddress> activeDelivery;
 
     @SuppressWarnings("restriction")
-	public MapScreen() {
+    public MapScreen() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/components/mapscreen/MapScreen.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -50,11 +57,16 @@ public class MapScreen extends AnchorPane {
         }
 
         canvas.addEventHandler(IntersectionSelectionEvent.INTERSECTION_SELECTION, event -> {
-        	System.out.println("handler");
-        	updateTooltip(event);
+            System.out.println("handler intersection");
+            updateIntersectionTooltip(event);
         });
 
+        canvas.addEventHandler(DeliverySelectionEvent.DELIVERY_SELECTION, event -> {
+            System.out.println("handler delivery address");
+            updateDeliveryTooltip(event);
+        });
 
+        tooltipDelivery.visibleProperty().bind(activeDelivery.isNotNull());
         tooltip.visibleProperty().bind(activeIntersection.isNotNull());
     }
 
@@ -140,7 +152,7 @@ public class MapScreen extends AnchorPane {
      */
     public final SimpleObjectProperty<Intersection> activeIntersectionProperty() {
         if (activeIntersection == null) {
-        	activeIntersection = new SimpleObjectProperty<>(this, "activeIntersection", null);
+            activeIntersection = new SimpleObjectProperty<>(this, "activeIntersection", null);
         }
         return activeIntersection;
     }
@@ -151,21 +163,112 @@ public class MapScreen extends AnchorPane {
      * @param value
      */
     public final void setActiveIntersection(Intersection value) {
-    	activeIntersectionProperty().setValue(value);
+        activeIntersectionProperty().setValue(value);
     }
 
     public final Intersection getActiveIntersection() {
         return activeIntersection == null ? null : activeIntersectionProperty().getValue();
     }
 
-    public void updateTooltip (IntersectionSelectionEvent event) {
-    	tooltip.setLayoutX(event.getX()+5);
-    	tooltip.setLayoutY(event.getY()+5);
-    	System.out.println(event.getIntersection());
-    	setActiveIntersection(event.getIntersection());
+    /**
+     * Update the position of the tooltip
+     *
+     */
+    public void updateIntersectionTooltip (IntersectionSelectionEvent event) {
+        tooltip = tooltipOptimalPosition(tooltip, event.getX(),event.getY());
+
+        System.out.println(event.getIntersection());
+        setActiveIntersection(event.getIntersection());
+    }
+
+    /**
+     * The active interserction
+     *      *
+     * @return The cityMap property
+     */
+    public final SimpleObjectProperty<DeliveryAddress> activeDeliveryProperty() {
+        if (activeDelivery == null) {
+            activeDelivery = new SimpleObjectProperty<>(this, "activeDelivery", null);
+        }
+        return activeDelivery;
+    }
+
+    /**
+     *
+     *
+     * @param value
+     */
+    public final void setActiveDelivery(DeliveryAddress value) {
+        activeDeliveryProperty().setValue(value);
+    }
+
+    public final DeliveryAddress getActiveDelivery() {
+        return activeDelivery == null ? null : activeDeliveryProperty().getValue();
+    }
+    /**
+     * Update the position of the tooltip
+     *
+     */
+    public void updateDeliveryTooltip (DeliverySelectionEvent event) {
+        tooltipDelivery = tooltipDeliveryOptimalPosition(tooltipDelivery, event.getX(),event.getY());
+        System.out.println(event.getDeliveryAddress());
+        setActiveDelivery(event.getDeliveryAddress());
     }
 
 
+    /**
+     * Find the optimal origin for the tooltip
+     *
+     * @return The best point
+     */
+    public IntersectionCard tooltipOptimalPosition(IntersectionCard tooltip, double x, double y){
+        double h = canvas.getHeight();
+        double w = canvas.getWidth();
+        double htool = tooltip.getHeight();
+        double wtool = tooltip.getWidth();
+        System.out.println(h + " " + w +" " + htool+" "+ wtool + " "+ x+ " "+ y);
+        if(x+wtool > w){
+            tooltip.setLayoutX(x-wtool-5);
+        }
+        else {
+            tooltip.setLayoutX(x+5);
+        }
+        if(y+htool > h){
+            tooltip.setLayoutY(y-htool-5);
+        }
+        else{
+            tooltip.setLayoutY(y+5);
+        }
+
+        return tooltip;
+    }
+
+    /**
+     * Find the optimal origin for the tooltip
+     *
+     * @return The best point
+     */
+    public DeliveryAddressCard tooltipDeliveryOptimalPosition(DeliveryAddressCard tooltipDelivery, double x, double y){
+        double h = canvas.getHeight();
+        double w = canvas.getWidth();
+        double htool = tooltipDelivery.getHeight();
+        double wtool = tooltipDelivery.getWidth();
+        System.out.println(h + " " + w +" " + htool+" "+ wtool + " "+ x+ " "+ y);
+        if(x+wtool > w){
+            tooltipDelivery.setLayoutX(x-wtool-5);
+        }
+        else {
+            tooltipDelivery.setLayoutX(x+5);
+        }
+        if(y+htool > h){
+            tooltipDelivery.setLayoutY(y-htool-5);
+        }
+        else{
+            tooltipDelivery.setLayoutY(y+5);
+        }
+
+        return tooltipDelivery;
+    }
 
     /**
      * The zoom factor to use.
@@ -243,6 +346,6 @@ public class MapScreen extends AnchorPane {
     }
 
     public void onIntersection() {
-    	//this.getChildren().add()
+        //this.getChildren().add()
     }
 }

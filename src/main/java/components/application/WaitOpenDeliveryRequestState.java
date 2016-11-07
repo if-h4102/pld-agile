@@ -7,6 +7,8 @@ import services.xml.exception.ParserException;
 import java.io.File;
 import java.io.IOException;
 
+import components.exceptionwindow.ExceptionWindow;
+
 public class WaitOpenDeliveryRequestState extends WaitOpenCityMapState {
     public void enterState(MainController mainController) {
         mainController.setDeliveryRequest(null); // Reset any previous delivery request
@@ -30,8 +32,7 @@ public class WaitOpenDeliveryRequestState extends WaitOpenCityMapState {
         try {
             currentDeliveryRequest = mainController.getParserService().getDeliveryRequest(deliveryRequestFile, mainController.getCityMap());
         } catch (IOException | ParserException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            ExceptionWindow exceptionWindow = new ExceptionWindow(e.getMessage());
         }
 
         mainController.setDeliveryRequest(currentDeliveryRequest);

@@ -1,4 +1,4 @@
-#root {
+PlanningDetailsItem {
     -fx-background-color: #FFFFFF;
     -fx-border-radius: 2px;
     -fx-text-fill: rgba(0,0,0,0.87);
@@ -24,7 +24,7 @@
     -fx-icon-color: rgba(0, 0, 0, .5);
 }
 
-#root:hover #remove, #root:hover #edit {
+PlanningDetailsItem:hover #remove, PlanningDetailsItem:hover #edit {
     visibility: visible;
 }
 

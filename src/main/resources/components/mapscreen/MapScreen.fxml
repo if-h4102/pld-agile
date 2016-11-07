@@ -4,6 +4,7 @@
 <?import components.intersectioncard.IntersectionCard?>
 <?import javafx.scene.layout.*?>
 
+<?import components.waypointcard.DeliveryAddressCard?>
 <fx:root fx:id="root" prefHeight="480.0" prefWidth="640.0"
          stylesheets="/components/mapscreen/MapScreen.css"
          type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.65"
@@ -19,4 +20,5 @@
 
   />
   <IntersectionCard fx:id="tooltip" intersection="${controller.activeIntersection}"/>
+  <DeliveryAddressCard fx:id="tooltipDelivery" waypoint="${controller.activeDelivery}"/>
 </fx:root>
