@@ -18,11 +18,13 @@ import models.DeliveryRequest;
 import models.Intersection;
 import models.Planning;
 import services.command.CommandManager;
+import services.map.IMapService;
 import services.xml.Parser;
 
 import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.concurrent.CompletableFuture;
 
 
 public class MainController extends BorderPane {
@@ -69,6 +71,12 @@ public class MainController extends BorderPane {
             Planning planning = this.getPlanning();
             planning.removeWaypoint(removeWaypointAction.getWaypoint());
         });
+
+        IMapService mapService = () -> {
+            CompletableFuture<Intersection> future = new CompletableFuture<>();
+            this.onPromptIntersection(future);
+            return future;
+        };
     }
 
     protected Parent getRoot() {
@@ -143,14 +151,14 @@ public class MainController extends BorderPane {
         this.state.setValue(state);
     }
 
-    private void applyState(MainControllerState nextState) {
+    protected void applyState(MainControllerState nextState) {
         MainControllerState currentState = this.getState();
         if (currentState == nextState) {
             return;
         }
         currentState.leaveState(this);
-        nextState.enterState(this);
         this.setState(nextState);
+        nextState.enterState(this);
     }
 
     // handlers
@@ -164,6 +172,14 @@ public class MainController extends BorderPane {
 
     public void onComputePlanningButtonAction(ActionEvent actionEvent) {
         this.applyState(this.getState().onComputePlanningButtonAction(this));
+    }
+
+    public void onPromptIntersection(CompletableFuture<Intersection> future) {
+        this.applyState(this.getState().onPromptIntersection(this, future));
+    }
+
+    public void onIntersectionSelection() {
+        this.applyState(this.getState().onIntersectionSelection(this, null));
     }
 
     public void onUndoButtonAction(ActionEvent actionEvent) {

@@ -14,6 +14,7 @@ import javafx.scene.layout.VBox;
 import models.Intersection;
 import models.Planning;
 import models.Route;
+import services.map.IMapService;
 
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
@@ -22,6 +23,7 @@ public class PlanningDetails extends ScrollPane {
     @FXML
     protected VBox vBox;
     private final SimpleObjectProperty<Planning> planning = new SimpleObjectProperty<>(this, "planning", null);
+    private final SimpleObjectProperty<IMapService> mapService = new SimpleObjectProperty<>(this, "mapService", null);
 
     final private ChangeListener<Planning> planningChangeListener;
     final private ListChangeListener<Route> planningRoutesChangeListener;
