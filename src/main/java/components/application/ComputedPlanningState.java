@@ -1,5 +1,9 @@
 package components.application;
 
+import models.Intersection;
+
+import java.util.concurrent.CompletableFuture;
+
 public class ComputedPlanningState extends WaitOpenDeliveryRequestState {
     final private MainController mainController;
 
@@ -13,6 +17,10 @@ public class ComputedPlanningState extends WaitOpenDeliveryRequestState {
 
     public void leaveState(MainController mainController) {
 
+    }
+
+    public MainControllerState onPromptIntersection(MainController mainController, CompletableFuture<Intersection> future) {
+        return new SelectingIntersectionState(this.mainController, future);
     }
 
     public MainControllerState onComputePlanningButtonAction(MainController mainController) {

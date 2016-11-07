@@ -11,9 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
-import models.Intersection;
-import models.Planning;
-import models.Route;
+import models.*;
 import services.map.IMapService;
 
 import java.io.IOException;
@@ -45,6 +43,7 @@ public class PlanningDetails extends ScrollPane {
         }
 
         observeItems();
+        this.addEventHandler(AddWaypointAction.TYPE, this::onAddWaypointAction);
     }
 
     public void observeItems() {
@@ -98,6 +97,18 @@ public class PlanningDetails extends ScrollPane {
         return this.planningProperty().getValue();
     }
 
+    public SimpleObjectProperty<IMapService> mapServiceProperty() {
+        return this.mapService;
+    }
+
+    public IMapService getMapService() {
+        return this.mapServiceProperty().getValue();
+    }
+
+    public void setMapService(IMapService value) {
+        this.mapServiceProperty().setValue(value);
+    }
+
     public void onPlanningChange(Planning oldValue, Planning newValue) {
         if (oldValue == newValue) {
             return;
@@ -111,7 +122,22 @@ public class PlanningDetails extends ScrollPane {
         this.refreshAll();
     }
 
-    public void onAddWaypointAction (AddWaypointAction index) {
-        // CompletableFuture<Intersection> i = this.mapService().promptIntersection();
+    public void onAddWaypointAction (AddWaypointAction action) {
+        IMapService mapService = this.getMapService();
+        if (mapService == null) {
+            System.err.println("Missing map service");
+        }
+        this.getMapService()
+            .promptIntersection()
+            .thenAccept(intersection -> {
+                System.out.println("Got intersection:");
+                System.out.println(intersection);
+                DeliveryAddress deliveryAddress = new DeliveryAddress(intersection, 5 * 60);
+                Planning planning = this.getPlanning();
+                int index = action.getIndex();
+                AbstractWaypoint after = planning.getRoutes().get(index - 1).getStartWaypoint();
+                planning.addWaypoint(deliveryAddress, after);
+                System.out.println("foo");
+            });
     }
 }

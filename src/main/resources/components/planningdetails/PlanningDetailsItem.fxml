@@ -33,10 +33,10 @@
       </cornerControls>
     </WaypointCard>
     <AnchorPane>
-      <Label text="Travel" />
+      <Label text="Travel: 15min" />
     </AnchorPane>
     <AnchorPane>
-      <Label text="Travel" />
+      <Label text="Wait: 10min" />
     </AnchorPane>
   </VBox>
 

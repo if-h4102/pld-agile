@@ -7,7 +7,9 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 public class Planning {
     /**
@@ -75,8 +77,7 @@ public class Planning {
     /**
      * Get the time that the delivery man must wait at the given way point
      *
-     * @param waypoint
-     *            The wait point where the delivery man will wait
+     * @param waypoint The wait point where the delivery man will wait
      * @return The waiting time of the delivery man
      */
     public int getWaitingTimeAtWaypoint(AbstractWaypoint waypoint) {
@@ -108,24 +109,23 @@ public class Planning {
      * and update the current routes consequently.
      *
      * @param point the way point to add to the current planning.
-     * @param map   the map with which the soon to be created new routes will be computed.
      * @return the updated current planning.
      */
-    public Planning addWaypoint(AbstractWaypoint point, CityMap map) {
+    public Planning addWaypoint(AbstractWaypoint point) {
         // Compute the best position to introduce the given way point
         int bestTime = Integer.MAX_VALUE;
         int bestPosition = 0;
         Route[] newRoutes = new Route[2];
         int index = 0;
         for (Route r : this.routes) {
-            int time = map.shortestPath(r.getStartWaypoint(), Collections.singletonList(point)).get(0).getDuration()
-                + map.shortestPath(point, Collections.singletonList(r.getEndWaypoint())).get(0).getDuration();
+            int time = this.getCityMap().shortestPath(r.getStartWaypoint(), Collections.singletonList(point)).get(0).getDuration()
+                + this.getCityMap().shortestPath(point, Collections.singletonList(r.getEndWaypoint())).get(0).getDuration();
             // TODO: style guide ?
             if (time < bestTime) {
                 bestTime = time;
                 bestPosition = index;
-                newRoutes[0] = map.shortestPath(r.getStartWaypoint(), Collections.singletonList(point)).get(0);
-                newRoutes[1] = map.shortestPath(point, Collections.singletonList(r.getEndWaypoint())).get(0);
+                newRoutes[0] = this.getCityMap().shortestPath(r.getStartWaypoint(), Collections.singletonList(point)).get(0);
+                newRoutes[1] = this.getCityMap().shortestPath(point, Collections.singletonList(r.getEndWaypoint())).get(0);
             }
         }
         // Remove the now unnecessary route
@@ -145,10 +145,9 @@ public class Planning {
      *
      * @param point      the way point to add to the current planning.
      * @param afterPoint the way point after which the new way point must be added.
-     * @param map        the map with which the soon to be created new routes will be computed.
      * @return the updated current planning.
      */
-    public Planning addWaypoint(AbstractWaypoint point, AbstractWaypoint afterPoint, CityMap map) {
+    public Planning addWaypoint(AbstractWaypoint point, AbstractWaypoint afterPoint) {
         // Look for the position of the given afterPoint
         int position = 0;
         for (int i = 0; i < this.routes.size(); i++) {
@@ -160,8 +159,8 @@ public class Planning {
         }
         // Split the affected route
         this.routes.remove(position);
-        this.routes.add(position, map.shortestPath(this.routes.get(position).getStartWaypoint(), Collections.singletonList(point)).get(0));
-        this.routes.add(position, map.shortestPath(point, Collections.singletonList(this.routes.get(position).getEndWaypoint())).get(0));
+        this.routes.add(position, this.getCityMap().shortestPath(this.routes.get(position).getStartWaypoint(), Collections.singletonList(point)).get(0));
+        this.routes.add(position, this.getCityMap().shortestPath(point, Collections.singletonList(this.routes.get(position).getEndWaypoint())).get(0));
         return this;
     }
 

@@ -6,7 +6,7 @@ DeliveryAddressCard {
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, .2), 3, 0, 0, 1);
 }
 
-#remove, #edit {
+#remove, #edit, #add {
     -fx-background-color: transparent;
     -fx-padding: 0 0 0 0;
     -fx-effect: none;
@@ -17,19 +17,19 @@ DeliveryAddressCard {
     -fx-border-radius: 2px;
 }
 
-#remove FontIcon, #edit FontIcon {
+#remove FontIcon, #edit FontIcon, #add FontIcon {
     -fx-icon-size: 32px;
     -fx-icon-color: rgba(0, 0, 0, .5);
 }
 
-DeliveryAddressCard:hover #remove, DeliveryAddressCard:hover #edit {
+DeliveryAddressCard:hover #remove, DeliveryAddressCard:hover #edit, DeliveryAddressCard:hover #add {
     visibility: visible;
 }
 
-#remove:hover, #edit:hover {
+#remove:hover, #edit:hover, #add:hover {
     -fx-background-color: rgba(0, 0, 0, 0.2);
 }
 
-#remove:hover FontIcon, #edit:hover FontIcon {
+#remove:hover FontIcon, #edit:hover FontIcon, #add:hover FontIcon {
     -fx-icon-color: rgba(0, 0, 0, .8);
 }

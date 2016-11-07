@@ -104,7 +104,9 @@
                                 AnchorPane.leftAnchor="0"
                                 AnchorPane.rightAnchor="0"
                                 AnchorPane.topAnchor="0"
-                                planning="${controller.planning}">
+                                planning="${controller.planning}"
+                                mapService="${controller.mapService}"
+                      >
                       </PlanningDetails>
                     </AnchorPane>
                   </content>

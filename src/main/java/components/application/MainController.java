@@ -1,6 +1,8 @@
 package components.application;
 
+import components.events.AddWaypointAction;
 import components.events.RemoveWaypointAction;
+import components.mapcanvas.IntersectionSelectionEvent;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -45,9 +47,11 @@ public class MainController extends BorderPane {
     final private SimpleObjectProperty<DeliveryRequest> deliveryRequest = new SimpleObjectProperty<>();
     final private SimpleObjectProperty<Planning> planning = new SimpleObjectProperty<>();
     final private SimpleListProperty<Intersection> intersections = new SimpleListProperty<>(FXCollections.observableArrayList());
-    final private Parser parserService = new Parser();
     final private SimpleDoubleProperty mapZoom = new SimpleDoubleProperty(1.0);
+
+    final private Parser parserService = new Parser();
     final private CommandManager commandManager = new CommandManager();
+    final private SimpleObjectProperty<IMapService> mapService = new SimpleObjectProperty<>(this, "mapService", null);
 
     public MainController() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/components/application/main.fxml"));
@@ -72,11 +76,14 @@ public class MainController extends BorderPane {
             planning.removeWaypoint(removeWaypointAction.getWaypoint());
         });
 
+        this.addEventHandler(IntersectionSelectionEvent.INTERSECTION_SELECTION, this::onIntersectionSelection);
+
         IMapService mapService = () -> {
             CompletableFuture<Intersection> future = new CompletableFuture<>();
             this.onPromptIntersection(future);
             return future;
         };
+        this.setMapService(mapService);
     }
 
     protected Parent getRoot() {
@@ -151,6 +158,19 @@ public class MainController extends BorderPane {
         this.state.setValue(state);
     }
 
+    // MapService
+    public SimpleObjectProperty<IMapService> mapServiceProperty() {
+        return this.mapService;
+    }
+
+    public IMapService getMapService() {
+        return this.mapServiceProperty().getValue();
+    }
+
+    public void setMapService(IMapService value) {
+        this.mapServiceProperty().setValue(value);
+    }
+
     protected void applyState(MainControllerState nextState) {
         MainControllerState currentState = this.getState();
         if (currentState == nextState) {
@@ -178,8 +198,8 @@ public class MainController extends BorderPane {
         this.applyState(this.getState().onPromptIntersection(this, future));
     }
 
-    public void onIntersectionSelection() {
-        this.applyState(this.getState().onIntersectionSelection(this, null));
+    public void onIntersectionSelection(IntersectionSelectionEvent event) {
+        this.applyState(this.getState().onIntersectionSelection(this, event));
     }
 
     public void onUndoButtonAction(ActionEvent actionEvent) {

@@ -1,5 +1,6 @@
 package components.application;
 
+import components.mapcanvas.IntersectionSelectionEvent;
 import models.Intersection;
 
 import java.util.concurrent.CompletableFuture;
@@ -29,7 +30,7 @@ public abstract class MainControllerState {
         return this;
     }
 
-    public MainControllerState onIntersectionSelection(MainController mainController, Intersection intersection) {
+    public MainControllerState onIntersectionSelection(MainController mainController, IntersectionSelectionEvent event) {
         return this;
     }
 }

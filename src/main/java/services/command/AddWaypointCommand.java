@@ -18,7 +18,7 @@ public class AddWaypointCommand extends AbstractCommand {
 
     @Override
     public void execute() {
-        this.planning.addWaypoint(this.waypointToAdd, this.map);
+        this.planning.addWaypoint(this.waypointToAdd);
     }
 
     @Override
