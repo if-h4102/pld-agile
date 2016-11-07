@@ -114,10 +114,10 @@ public class PlanningDetails extends ScrollPane {
             return;
         }
         if (oldValue != null) {
-            oldValue.getRoutes().removeListener(this.planningRoutesChangeListener);
+            oldValue.routesProperty().removeListener(this.planningRoutesChangeListener);
         }
         if (newValue != null) {
-            newValue.getRoutes().addListener(this.planningRoutesChangeListener);
+            newValue.routesProperty().addListener(this.planningRoutesChangeListener);
         }
         this.refreshAll();
     }

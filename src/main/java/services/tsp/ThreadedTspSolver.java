@@ -1,6 +1,10 @@
 package services.tsp;
 
-import models.*;
+import models.AbstractWaypoint;
+import models.DeliveryGraph;
+import models.Planning;
+import models.Warehouse;
+
 import java.util.*;
 
 public class ThreadedTspSolver extends AbstractTspSolver implements Runnable {
@@ -14,11 +18,12 @@ public class ThreadedTspSolver extends AbstractTspSolver implements Runnable {
      */
     private final int MIN_EXPLORATION_WIDTH = 3; //min number of route tried from a given point
     private final int EXPLORATION_WIDTH_DIVISOR = 1; //divisor of the total number of accessible points
-        //finale width exploration is: MIN_EXPLORATION_WIDTH + (number of accessible points) / EXPLORATION_WIDTH_DIVISOR
-        //set to 1 to disable width exploration limitation
+    //finale width exploration is: MIN_EXPLORATION_WIDTH + (number of accessible points) / EXPLORATION_WIDTH_DIVISOR
+    //set to 1 to disable width exploration limitation
     private final int MAX_NUMBER_OF_MIN_COST = 1000; //branch cut if cost of currant branch is bigger than this constant
-                                                  //multiply by the minimum cost to reach an accessible point.
-        //set to 1000 or a an other big value to disable, Interger.MAX_VALUE is too big and has overflow problems
+    //multiply by the minimum cost to reach an accessible point.
+    //set to 1000 or a an other big value to disable, Interger.MAX_VALUE is too big and has overflow problems
+
     /**
      * The constructor for a basic TSP solver. It doesn't need anything for now.
      */
@@ -31,8 +36,8 @@ public class ThreadedTspSolver extends AbstractTspSolver implements Runnable {
      * the best result can be get using getBestPlanning(), during compute time it return the best found so far
      * once compute finished it's the best the algo can found.
      */
-    public void run(){
-        if(graph == null){
+    public void run() {
+        if (graph == null) {
             System.err.println("Please set a deliveryGraph before trying to solve TSP");
             return;
         }
@@ -75,19 +80,14 @@ public class ThreadedTspSolver extends AbstractTspSolver implements Runnable {
     /**
      * Generate bestPlanning from bestSolution list, the city map, the waiting time and bestSolutionCost
      */
-    private void updateBestPlanning(){
-        List<Route> routes = new ArrayList<>(graph.size());
-        for (int i = 0; i < graph.size(); i++) {
-            routes.add(graph.getRoute(this.bestSolution[i], this.bestSolution[(i + 1) % graph.size()]));
-        }
-        bestPlanning = new Planning(graph.getCityMap(), routes, bestSolutionWaitingTime, bestSolutionCost);
+    private void updateBestPlanning() {
+        this.bestPlanning = new Planning(graph.getCityMap(), Arrays.asList(this.bestSolution), bestSolutionWaitingTime, bestSolutionCost);
     }
 
     /**
      * set the DeliveryGraph.
      *
-     * @param graph
-     *            The (complete) graph representing all delivery points and the warehouse.
+     * @param graph The (complete) graph representing all delivery points and the warehouse.
      */
     public void setDeliveryGraph(DeliveryGraph graph) {
         this.graph = graph;
@@ -97,8 +97,7 @@ public class ThreadedTspSolver extends AbstractTspSolver implements Runnable {
     /**
      * Solve the TSP problem for the given DeliveryGraph.
      *
-     * @param graph
-     *            The (complete) graph representing all delivery points and the warehouse.
+     * @param graph The (complete) graph representing all delivery points and the warehouse.
      * @return The delivery plan (Planning) associated to the given DeliveryGraph.
      */
     @Override
@@ -111,18 +110,12 @@ public class ThreadedTspSolver extends AbstractTspSolver implements Runnable {
     /**
      * Basic branch an bound algorithm
      *
-     * @param lastSeenNode
-     *            the last explored node.
-     * @param unseen
-     *            all nodes not explored yet.
-     * @param seen
-     *            all nodes already explored.
-     * @param seenCost
-     *            the cost of all explored nodes.
-     * @param costs
-     *            the cost of the path between each node.
-     * @param deliveryDurations
-     *            the delivery duration of each node.
+     * @param lastSeenNode      the last explored node.
+     * @param unseen            all nodes not explored yet.
+     * @param seen              all nodes already explored.
+     * @param seenCost          the cost of all explored nodes.
+     * @param costs             the cost of the path between each node.
+     * @param deliveryDurations the delivery duration of each node.
      */
     private void branchAndBound(AbstractWaypoint lastSeenNode, ArrayList<AbstractWaypoint> unseen,
                                 ArrayList<AbstractWaypoint> seen, int seenCost,
@@ -142,31 +135,30 @@ public class ThreadedTspSolver extends AbstractTspSolver implements Runnable {
                 this.updateBestPlanning();
             }
         } //else if the estimation of time left show possible new best solution
-        else if (seenCost + this.bound(lastSeenNode, unseen, costs, deliveryDurations,seenCost) < this.bestSolutionCost) {
+        else if (seenCost + this.bound(lastSeenNode, unseen, costs, deliveryDurations, seenCost) < this.bestSolutionCost) {
             // We have a great candidate !
-            Iterator<AbstractWaypoint> it = this.iterator(lastSeenNode, unseen, costs, deliveryDurations,seenCost);
-            int i=0;
+            Iterator<AbstractWaypoint> it = this.iterator(lastSeenNode, unseen, costs, deliveryDurations, seenCost);
+            int i = 0;
             int minCost = Integer.MAX_VALUE;
-            while (it.hasNext() && i++ < unseen.size()/EXPLORATION_WIDTH_DIVISOR+MIN_EXPLORATION_WIDTH) {
+            while (it.hasNext() && i++ < unseen.size() / EXPLORATION_WIDTH_DIVISOR + MIN_EXPLORATION_WIDTH) {
                 AbstractWaypoint nextNode = it.next();
                 seen.add(nextNode);
                 unseen.remove(nextNode);
                 int costRouteAndDelivery = costs.get(lastSeenNode).get(nextNode);
-                if(i==1)
+                if (i == 1)
                     minCost = costRouteAndDelivery;
-                else if(costRouteAndDelivery > MAX_NUMBER_OF_MIN_COST*minCost)
+                else if (costRouteAndDelivery > MAX_NUMBER_OF_MIN_COST * minCost)
                     break; //if currant cost is bigger than two time the min value cut the currant branch.
                 //if we can pass to the selected node
-                int arrivalTime=this.startPoint.getTimeStart()+seenCost+costRouteAndDelivery;
+                int arrivalTime = this.startPoint.getTimeStart() + seenCost + costRouteAndDelivery;
                 arrivalTime %= 86400;
-                if(!nextNode.canBePassed(arrivalTime)){
-                    if( arrivalTime < nextNode.getTimeStart()){
+                if (!nextNode.canBePassed(arrivalTime)) {
+                    if (arrivalTime < nextNode.getTimeStart()) {
                         //wait until opening of the delivery point
                         int waitingDuration = nextNode.getTimeStart() - arrivalTime;
                         costRouteAndDelivery += waitingDuration;
-                        wayPointWaitingTime.put(nextNode,waitingDuration);
-                    }
-                    else{
+                        wayPointWaitingTime.put(nextNode, waitingDuration);
+                    } else {
                         //add a one day cost (longer than the max delivery time)
                         costRouteAndDelivery += 86400;
                     }
@@ -202,8 +194,7 @@ public class ThreadedTspSolver extends AbstractTspSolver implements Runnable {
      * Return a very basic iterator on the given collection.
      *
      * @param lastSeenNode
-     * @param unseen
-     *            the collection in which you want to iterate.
+     * @param unseen            the collection in which you want to iterate.
      * @param costs
      * @param deliveryDurations
      * @return
@@ -220,10 +211,10 @@ public class ThreadedTspSolver extends AbstractTspSolver implements Runnable {
 
     /**
      * @return the currant best planning found
-     *      if computation is still in progress it's probably not the best the algo can found
-     *      (can be null if no computation had been run yet)
+     * if computation is still in progress it's probably not the best the algo can found
+     * (can be null if no computation had been run yet)
      */
-    public Planning getBestPlanning(){
+    public Planning getBestPlanning() {
         return bestPlanning;
     }
 }

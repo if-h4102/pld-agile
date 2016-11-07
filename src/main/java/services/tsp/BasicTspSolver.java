@@ -68,11 +68,7 @@ public class BasicTspSolver extends AbstractTspSolver {
         // Compute solution
         branchAndBound(startPoint, unseen, seen, 0, costs, deliveryDurations, waypointWaitingTime);
         // Construct Planning based on the previous result
-        List<Route> routes = new ArrayList<>(graph.size());
-        for (int i = 0; i < graph.size(); i++) {
-            routes.add(graph.getRoute(this.bestSolution[i], this.bestSolution[(i + 1) % graph.size()]));
-        }
-        return new Planning(graph.getCityMap(), routes, bestSolutionWaitingTime, bestSolutionCost);
+        return new Planning(graph.getCityMap(), Arrays.asList(this.bestSolution), bestSolutionWaitingTime, bestSolutionCost);
     }
 
     /**

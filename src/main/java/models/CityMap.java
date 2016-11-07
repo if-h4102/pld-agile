@@ -49,6 +49,10 @@ public class CityMap {
         streetSections.put(streetSection.getStartIntersection().getId(), streetSectionsFromStartIntersection);
     }
 
+    public Route shortestPath(AbstractWaypoint startWaypoint, AbstractWaypoint endWaypoint) {
+        return this.shortestPath(startWaypoint, Collections.singletonList(endWaypoint)).get(0);
+    }
+
     // TODO Complexity to improve by using a min-heap for the greys intersections
     @Requires({"startWaypoint != null", "endWaypoints != null",
         "intersections.containsValue(startWaypoint.getIntersection())"})
