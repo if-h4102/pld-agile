@@ -124,27 +124,27 @@ public class Planning {
      * @return the updated current planning.
      */
     public Planning addWaypoint(AbstractWaypoint point) {
-//        // Compute the best position to introduce the given waypoint
-//        int bestTime = Integer.MAX_VALUE;
-//        int bestPosition = 0;
-//        Route[] newRoutes = new Route[2];
-//        int index = 0;
-//        for (Route r : this.routes) {
-//            int time = this.getCityMap().shortestPath(r.getStartWaypoint(), Collections.singletonList(point)).get(0).getDuration()
-//                + this.getCityMap().shortestPath(point, Collections.singletonList(r.getEndWaypoint())).get(0).getDuration();
-//            // TODO: style guide ?
-//            if (time < bestTime) {
-//                bestTime = time;
-//                bestPosition = index;
-//                newRoutes[0] = this.getCityMap().shortestPath(r.getStartWaypoint(), Collections.singletonList(point)).get(0);
-//                newRoutes[1] = this.getCityMap().shortestPath(point, Collections.singletonList(r.getEndWaypoint())).get(0);
-//            }
-//        }
-//        // Remove the now unnecessary route
-//        this.routes.remove(bestPosition);
-//        // Introduce the waypoint
-//        this.routes.add(bestPosition, newRoutes[1]);
-//        this.routes.add(bestPosition, newRoutes[0]);
+        // Compute the best position to introduce the given waypoint
+        int bestTime = Integer.MAX_VALUE;
+        int bestPosition = 0;
+        Route[] newRoutes = new Route[2];
+        int index = 0;
+        for (Route r : this.routes) {
+            int time = this.getCityMap().shortestPath(r.getStartWaypoint(), Collections.singletonList(point)).get(0).getDuration()
+                + this.getCityMap().shortestPath(point, Collections.singletonList(r.getEndWaypoint())).get(0).getDuration();
+            // TODO: style guide ?
+            if (time < bestTime) {
+                bestTime = time;
+                bestPosition = index;
+                newRoutes[0] = this.getCityMap().shortestPath(r.getStartWaypoint(), Collections.singletonList(point)).get(0);
+                newRoutes[1] = this.getCityMap().shortestPath(point, Collections.singletonList(r.getEndWaypoint())).get(0);
+            }
+        }
+        // Remove the now unnecessary route
+        this.routes.remove(bestPosition);
+        // Introduce the waypoint
+        this.routes.add(bestPosition, newRoutes[1]);
+        this.routes.add(bestPosition, newRoutes[0]);
 
         return this;
 
@@ -190,8 +190,13 @@ public class Planning {
      */
     @Requires({"this.waypoints.contains(waypoint)", "!waypoint.equals(this.waypoints.get(0))"})
     public void removeWaypoint(AbstractWaypoint waypoint) {
+        int index = this.waypoints.indexOf(waypoint);
+        this.waypoints.remove(index);
+        this.routes.remove(index);
+        this.routes.remove(index - 1);
+        this.routes.add(index - 1, this.getCityMap().shortestPath(this.getWaypoint(index-1), this.getWaypoint(index)));
         this.waypoints.remove(waypoint);
-        this.updateRoutes();
+        // this.updateRoutes();
     }
 
     public AbstractWaypoint getWaypoint(int index) {
