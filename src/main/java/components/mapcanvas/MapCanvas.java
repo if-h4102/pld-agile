@@ -80,6 +80,15 @@ public class MapCanvas extends Canvas {
                 eventY += DEFAULT_OFFSET_Y;
 
                 if(getDeliveryRequest() != null){
+                	Warehouse warehouse = getDeliveryRequest().getWarehouse();
+                	if (eventX < warehouse.getX() + DEFAULT_DELIVERY_SIZE / 2 && eventX > warehouse.getX() - DEFAULT_DELIVERY_SIZE / 2
+                            && eventY < warehouse.getY() + DEFAULT_DELIVERY_SIZE / 2 && eventY > warehouse.getY() - DEFAULT_DELIVERY_SIZE / 2){
+                		WarehouseSelectionEvent deliver = new WarehouseSelectionEvent(warehouse, e.getX(), e.getY());
+                        fireEvent(deliver);
+                        IntersectionSelectionEvent nullIntersect = new IntersectionSelectionEvent(null, e.getX(), e.getY());
+                        fireEvent(nullIntersect);
+                        return;
+                	}
                     listDeliveryAddresses = getDeliveryRequest().getDeliveryAddresses();
                     for(DeliveryAddress delivery : listDeliveryAddresses){
                         if (eventX < delivery.getX() + DEFAULT_DELIVERY_SIZE / 2 && eventX > delivery.getX() - DEFAULT_DELIVERY_SIZE / 2
@@ -227,8 +236,6 @@ public class MapCanvas extends Canvas {
         GraphicsContext gc = getGraphicsContext2D();
 
         Planning planning = getPlanning();
-        // System.out.println(planning.getFullTime());
-        //planning.
 
         Iterable<Route> listRoutes = planning.getRoutes();
 
