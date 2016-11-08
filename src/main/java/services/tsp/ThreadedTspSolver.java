@@ -1,5 +1,6 @@
 package services.tsp;
 
+import javafx.beans.property.SimpleObjectProperty;
 import models.AbstractWaypoint;
 import models.DeliveryGraph;
 import models.Planning;
@@ -11,6 +12,7 @@ public class ThreadedTspSolver extends AbstractTspSolver implements Runnable {
 
     protected Warehouse startPoint;
     private DeliveryGraph graph;
+    private SimpleObjectProperty<Planning> bestPlanningObservable = new SimpleObjectProperty<>(this, "planning", null);
     private Planning bestPlanning;
 
     /**
@@ -82,6 +84,7 @@ public class ThreadedTspSolver extends AbstractTspSolver implements Runnable {
      */
     private void updateBestPlanning() {
         this.bestPlanning = new Planning(graph.getCityMap(), Arrays.asList(this.bestSolution), bestSolutionWaitingTime, bestSolutionCost);
+        this.bestPlanningObservable.setValue(bestPlanning);
     }
 
     /**
@@ -92,6 +95,7 @@ public class ThreadedTspSolver extends AbstractTspSolver implements Runnable {
     public void setDeliveryGraph(DeliveryGraph graph) {
         this.graph = graph;
         bestPlanning = null;
+        bestPlanningObservable.setValue(bestPlanning);
     }
 
     /**
@@ -216,5 +220,12 @@ public class ThreadedTspSolver extends AbstractTspSolver implements Runnable {
      */
     public Planning getBestPlanning() {
         return bestPlanning;
+    }
+
+    /**
+     * @return an observable version of the best planning
+     */
+    public SimpleObjectProperty<Planning> bestPlanningProperty(){
+        return this.bestPlanningObservable;
     }
 }
