@@ -240,6 +240,9 @@ public class MapCanvas extends Canvas {
                 gc.strokeLine(section.getStartIntersection().getX(), section.getStartIntersection().getY(),
                     section.getEndIntersection().getX(), section.getEndIntersection().getY());
             }
+        }
+        drawDeliveryRequest();
+        for(Route route : listRoutes){
             gc.setLineWidth(3);
             gc.setStroke(Color.BLACK);
             gc.strokeText("" + number, route.getStartWaypoint().getIntersection().getX(), route.getStartWaypoint().getIntersection().getY());
