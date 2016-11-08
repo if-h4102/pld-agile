@@ -178,6 +178,7 @@ public class EditableDeliveryAddressCard extends WaypointCardBase<DeliveryAddres
     public void onSaveButtonAction(ActionEvent actionEvent) {
         DeliveryAddress current = this.computeWaypoint();
         this.setWaypoint(current);
+        System.out.println("Saving");
         this.fireEvent(new SaveDeliveryAddress(current));
     }
 }
