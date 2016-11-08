@@ -18,6 +18,7 @@ import java.awt.Point;
 import java.io.IOException;
 
 import components.waypointcard.DeliveryAddressCard;
+import components.waypointcard.WarehouseCard;
 import components.intersectioncard.IntersectionCard;
 import components.mapcanvas.MapCanvas;
 
@@ -33,6 +34,9 @@ public class MapScreen extends AnchorPane {
     protected IntersectionCard tooltip;
     @FXML
     protected DeliveryAddressCard tooltipDelivery;
+    
+    @FXML
+    protected WarehouseCard tooltipwarehouse;
     @FXML
     protected MapCanvas canvas;
     private SimpleDoubleProperty zoom;

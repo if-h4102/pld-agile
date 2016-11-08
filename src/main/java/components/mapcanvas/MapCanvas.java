@@ -233,6 +233,9 @@ public class MapCanvas extends Canvas {
     @SuppressWarnings("restriction")
     @Requires("getPlanning() != null")
     private void drawPlanning() {
+    	Color colorStart = Color.BLUE;
+    	Color currentColor = colorStart;
+    	
         GraphicsContext gc = getGraphicsContext2D();
 
         Planning planning = getPlanning();
@@ -241,13 +244,15 @@ public class MapCanvas extends Canvas {
 
         int number = 1;
         for (Route route : listRoutes) {
-            gc.setStroke(Color.ORANGE);
+            gc.setStroke(currentColor);
             List<StreetSection> streetSections = route.getStreetSections();
             for (StreetSection section : streetSections) {
                 gc.setLineWidth(4);
-                gc.setStroke(Color.ORANGE);
+                //currentColor = currentColor.color(currentColor.getRed()+10, currentColor.getGreen()+10, currentColor.getBlue()+10);
+                gc.setStroke(currentColor);
                 gc.strokeLine(section.getStartIntersection().getX(), section.getStartIntersection().getY(),
                     section.getEndIntersection().getX(), section.getEndIntersection().getY());
+                drawArrowBetweenStreetSection(section, currentColor);
             }
         }
         drawDeliveryRequest();
@@ -262,6 +267,36 @@ public class MapCanvas extends Canvas {
         }
 
     }
+    
+    
+    public void drawArrowBetweenStreetSection(StreetSection street, Color color){
+
+        double xStart = street.getStartIntersection().getX();
+        double xEnd = street.getEndIntersection().getX();
+        double yStart = street.getStartIntersection().getY();
+        double yEnd = street.getEndIntersection().getY();
+        
+        double alpha = Math.atan2(yStart-yEnd,xStart-xEnd);
+        System.out.println("alpha = " +alpha);
+        
+        double xthird = (xStart + 2*xEnd)/3;
+        double ythird = (yStart + 2*yEnd)/3;
+        
+        double lengthCross = 10 ;
+        double xCross1 = xthird + lengthCross * Math.cos(alpha+Math.PI/6);
+        double yCross1 = ythird + lengthCross * Math.sin(alpha+Math.PI/6);
+        double xCross2 = xthird + lengthCross * Math.cos(alpha+11*Math.PI/6);
+        double yCross2 = ythird + lengthCross * Math.sin(alpha+11*Math.PI/6);
+        
+        GraphicsContext gc = getGraphicsContext2D();
+        gc.setStroke(color);
+        gc.setLineWidth(2);
+        gc.strokeLine(xthird, ythird, xCross1, yCross1);
+        gc.strokeLine(xthird, ythird, xCross2, yCross2);
+            
+        
+    }
+    
 
     @Override
     public boolean isResizable() {
