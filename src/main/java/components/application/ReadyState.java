@@ -11,6 +11,6 @@ public class ReadyState extends WaitOpenDeliveryRequestState {
     }
 
     public MainControllerState onComputePlanningButtonAction(MainController mainController) {
-        return new ComputingPlanningState();
+        return new ComputingPlanningState(mainController);
     }
 }

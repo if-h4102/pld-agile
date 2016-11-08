@@ -2,22 +2,22 @@
 actor "Caller\n(anyone or anything)" as CPS
 participant CityMap as CM
 participant DeliveryGraph as DG
-participant "startWayPoint : AbstractWayPoint" as SWP
+participant "startWaypoint : AbstractWaypoint" as SWP
 participant "successor : Intersection" as S
 participant "minimalGreyIntersection : Intersection" as MGI
 
 
 CPS -> CM : computeDeliveryGraph(**request**: DeliveryRequest)
 activate CM
-CM -> CM : mappedRoutes = new TreeMap<AbstractWayPoint, Map<AbstractWayPoint, Route>>();
-loop for (AbstractWayPoint startPoint : pointsContainedInRequest)
+CM -> CM : mappedRoutes = new TreeMap<AbstractWaypoint, Map<AbstractWaypoint, Route>>();
+loop for (AbstractWaypoint startPoint : pointsContainedInRequest)
     CM -> SWP : getIntersection()
     activate SWP
-    CM <- SWP : startWayPointIntersection
+    CM <- SWP : startWaypointIntersection
     deactivate SWP
     CM -> CM : predecessors = new Intersection[intersections.size()]
     CM -> CM : durations = new int[intersections.size()]
-    CM -> CM : greys.add(startWayPointIntersection)
+    CM -> CM : greys.add(startWaypointIntersection)
     loop while (greys.size() != 0)
         CM -> CM : minimalGreyIntersection = getMinimalGreyIntersection(index, greys, durations)
         loop for (Intersection successor : getNeighbourIntersection(minimalGreyIntersection))

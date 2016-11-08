@@ -1,33 +1,58 @@
 package components.application;
 
 
-import models.*;
-import services.pdf.planningPrinter;
-import services.tsp.AbstractTspSolver;
+import models.DeliveryGraph;
+import models.DeliveryRequest;
+import models.Planning;
 import services.tsp.BasicBoundTspSolver;
-import services.tsp.BasicTspSolver;
-import services.tsp.TimeConstraintBoundTspSolver;
+import services.tsp.ThreadedTspSolver;
 
 public class ComputingPlanningState extends WaitOpenDeliveryRequestState {
+    final private MainController mainController;
+    private Thread solverThread;
+    private long beforeDijkstraTime;
+    private long beforeTspTime;
+    private long completionTime;
+
+    ComputingPlanningState(MainController mainController) {
+        this.mainController = mainController;
+    }
+
+
     public void enterState(MainController mainController) {
-        System.out.println("Computing...");
-        AbstractTspSolver solver = new TimeConstraintBoundTspSolver();
-//        AbstractTspSolver solver = new BasicBoundTspSolver();
-//        AbstractTspSolver solver = new BasicTspSolver();
+
         DeliveryRequest deliveryRequest = mainController.getDeliveryRequest();
-        long beforeDijkstra = System.nanoTime();
+
+        this.beforeDijkstraTime = System.nanoTime();
         DeliveryGraph deliveryGraph = deliveryRequest.computeDeliveryGraph();
-        long startTime = System.nanoTime();
-        Planning planning = solver.solve(deliveryGraph);
-        long endTime = System.nanoTime();
-        System.out.println(planning);
+
+        this.beforeTspTime = System.nanoTime();
+        ThreadedTspSolver tspSolver = new BasicBoundTspSolver();
+        tspSolver.setDeliveryGraph(deliveryGraph);
+        this.solverThread = new Thread(tspSolver);
+        this.solverThread.start();
+
+        try {
+            this.solverThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Planning planning = tspSolver.getBestPlanning();
         mainController.setPlanning(planning);
-        System.out.println("Computed in "+((endTime-beforeDijkstra)/1000000)+" ms (tsp: "+((endTime-startTime)/1000000)+" ms, dijktra: "+((startTime-beforeDijkstra)/1000000)+" ms)");
-        //TODO: call pdf generator at a better place !!!
-        planningPrinter.generatePdfFromPlanning(planning,"");
+
+        mainController.applyState(new ComputedPlanningState(mainController));
     }
 
     public void leaveState(MainController mainController) {
+        this.completionTime = System.nanoTime();
+        long fullDuration = (this.completionTime - this.beforeDijkstraTime) / 1000000;
+        long tspDuration = (this.completionTime - this.beforeTspTime) / 1000000;
+        long dijkstraDuration = (this.beforeTspTime - this.beforeDijkstraTime) / 1000000;
+        System.out.println("Computed in " + (fullDuration) + " ms (tsp: " + (tspDuration) + " ms, dijktra: " + (dijkstraDuration) + " ms)");
+    }
 
+    public MainControllerState onComputePlanningButtonAction(MainController mainController) {
+        System.out.println("Computing");
+        return this;
     }
 }

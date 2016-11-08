@@ -2,19 +2,19 @@ package models;
 
 import com.google.java.contract.Requires;
 
-public abstract class AbstractWayPoint implements Comparable<AbstractWayPoint> {
+public abstract class AbstractWaypoint implements Comparable<AbstractWaypoint> {
 
     final protected Intersection intersection;
     private int timeStart;
     private int timeEnd;
 
-    public AbstractWayPoint(Intersection intersection, int deliveryTimeStart, int deliveryTimeEnd) {
+    public AbstractWaypoint(Intersection intersection, int deliveryTimeStart, int deliveryTimeEnd) {
         this.intersection = intersection; // TODO clone to avoid a later modification?
         this.timeStart = deliveryTimeStart;
         this.timeEnd = deliveryTimeEnd;
     }
 
-    public AbstractWayPoint(Intersection intersection) {
+    public AbstractWaypoint(Intersection intersection) {
         this.intersection = intersection; // TODO clone to avoid a later modification?
         this.timeStart = 0;
         this.timeEnd = 86400; // end of a day
@@ -23,7 +23,7 @@ public abstract class AbstractWayPoint implements Comparable<AbstractWayPoint> {
     /**
      * @param timeOfPassage
      * @return true if the time of passage is more than deliveryTimeStart and time of passage plus delivery duration is less than
-     *         timeEnd if timeOfPassage is greater than a day (86400 sec) is modulus by 86400 is used.
+     * timeEnd if timeOfPassage is greater than a day (86400 sec) is modulus by 86400 is used.
      */
     public boolean canBePassed(int timeOfPassage) {
         timeOfPassage %= 86400;
@@ -58,10 +58,10 @@ public abstract class AbstractWayPoint implements Comparable<AbstractWayPoint> {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof AbstractWayPoint))
+        if (!(obj instanceof AbstractWaypoint))
             return false;
 
-        AbstractWayPoint other = (AbstractWayPoint) obj;
+        AbstractWaypoint other = (AbstractWaypoint) obj;
         return getId() == other.getId();
     }
 
@@ -71,8 +71,8 @@ public abstract class AbstractWayPoint implements Comparable<AbstractWayPoint> {
     }
 
     @Override
-    @Requires({ "other != null" })
-    public int compareTo(AbstractWayPoint other) {
+    @Requires({"other != null"})
+    public int compareTo(AbstractWaypoint other) {
         return getId() - other.getId();
     }
 }

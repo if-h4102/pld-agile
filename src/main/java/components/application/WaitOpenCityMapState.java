@@ -6,6 +6,7 @@ import models.CityMap;
 import services.xml.exception.ParserException;
 import java.io.File;
 import java.io.IOException;
+import components.exceptionwindow.ExceptionWindow;
 
 public class WaitOpenCityMapState extends MainControllerState {
     public void enterState(MainController mainController) {
@@ -30,8 +31,7 @@ public class WaitOpenCityMapState extends MainControllerState {
         try {
             currentCityMap = mainController.getParserService().getCityMap(cityMapFile);
         } catch (IOException | ParserException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            ExceptionWindow exceptionWindow = new ExceptionWindow(e.getMessage());
         }
 
         mainController.setCityMap(currentCityMap);

@@ -3,7 +3,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.VBox?>
 <fx:root fx:id="root" fitToWidth="true" prefHeight="300.0" prefWidth="250.0"
-         stylesheets="/components/planningdetails/planningDetails.css"
+         stylesheets="/components/planningdetails/PlanningDetails.css"
          type="ScrollPane"
          xmlns="http://javafx.com/javafx/8.0.102-ea"
          xmlns:fx="http://javafx.com/fxml/1">

@@ -1,11 +1,10 @@
 package models;
 
-public class Warehouse extends AbstractWayPoint {
-
+public class Warehouse extends AbstractWaypoint {
     public Warehouse(Intersection intersection) {
         super(intersection);
     }
-    
+
     public Warehouse(Intersection intersection, int startPlanningTime) {
         super(intersection, startPlanningTime, 86400);
     }
@@ -14,7 +13,7 @@ public class Warehouse extends AbstractWayPoint {
     public int getDuration() {
         return 0;
     }
-    
+
     @Override
     public String toString() {
         return "" + getId();

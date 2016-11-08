@@ -1,41 +1,31 @@
 package components.waypointcard;
 
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import models.AbstractWayPoint;
-import models.Intersection;
+import models.AbstractWaypoint;
+import models.DeliveryAddress;
 import models.Warehouse;
 
 import java.io.IOException;
 
-public class WaypointCard<WP extends AbstractWayPoint> extends AnchorPane {
+/**
+ * This component is a wrapper for a DeliveryAddressCard or WarehouseCard.
+ * It chooses the best concrete card according to the type of the `waypoint` property.
+ */
+public class WaypointCard extends AnchorPane implements IWaypointCard<AbstractWaypoint> {
+    private final ReadOnlyObjectWrapper<WaypointCardBase<?>> content = new ReadOnlyObjectWrapper<>(this, "content", null);
+    private final SimpleListProperty<Node> cornerControls = new SimpleListProperty<>(this, "cornerControls", FXCollections.observableArrayList());
+    private final SimpleObjectProperty<AbstractWaypoint> waypoint = new SimpleObjectProperty<>(this, "waypoint", null);
+    private final SimpleBooleanProperty editable = new SimpleBooleanProperty(this, "editable", false);
     @FXML
-    public HBox cornerControls;
-    @FXML
-    protected AnchorPane timeConstraints;
-
-    private SimpleObjectProperty<WP> waypoint;
-    private SimpleStringProperty waypointName;
-    private SimpleStringProperty coordinates;
-    private SimpleStringProperty deliveryDuration;
-    private SimpleStringProperty timeStart;
-    private SimpleStringProperty timeEnd;
-    private SimpleBooleanProperty readOnly;
+    protected AnchorPane root;
 
     public WaypointCard() {
-        updateWaypointName();
-        updateCoordinates();
-
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/components/waypointcard/WaypointCard.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -45,104 +35,161 @@ public class WaypointCard<WP extends AbstractWayPoint> extends AnchorPane {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
-        waypointProperty().addListener(event -> {
-            updateCoordinates();
-            updateWaypointName();
+
+        this.waypointProperty().addListener(event -> this.onWaypointChange());
+        this.contentProperty().addListener(event -> this.onContentChange());
+        this.cornerControlsProperty().addListener((observableValue, oldValue, newValue) -> {
+            this.onCornerControlsChange(oldValue, newValue);
         });
-        // edit.visibleProperty().bind(readOnlyProperty());
-        // remove.visibleProperty().bind(readOnlyProperty());
     }
 
-    // Item
-    public final SimpleObjectProperty<WP> waypointProperty() {
-        if (waypoint == null) {
-            waypoint = new SimpleObjectProperty<>(this, "waypoint", null);
-        }
-        return waypoint;
+    /**
+     * Get the observable property for the waypoint attached to this node.
+     *
+     * @return The observable property for the waypoint attached to this node.
+     */
+    public final SimpleObjectProperty<AbstractWaypoint> waypointProperty() {
+        return this.waypoint;
     }
 
-    public final void setWaypoint(WP value) {
-        waypointProperty().setValue(value);
+    /**
+     * Get the waypoint currently attached to this node.
+     *
+     * @return The waypoint currently attached to this node.
+     */
+    public final AbstractWaypoint getWaypoint() {
+        return this.waypointProperty().getValue();
     }
 
-    public final WP getWaypoint() {
-        return waypoint == null ? null : waypointProperty().getValue();
+    /**
+     * Set the waypoint displayed by this node.
+     *
+     * @param value The waypoint to attach to this node.
+     */
+    public final void setWaypoint(AbstractWaypoint value) {
+        this.waypointProperty().setValue(value);
     }
 
-    // WaypointName
-    public final SimpleStringProperty waypointNameProperty() {
-        if (waypointName == null) {
-            waypointName = new SimpleStringProperty(this, "waypointName");
-        }
-        return waypointName;
+    /**
+     * Get the observable property for the editable state of this waypoint card.
+     *
+     * @return The observable property for the editable state of this waypoint card.
+     */
+    public final SimpleBooleanProperty editableProperty() {
+        return this.editable;
     }
 
-    public final void setWaypointName(String value) {
-        waypointNameProperty().setValue(value);
+    /**
+     * Get the editable state of this waypoint card.
+     *
+     * @return The current value for the editable state of this waypoint card.
+     */
+    public final boolean getEditable() {
+        return this.editableProperty().getValue();
     }
 
-    public final String getWaypointName() {
-        return waypointNameProperty().getValue();
+    /**
+     * Set the editable state of this waypoint card.
+     *
+     * @param value The new value for the editable state of this waypoint card.
+     */
+    public final void setEditable(boolean value) {
+        this.editableProperty().setValue(value);
     }
 
-    // Coordinates
-    public final SimpleStringProperty coordinatesProperty() {
-        if (coordinates == null) {
-            coordinates = new SimpleStringProperty(this, "coordinates");
-        }
-        return coordinates;
+    /**
+     * @return The observable property for the current content (most specific card for the current waypoint).
+     */
+    public ReadOnlyObjectProperty<WaypointCardBase<?>> contentProperty() {
+        return this.content.getReadOnlyProperty();
     }
 
-    public final void setCoordinates(String value) {
-        coordinatesProperty().setValue(value);
+    /**
+     * Get the content node, this is the most specific card based on the type of the waypoint.
+     *
+     * @return The content node.
+     */
+    public WaypointCardBase<?> getContent() {
+        return this.content.getValue();
     }
 
-    public void updateCoordinates() {
-        final AbstractWayPoint waypoint = getWaypoint();
-        if (waypoint == null) {
-            return;
-        }
-        final Intersection intersection = waypoint.getIntersection();
-        if (intersection == null) {
-            return;
-        }
-        setCoordinates("(" + intersection.getX() + "; " + intersection.getY() + ")");
+    /**
+     * Set a new content node.
+     *
+     * @param content A new content node.
+     */
+    protected void setContent(WaypointCardBase<?> content) {
+        this.content.setValue(content);
     }
 
-    // Editable
-    public final SimpleBooleanProperty readOnlyProperty() {
-        if (readOnly == null) {
-            readOnly = new SimpleBooleanProperty(this, "readOnly", false);
-        }
-        return readOnly;
+    /**
+     * @return The observable property for the current content (most specific card for the current waypoint).
+     */
+    public SimpleListProperty<Node> cornerControlsProperty() {
+        return this.cornerControls;
     }
 
-    public final void setReadOnly(boolean value) {
-        readOnlyProperty().setValue(value);
-    }
-
-    public final boolean getReadOnly() {
-        return readOnly == null ? false : readOnlyProperty().getValue();
-    }
-
-    public void updateWaypointName() {
-        String name;
-        AbstractWayPoint waypoint = getWaypoint();
-        if (waypoint == null) {
-            name = "";
-        } else if (waypoint instanceof Warehouse) {
-            name = "Warehouse";
-        } else {
-            name = "DeliveryAdress #" + waypoint.getIntersection().getId();
-        }
-        setWaypointName(name);
-    }
-
+    /**
+     * Get the content node, this is the most specific card based on the type of the waypoint.
+     *
+     * @return The content node.
+     */
     public ObservableList<Node> getCornerControls() {
-        return cornerControls.getChildren();
+        return this.cornerControlsProperty().getValue();
     }
 
-    public final String getCoordinates() {
-        return coordinatesProperty().getValue();
+    /**
+     * Set a new content node.
+     *
+     * @param content A new content node.
+     */
+    protected void setCornerControls(ObservableList<Node> content) {
+        this.cornerControlsProperty().setValue(content);
+    }
+
+    protected void onWaypointChange() {
+        AbstractWaypoint waypoint = getWaypoint();
+        if (waypoint == null) {
+            this.setContent(null);
+            return;
+        }
+
+        WaypointCardBase<?> newContent;
+
+        if (waypoint instanceof Warehouse) {
+            WarehouseCard node = new WarehouseCard();
+            node.setWaypoint((Warehouse) waypoint);
+            newContent = node;
+        } else if (waypoint instanceof DeliveryAddress) {
+            DeliveryAddressCard node = new DeliveryAddressCard();
+            node.setWaypoint((DeliveryAddress) waypoint);
+            newContent = node;
+        } else {
+            Exception e = new Exception("Unknown concrete waypoint");
+            e.printStackTrace();
+            return;
+        }
+
+        this.setContent(newContent);
+    }
+
+    protected void onContentChange() {
+        root.getChildren().clear();
+        WaypointCardBase<?> newContent = getContent();
+        if (newContent == null) {
+            return;
+        }
+        AnchorPane.setLeftAnchor(newContent, 0.0);
+        AnchorPane.setRightAnchor(newContent, 0.0);
+        this.setCornerControls(newContent.getCornerControls());
+        root.getChildren().add(newContent);
+    }
+
+    protected void onCornerControlsChange(ObservableList<Node> oldValue, ObservableList<Node> newValue) {
+        if (newValue == oldValue) {
+            return;
+        }
+        newValue.clear();
+        newValue.addAll(oldValue);
     }
 }

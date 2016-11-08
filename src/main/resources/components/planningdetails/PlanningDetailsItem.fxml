@@ -6,11 +6,20 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.control.Button?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
-<fx:root fx:id="root" prefHeight="80.0" prefWidth="250.0"
-         stylesheets="/components/planningdetails/planningDetailsItem.css" type="AnchorPane"
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<fx:root fx:id="root" prefHeight="50.0" prefWidth="200.0"
+         stylesheets="/components/planningdetails/PlanningDetailsItem.css" type="AnchorPane"
          xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1">
-    <WaypointCard waypoint="${controller.item.startWaypoint}" readOnly="true" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.bottomAnchor="0">
+  <VBox AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0">
+    <WaypointCard waypoint="${controller.item.startWaypoint}">
       <cornerControls>
+        <Button fx:id="add" graphicTextGap="2.0" mnemonicParsing="false" onAction="#onAddButtonAction" AnchorPane.rightAnchor="32" AnchorPane.topAnchor="0">
+          <graphic>
+            <FontIcon iconLiteral="gmi-add" scaleX="0.75" scaleY="0.75" />
+          </graphic>
+        </Button>
         <Button fx:id="edit" graphicTextGap="2.0" mnemonicParsing="false" onAction="#onEditButtonAction" AnchorPane.rightAnchor="32" AnchorPane.topAnchor="0">
           <graphic>
             <FontIcon iconLiteral="gmi-edit" scaleX="0.75" scaleY="0.75" />
@@ -23,4 +32,12 @@
         </Button>
       </cornerControls>
     </WaypointCard>
+    <AnchorPane>
+      <Label text="Travel: 15min" />
+    </AnchorPane>
+    <AnchorPane>
+      <Label text="Wait: 10min" />
+    </AnchorPane>
+  </VBox>
+
 </fx:root>

@@ -36,15 +36,15 @@ public class BasicTspSolver extends AbstractTspSolver {
 
         // Initialize solver parameters
         this.bestSolutionCost = Integer.MAX_VALUE;
-        this.bestSolution = new AbstractWayPoint[graph.size()];
+        this.bestSolution = new AbstractWaypoint[graph.size()];
         // Initialize unseen nodes
-        ArrayList<AbstractWayPoint> unseen = graph.getNodes();
+        ArrayList<AbstractWaypoint> unseen = graph.getNodes();
         // Initialize seen nodes
-        ArrayList<AbstractWayPoint> seen = new ArrayList<AbstractWayPoint>(graph.size());
+        ArrayList<AbstractWaypoint> seen = new ArrayList<AbstractWaypoint>(graph.size());
         // Initilize map of by node waiting time
-        Map<AbstractWayPoint, Integer> wayPointWaitingTime = new HashMap<AbstractWayPoint,Integer>();
+        Map<AbstractWaypoint, Integer> waypointWaitingTime = new HashMap<AbstractWaypoint,Integer>();
         // Let's say that the starting point is the first warehouse found
-        for (AbstractWayPoint point : unseen) {
+        for (AbstractWaypoint point : unseen) {
             if (point instanceof Warehouse) {
                 startPoint = (Warehouse) point;
                 break;
@@ -54,9 +54,9 @@ public class BasicTspSolver extends AbstractTspSolver {
         unseen.remove(startPoint);
 
         // Get the cost for all routes
-        Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs = new HashMap<>();
+        Map<AbstractWaypoint, Map<AbstractWaypoint, Integer>> costs = new HashMap<>();
         graph.iterator().forEachRemaining((startPoint) -> {
-            HashMap<AbstractWayPoint, Integer> costsFromStartPoint = new HashMap<>();
+            HashMap<AbstractWaypoint, Integer> costsFromStartPoint = new HashMap<>();
             startPoint.getValue().entrySet().forEach((endPoint) -> {
                 costsFromStartPoint.put(endPoint.getKey(), endPoint.getValue().getDuration());
             });
@@ -64,15 +64,11 @@ public class BasicTspSolver extends AbstractTspSolver {
         });
 
         // Get the time needed to deliver each way point
-        Map<AbstractWayPoint, Integer> deliveryDurations = graph.getDeliveryDurations();
+        Map<AbstractWaypoint, Integer> deliveryDurations = graph.getDeliveryDurations();
         // Compute solution
-        branchAndBound(startPoint, unseen, seen, 0, costs, deliveryDurations, wayPointWaitingTime);
+        branchAndBound(startPoint, unseen, seen, 0, costs, deliveryDurations, waypointWaitingTime);
         // Construct Planning based on the previous result
-        List<Route> routes = new ArrayList<>(graph.size());
-        for (int i = 0; i < graph.size(); i++) {
-            routes.add(graph.getRoute(this.bestSolution[i], this.bestSolution[(i + 1) % graph.size()]));
-        }
-        return new Planning(graph.getCityMap(), routes, bestSolutionWaitingTime, bestSolutionCost);
+        return new Planning(graph.getCityMap(), Arrays.asList(this.bestSolution), bestSolutionWaitingTime, bestSolutionCost);
     }
 
     /**
@@ -91,11 +87,11 @@ public class BasicTspSolver extends AbstractTspSolver {
      * @param deliveryDurations
      *            the delivery duration of each node.
      */
-    private void branchAndBound(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen,
-                                ArrayList<AbstractWayPoint> seen, int seenCost,
-                                Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs,
-                                Map<AbstractWayPoint, Integer> deliveryDurations,
-                                Map<AbstractWayPoint, Integer> wayPointWaitingTime) {
+    private void branchAndBound(AbstractWaypoint lastSeenNode, ArrayList<AbstractWaypoint> unseen,
+                                ArrayList<AbstractWaypoint> seen, int seenCost,
+                                Map<AbstractWaypoint, Map<AbstractWaypoint, Integer>> costs,
+                                Map<AbstractWaypoint, Integer> deliveryDurations,
+                                Map<AbstractWaypoint, Integer> waypointWaitingTime) {
         if (unseen.size() == 0) {
             // All nodes have been seen
             // Just complete the circuit...
@@ -104,17 +100,17 @@ public class BasicTspSolver extends AbstractTspSolver {
             if (seenCost < this.bestSolutionCost) {
                 // Indeed it was ! Let's update the previous one
                 seen.toArray(this.bestSolution);
-                bestSolutionWaitingTime = new HashMap<AbstractWayPoint,Integer>(wayPointWaitingTime);
+                bestSolutionWaitingTime = new HashMap<AbstractWaypoint,Integer>(waypointWaitingTime);
                 this.bestSolutionCost = seenCost;
             }
         } //else if the estimation of time left show possible new best solution
         else if (seenCost + this.bound(lastSeenNode, unseen, costs, deliveryDurations,seenCost) < this.bestSolutionCost) {
             // We have a great candidate !
-            Iterator<AbstractWayPoint> it = this.iterator(lastSeenNode, unseen, costs, deliveryDurations,seenCost);
+            Iterator<AbstractWaypoint> it = this.iterator(lastSeenNode, unseen, costs, deliveryDurations,seenCost);
             int i=0;
             int minCost = Integer.MAX_VALUE;
             while (it.hasNext() && i++ < unseen.size()/EXPLORATION_WIDTH_DIVISOR+MIN_EXPLORATION_WIDTH) {
-                AbstractWayPoint nextNode = it.next();
+                AbstractWaypoint nextNode = it.next();
                 seen.add(nextNode);
                 unseen.remove(nextNode);
                 int costRouteAndDelivery = costs.get(lastSeenNode).get(nextNode);
@@ -130,7 +126,7 @@ public class BasicTspSolver extends AbstractTspSolver {
                         //wait until opening of the delivery point
                         int waitingDuration = nextNode.getTimeStart() - arrivalTime;
                         costRouteAndDelivery += waitingDuration;
-                        wayPointWaitingTime.put(nextNode,waitingDuration);
+                        waypointWaitingTime.put(nextNode,waitingDuration);
                     }
                     else{
                         //add a one day cost (longer than the max delivery time)
@@ -138,10 +134,10 @@ public class BasicTspSolver extends AbstractTspSolver {
                     }
                 }
                 costRouteAndDelivery += deliveryDurations.get(nextNode);
-                branchAndBound(nextNode, unseen, seen, seenCost + costRouteAndDelivery, costs, deliveryDurations, wayPointWaitingTime);
+                branchAndBound(nextNode, unseen, seen, seenCost + costRouteAndDelivery, costs, deliveryDurations, waypointWaitingTime);
                 unseen.add(nextNode);
                 seen.remove(nextNode);
-                wayPointWaitingTime.remove(nextNode); //remove the possible waiting time
+                waypointWaitingTime.remove(nextNode); //remove the possible waiting time
             }
         }
     }
@@ -156,9 +152,9 @@ public class BasicTspSolver extends AbstractTspSolver {
      * @return
      */
     @Override
-    protected int bound(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen,
-                        Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs,
-                        Map<AbstractWayPoint, Integer> deliveryDurations,
+    protected int bound(AbstractWaypoint lastSeenNode, ArrayList<AbstractWaypoint> unseen,
+                        Map<AbstractWaypoint, Map<AbstractWaypoint, Integer>> costs,
+                        Map<AbstractWaypoint, Integer> deliveryDurations,
                         int seenCost) {
         // TODO: improve that, or is this enough for this solver ?
         return 0; // The most basic bound
@@ -175,12 +171,12 @@ public class BasicTspSolver extends AbstractTspSolver {
      * @return
      */
     @Override
-    protected Iterator<AbstractWayPoint> iterator(AbstractWayPoint lastSeenNode, ArrayList<AbstractWayPoint> unseen,
-                                                  Map<AbstractWayPoint, Map<AbstractWayPoint, Integer>> costs,
-                                                  Map<AbstractWayPoint, Integer> deliveryDurations,
+    protected Iterator<AbstractWaypoint> iterator(AbstractWaypoint lastSeenNode, ArrayList<AbstractWaypoint> unseen,
+                                                  Map<AbstractWaypoint, Map<AbstractWaypoint, Integer>> costs,
+                                                  Map<AbstractWaypoint, Integer> deliveryDurations,
                                                   int seenCost) {
         // NOTE: for the moment, this just returns a basic iterator,
         // which won't look for the best node to return.
-        return new WayPointIterator(unseen, costs.get(lastSeenNode));
+        return new WaypointIterator(unseen, costs.get(lastSeenNode));
     }
 }
