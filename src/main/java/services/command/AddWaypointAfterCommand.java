@@ -1,35 +1,25 @@
 package services.command;
 
-import models.AbstractWayPoint;
+import models.AbstractWaypoint;
 import models.CityMap;
 import models.Planning;
 
-public class AddWaypointAfterCommand extends AbstractCommand {
+public class AddWaypointAfterCommand extends AddWaypointCommand {
 
-    private AbstractWayPoint waypointToAdd;
-    private AbstractWayPoint previousWaypoint;
-    private Planning planning;
-    private CityMap map;
+    private int index;
 
-    public AddWaypointAfterCommand(AbstractWayPoint waypointToAdd, AbstractWayPoint previousWaypoint, Planning planning, CityMap map) {
-        this.waypointToAdd = waypointToAdd;
-        this.previousWaypoint = previousWaypoint;
-        this.planning = planning;
-        this.map = map;
+    public AddWaypointAfterCommand(AbstractWaypoint waypointToAdd, int index, Planning planning, CityMap map) {
+        super(waypointToAdd, planning, map);
+        this.index = index;
     }
 
     @Override
     public void execute() {
-        this.planning.addWayPoint(this.waypointToAdd, this.previousWaypoint, this.map);
-    }
-
-    @Override
-    public boolean isReversible() {
-        return true;
+        this.planning.addWaypoint(this.waypointToAdd, this.index);
     }
 
     @Override
     public AbstractCommand getReversed() {
-        return new RemoveWayPointCommand(this.waypointToAdd, this.planning, this.map);
+        return new RemoveWaypointAfterCommand(this.waypointToAdd, this.index, this.planning, this.map);
     }
 }

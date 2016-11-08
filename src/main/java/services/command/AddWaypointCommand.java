@@ -6,9 +6,9 @@ import models.Planning;
 
 public class AddWaypointCommand extends AbstractCommand {
 
-    private AbstractWaypoint waypointToAdd;
-    private Planning planning;
-    private CityMap map;
+    protected AbstractWaypoint waypointToAdd;
+    protected Planning planning;
+    protected CityMap map;
 
     public AddWaypointCommand(AbstractWaypoint waypointToAdd, Planning planning, CityMap map) {
         this.waypointToAdd = waypointToAdd;

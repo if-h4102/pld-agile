@@ -6,9 +6,9 @@ import models.Planning;
 
 public class RemoveWaypointCommand extends AbstractCommand {
 
-    private AbstractWaypoint waypointToRemove;
-    private Planning planning;
-    private CityMap map;
+    protected AbstractWaypoint waypointToRemove;
+    protected Planning planning;
+    protected CityMap map;
 
     public RemoveWaypointCommand(AbstractWaypoint waypointToAdd, Planning planning, CityMap map) {
         this.waypointToRemove = waypointToAdd;
