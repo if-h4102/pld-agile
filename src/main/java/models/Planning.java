@@ -217,4 +217,8 @@ public class Planning {
     protected void updateRoutes() {
         this.routes.setValue(FXCollections.observableArrayList(this.computeRoutes()));
     }
+
+    public Warehouse getWarehouse(){
+        return (Warehouse) waypoints.get(0);
+    }
 }
