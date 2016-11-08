@@ -73,6 +73,7 @@ public class ParserTest {
         File cityMapXmlFile = getFile("/services/xml/cityMap/malformedXml.xml");
 
         thrown.expect(ParserMalformedXmlException.class); // No message expected, due to translation problems of the message
+
         parser.getCityMap(cityMapXmlFile);
     }
 
@@ -392,7 +393,7 @@ public class ParserTest {
         File deliveryRequestXmlFile = getFile("/services/xml/deliveryRequest/warehouse/missingAttribute.xml");
 
         thrown.expect(ParserMissingAttributeException.class);
-        thrown.expectMessage("The start planning time is missing");
+        thrown.expectMessage("An attribute is missing to construct the warehouse");
         parser.getDeliveryRequest(deliveryRequestXmlFile, cityMap);
     }
 

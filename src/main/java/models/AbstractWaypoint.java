@@ -8,10 +8,10 @@ public abstract class AbstractWaypoint implements Comparable<AbstractWaypoint> {
     private int timeStart;
     private int timeEnd;
 
-    public AbstractWaypoint(Intersection intersection, int deliveryTimeStart, int deliveryTimeEnd) {
+    public AbstractWaypoint(Intersection intersection, int timeStart, int timeEnd) {
         this.intersection = intersection; // TODO clone to avoid a later modification?
-        this.timeStart = deliveryTimeStart;
-        this.timeEnd = deliveryTimeEnd;
+        this.timeStart = timeStart;
+        this.timeEnd = timeEnd;
     }
 
     public AbstractWaypoint(Intersection intersection) {
