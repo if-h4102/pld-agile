@@ -32,6 +32,10 @@ public class StreetSection {
         return end;
     }
 
+    public int getLength(){
+        return length;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof StreetSection))
