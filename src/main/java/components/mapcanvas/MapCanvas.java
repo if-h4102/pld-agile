@@ -1,6 +1,8 @@
 package components.mapcanvas;
 
 import com.google.java.contract.Ensures;
+import com.google.java.contract.Requires;
+
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -188,7 +190,7 @@ public class MapCanvas extends Canvas {
 
 
     @SuppressWarnings("restriction")
-    @Ensures("getDeliveryRequest() != null")
+    @Requires("getCityMap() != null")
     private void drawCityMap() {
         GraphicsContext gc = getGraphicsContext2D();
         CityMap map = getCityMap();
@@ -209,7 +211,7 @@ public class MapCanvas extends Canvas {
     }
 
     @SuppressWarnings("restriction")
-    @Ensures("getDeliveryRequest() != null")
+    @Requires("getDeliveryRequest() != null")
     private void drawDeliveryRequest() {
         GraphicsContext gc = getGraphicsContext2D();
         DeliveryRequest deliveryRequest = getDeliveryRequest();
@@ -229,7 +231,7 @@ public class MapCanvas extends Canvas {
     }
 
     @SuppressWarnings("restriction")
-    @Ensures("getPlanning() != null")
+    @Requires("getPlanning() != null")
     private void drawPlanning() {
         GraphicsContext gc = getGraphicsContext2D();
 
