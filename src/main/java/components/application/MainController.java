@@ -67,20 +67,21 @@ public class MainController extends BorderPane {
 
         this.setState(new WaitOpenCityMapState());
         this.openDeliveryRequestButton.disableProperty().bind(this.cityMap.isNull());
-        this.computePlanningButton.disableProperty().bind(this.deliveryRequest.isNull());
+        this.computePlanningButton.setDisable(true);
         this.undoButton.disableProperty().bind(this.commandManager.undoableProperty().not());
         this.redoButton.disableProperty().bind(this.commandManager.isRedoable().not());
 
         this.root.addEventHandler(RemoveWaypointAction.TYPE, removeWaypointAction -> {
             Planning planning = this.getPlanning();
             planning.removeWaypoint(removeWaypointAction.getWaypoint());
+            modifyComputePlanningButtonDisabledProperty(true);
         });
 
         this.addEventHandler(IntersectionSelectionEvent.INTERSECTION_SELECTION, this::onIntersectionSelection);
 
         IMapService mapService = () -> {
             CompletableFuture<Intersection> future = new CompletableFuture<>();
-            this.onPromptIntersection(future);
+            this.onPromptIntersection(future); 
             return future;
         };
         this.setMapService(mapService);
@@ -208,5 +209,12 @@ public class MainController extends BorderPane {
 
     public void onRedoButtonAction(ActionEvent actionEvent) {
         commandManager.redo();
+    }
+    
+    // buttons properties modifier
+    public void modifyComputePlanningButtonDisabledProperty(boolean disable) {
+        if (this.computePlanningButton.isDisable() != disable) {
+            this.computePlanningButton.setDisable(disable);
+        }
     }
 }
