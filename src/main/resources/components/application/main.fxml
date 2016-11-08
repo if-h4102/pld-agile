@@ -5,8 +5,8 @@
 <?import javafx.scene.layout.*?>
 <?import components.planningdetails.PlanningDetails?>
 <?import javafx.geometry.Insets?>
-<?import components.citymapdetails.CityMapDetails?>
 <?import components.deliveryrequestdetails.DeliveryRequestDetails?>
+<?import components.informationsarea.InformationArea?>
 <fx:root type="BorderPane" fx:id="root" prefHeight="480.0" prefWidth="640.0"
          stylesheets="/components/application/main.css"
          xmlns="http://javafx.com/javafx/8.0.65"
@@ -88,6 +88,11 @@
               </panes>
             </Accordion>
           </center>
+          <bottom>
+            <InformationArea prefHeight="50.0">
+
+            </InformationArea>
+          </bottom>
         </BorderPane>
       </AnchorPane>
     </SplitPane>
