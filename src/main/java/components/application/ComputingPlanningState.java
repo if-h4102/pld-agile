@@ -4,6 +4,7 @@ package components.application;
 import models.DeliveryGraph;
 import models.DeliveryRequest;
 import models.Planning;
+import services.pdf.planningPrinter;
 import services.tsp.BasicBoundTspSolver;
 import services.tsp.ThreadedTspSolver;
 
@@ -39,6 +40,8 @@ public class ComputingPlanningState extends WaitOpenDeliveryRequestState {
         }
         Planning planning = tspSolver.getBestPlanning();
         mainController.setPlanning(planning);
+
+        planningPrinter.generatePdfFromPlanning(planning,"planning.pdf");
 
         mainController.applyState(new ComputedPlanningState(mainController));
     }
