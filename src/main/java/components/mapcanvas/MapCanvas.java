@@ -86,6 +86,8 @@ public class MapCanvas extends Canvas {
                             && eventY < delivery.getY() + DEFAULT_DELIVERY_SIZE / 2 && eventY > delivery.getY() - DEFAULT_DELIVERY_SIZE / 2) {
                             DeliverySelectionEvent deliver = new DeliverySelectionEvent(delivery, e.getX(), e.getY());
                             fireEvent(deliver);
+                            IntersectionSelectionEvent nullIntersect = new IntersectionSelectionEvent(null, e.getX(), e.getY());
+                            fireEvent(nullIntersect);
                             return;
                         }
                     }
@@ -96,6 +98,8 @@ public class MapCanvas extends Canvas {
                         && eventY < inter.getY() + DEFAULT_INTERSECTION_SIZE / 2 && eventY > inter.getY() - DEFAULT_INTERSECTION_SIZE / 2) {
                         IntersectionSelectionEvent intersect = new IntersectionSelectionEvent(inter, e.getX(), e.getY());
                         fireEvent(intersect);
+                        DeliverySelectionEvent nullDeliver = new DeliverySelectionEvent(null, e.getX(), e.getY());
+                        fireEvent(nullDeliver);
                         return;
                     }
                 }
@@ -238,6 +242,9 @@ public class MapCanvas extends Canvas {
                 gc.strokeLine(section.getStartIntersection().getX(), section.getStartIntersection().getY(),
                     section.getEndIntersection().getX(), section.getEndIntersection().getY());
             }
+        }
+        drawDeliveryRequest();
+        for(Route route : listRoutes){
             gc.setLineWidth(3);
             gc.setStroke(Color.BLACK);
             gc.strokeText("" + number, route.getStartWaypoint().getIntersection().getX(), route.getStartWaypoint().getIntersection().getY());
