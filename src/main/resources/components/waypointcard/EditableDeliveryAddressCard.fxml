@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import components.timefield.TimeField?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<fx:root xmlns:fx="http://javafx.com/fxml/1" fx:id="root" prefHeight="50.0"
+         stylesheets="/components/waypointcard/EditableDeliveryAddressCard.css"
+         prefWidth="200.0"
+         type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.102-ea">
+  <VBox AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+    <Label text="${controller.name}"/>
+    <GridPane AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+      <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+      </columnConstraints>
+      <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+      </rowConstraints>
+      <children>
+        <Label text="${controller.deliveryDuration}" GridPane.columnIndex="0"
+               GridPane.rowIndex="0"/>
+        <Label text="${controller.coordinates}" GridPane.columnIndex="1"
+               GridPane.rowIndex="0"/>
+        <Label text="Delivery duration" GridPane.columnIndex="0"
+               GridPane.rowIndex="1"/>
+        <TimeField fx:id="deliveryDurationField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+      </children>
+    </GridPane>
+    <HBox>
+      <CheckBox fx:id="hasTimeConstraintsCheckBox" />
+      <Label text="Has time constraints" />
+    </HBox>
+    <AnchorPane fx:id="timeConstraints">
+      <GridPane AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"
+                             prefWidth="100.0"/>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"
+                             prefWidth="100.0"/>
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+        </rowConstraints>
+        <children>
+          <Label text="Time constraint start" GridPane.columnIndex="0"
+                 GridPane.rowIndex="0"/>
+          <TimeField fx:id="startTimeField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+          <Label text="Time constraint end" GridPane.columnIndex="0"
+                 GridPane.rowIndex="1"/>
+          <TimeField fx:id="endTimeField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        </children>
+      </GridPane>
+    </AnchorPane>
+    <AnchorPane>
+      <Button fx:id="saveButton" graphicTextGap="2.0" mnemonicParsing="false" onAction="#onSaveButtonAction" AnchorPane.rightAnchor="32" AnchorPane.topAnchor="0">
+        <graphic>
+          <FontIcon iconLiteral="gmi-check" />
+        </graphic>
+      </Button>
+    </AnchorPane>
+  </VBox>
+  <AnchorPane AnchorPane.rightAnchor="8" AnchorPane.topAnchor="8">
+    <HBox alignment="TOP_RIGHT" fx:id="cornerControls">
+    </HBox>
+  </AnchorPane>
+</fx:root>
