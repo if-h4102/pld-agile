@@ -1,6 +1,8 @@
 package components.mapcanvas;
 
 import com.google.java.contract.Ensures;
+import com.google.java.contract.Requires;
+
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -78,12 +80,23 @@ public class MapCanvas extends Canvas {
                 eventY += DEFAULT_OFFSET_Y;
 
                 if(getDeliveryRequest() != null){
+                	Warehouse warehouse = getDeliveryRequest().getWarehouse();
+                	if (eventX < warehouse.getX() + DEFAULT_DELIVERY_SIZE / 2 && eventX > warehouse.getX() - DEFAULT_DELIVERY_SIZE / 2
+                            && eventY < warehouse.getY() + DEFAULT_DELIVERY_SIZE / 2 && eventY > warehouse.getY() - DEFAULT_DELIVERY_SIZE / 2){
+                		WarehouseSelectionEvent deliver = new WarehouseSelectionEvent(warehouse, e.getX(), e.getY());
+                        fireEvent(deliver);
+                        IntersectionSelectionEvent nullIntersect = new IntersectionSelectionEvent(null, e.getX(), e.getY());
+                        fireEvent(nullIntersect);
+                        return;
+                	}
                     listDeliveryAddresses = getDeliveryRequest().getDeliveryAddresses();
                     for(DeliveryAddress delivery : listDeliveryAddresses){
                         if (eventX < delivery.getX() + DEFAULT_DELIVERY_SIZE / 2 && eventX > delivery.getX() - DEFAULT_DELIVERY_SIZE / 2
                             && eventY < delivery.getY() + DEFAULT_DELIVERY_SIZE / 2 && eventY > delivery.getY() - DEFAULT_DELIVERY_SIZE / 2) {
                             DeliverySelectionEvent deliver = new DeliverySelectionEvent(delivery, e.getX(), e.getY());
                             fireEvent(deliver);
+                            IntersectionSelectionEvent nullIntersect = new IntersectionSelectionEvent(null, e.getX(), e.getY());
+                            fireEvent(nullIntersect);
                             return;
                         }
                     }
@@ -94,6 +107,8 @@ public class MapCanvas extends Canvas {
                         && eventY < inter.getY() + DEFAULT_INTERSECTION_SIZE / 2 && eventY > inter.getY() - DEFAULT_INTERSECTION_SIZE / 2) {
                         IntersectionSelectionEvent intersect = new IntersectionSelectionEvent(inter, e.getX(), e.getY());
                         fireEvent(intersect);
+                        DeliverySelectionEvent nullDeliver = new DeliverySelectionEvent(null, e.getX(), e.getY());
+                        fireEvent(nullDeliver);
                         return;
                     }
                 }
@@ -175,7 +190,7 @@ public class MapCanvas extends Canvas {
 
 
     @SuppressWarnings("restriction")
-    @Ensures("getDeliveryRequest() != null")
+    @Requires("getCityMap() != null")
     private void drawCityMap() {
         GraphicsContext gc = getGraphicsContext2D();
         CityMap map = getCityMap();
@@ -196,7 +211,7 @@ public class MapCanvas extends Canvas {
     }
 
     @SuppressWarnings("restriction")
-    @Ensures("getDeliveryRequest() != null")
+    @Requires("getDeliveryRequest() != null")
     private void drawDeliveryRequest() {
         GraphicsContext gc = getGraphicsContext2D();
         DeliveryRequest deliveryRequest = getDeliveryRequest();
@@ -216,13 +231,11 @@ public class MapCanvas extends Canvas {
     }
 
     @SuppressWarnings("restriction")
-    @Ensures("getPlanning() != null")
+    @Requires("getPlanning() != null")
     private void drawPlanning() {
         GraphicsContext gc = getGraphicsContext2D();
 
         Planning planning = getPlanning();
-        // System.out.println(planning.getFullTime());
-        //planning.
 
         Iterable<Route> listRoutes = planning.getRoutes();
 
@@ -236,6 +249,9 @@ public class MapCanvas extends Canvas {
                 gc.strokeLine(section.getStartIntersection().getX(), section.getStartIntersection().getY(),
                     section.getEndIntersection().getX(), section.getEndIntersection().getY());
             }
+        }
+        drawDeliveryRequest();
+        for(Route route : listRoutes){
             gc.setLineWidth(3);
             gc.setStroke(Color.BLACK);
             gc.strokeText("" + number, route.getStartWaypoint().getIntersection().getX(), route.getStartWaypoint().getIntersection().getY());

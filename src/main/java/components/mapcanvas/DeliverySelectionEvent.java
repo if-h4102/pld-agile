@@ -1,15 +1,16 @@
 package components.mapcanvas;
 
 import models.DeliveryAddress;
+import models.Warehouse;
 import javafx.event.Event;
 import javafx.event.EventType;
 import javafx.scene.input.MouseEvent;
 
 public class DeliverySelectionEvent extends Event {
 	public static final EventType<DeliverySelectionEvent> DELIVERY_SELECTION = new EventType<>("DELIVERY_SELECTION");
-	
 	double canvasEventX;
 	double canvasEventY;
+	
 	DeliveryAddress delivery;
 	public DeliverySelectionEvent(DeliveryAddress deliv, double posX, double posY) {
 		super(DELIVERY_SELECTION);

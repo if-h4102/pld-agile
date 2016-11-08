@@ -65,6 +65,8 @@ public class MapScreen extends AnchorPane {
             System.out.println("handler delivery address");
             updateDeliveryTooltip(event);
         });
+        
+        
 
         tooltipDelivery.visibleProperty().bind(activeDelivery.isNotNull());
         tooltip.visibleProperty().bind(activeIntersection.isNotNull());

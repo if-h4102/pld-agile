@@ -65,7 +65,18 @@ package services {
             +AbstractCommand getReversed()
         }
 
-        class RemoveWaypoint extends AbstractCommand {
+        class AddWaypointAfterCommand extends AddWaypointCommand {
+            -index: int
+            +void execute()
+            +AbstractCommand getReversed()
+        }
+
+        class RemoveWaypointAfterCommand extends RemoveWaypointCommand {
+            -index: int
+            +AbstractCommand getReversed()
+        }
+
+        class RemoveWaypointCommand extends AbstractCommand {
             -waypoint: AbstractWaypoint
             -planning: Planning
             -map: CityMap
@@ -80,7 +91,6 @@ package services {
 
     }
 }
-
 
 
 @enduml

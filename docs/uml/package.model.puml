@@ -21,6 +21,7 @@ package model {
         +Intersection getStartIntersection()
         +Intersection getEndIntersection()
         +int getDuration()
+        +int getLength()
     }
 
     class Intersection {
