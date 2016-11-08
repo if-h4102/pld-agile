@@ -33,6 +33,7 @@ public class SelectingIntersectionState extends WaitOpenDeliveryRequestState {
         if (intersection == null) {
             return this;
         }
+        mainController.modifyComputePlanningButtonDisabledProperty(true);
         this.future.complete(intersection);
         return new ComputedPlanningState(this.mainController);
     }
