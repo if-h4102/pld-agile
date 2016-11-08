@@ -12,6 +12,12 @@ import javafx.stage.Stage;
 import javafx.stage.Modality;
 import javafx.scene.layout.StackPane;
 import javafx.geometry.Pos;
+import javafx.geometry.Insets;
+import javafx.scene.control.Button;
+import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 
 public class ExceptionWindow {
 
@@ -34,21 +40,8 @@ public class ExceptionWindow {
             }
         }
         
-        StackPane root = new StackPane();
-        
-        Text text = new Text(displayedMessage);
-        text.setFont(new Font(20));
-        text.setTextAlignment(TextAlignment.CENTER);
-        
-        root.getChildren().addAll(text);
-        root.setAlignment(text, Pos.CENTER);
-        
-        Scene scene = new Scene(root, 400, 200);
-    
-        Stage stage = new Stage();
-        stage.setTitle("Error window."); 
-        stage.setScene(scene); 
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.show();
+        Alert alert = new Alert(AlertType.ERROR, displayedMessage, ButtonType.OK);
+        alert.setTitle("Error window");
+        alert.showAndWait();
     }
 }
