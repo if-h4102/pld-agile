@@ -20,7 +20,8 @@ public class planningPrinter {
     private static final Font chapterFont = FontFactory.getFont(FontFactory.COURIER, 23, Font.BOLD, new CMYKColor(255, 255, 255, 0));
     private static final Font sectionFont = FontFactory.getFont(FontFactory.COURIER, 15, Font.BOLD, new CMYKColor(180, 180, 180, 0));
     private static final Font instructionFont = FontFactory.getFont(FontFactory.COURIER, 10, Font.NORMAL, new CMYKColor(255, 255, 255, 0));
-    private static final float instructionLeftMargin = 10;
+    private static final float instructionLeftMargin = 20;
+    private static final float instructionLeftMarginWOHour = 60;
 
     public static void generatePdfFromPlanning(Planning planning, String pathOfWrotePdfFIle){
 
@@ -107,22 +108,22 @@ public class planningPrinter {
             }
             String instruction = "Follow road "+streetName+" for "+distance+" ("+durationValue/60+" min)";
             Paragraph instructionParagraph = new Paragraph(instruction, instructionFont);
-            instructionParagraph.setIndentationLeft(instructionLeftMargin);
+            instructionParagraph.setIndentationLeft(instructionLeftMarginWOHour);
             section.add(instructionParagraph);
             //update time
             time += durationValue;
         }
         //waiting instruction
-        if(waitingTime>60){ //only display waiting if wait more than one minute
+        if(waitingTime>0){ //only display waiting if wait more than one minute
             int openingTimeValue = route.getEndWaypoint().getTimeStart();
             String openingTime = timeTools.printTime(openingTimeValue);
-            String instruction = "Wait "+openingTime;
+            String instruction = "[" + timeTools.printTime(time) + "] Wait until "+openingTime;
             Paragraph instructionParagraph = new Paragraph(instruction, instructionFont);
             instructionParagraph.setIndentationLeft(instructionLeftMargin);
             section.add(instructionParagraph);
-            //update time
-            time += waitingTime;
         }
+        //update time
+        time += waitingTime;
         //deliver instruction
         {
             String instruction = "[" + timeTools.printTime(time) + "]";
