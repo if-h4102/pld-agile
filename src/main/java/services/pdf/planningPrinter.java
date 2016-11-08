@@ -17,12 +17,12 @@ import models.StreetSection;
  */
 public class planningPrinter {
 
-    public static void generatePdfFromPlanning(Planning planning, String pathOfWritedPdfFIle){
+    public static void generatePdfFromPlanning(Planning planning, String pathOfWrotePdfFIle){
         Font titleFont = FontFactory.getFont(FontFactory.COURIER, 23, Font.BOLD, new CMYKColor(255, 255, 255, 0));
         Document document = new Document();
         try
         {
-            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("Planning.pdf"));
+            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(pathOfWrotePdfFIle));
             document.open();
             Paragraph title = new Paragraph("Planning",titleFont);
             title.setAlignment(Element.ALIGN_CENTER);
