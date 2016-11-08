@@ -1,20 +1,5 @@
 package components.exceptionwindow;
 
-import java.awt.Dialog.ModalityType;
-
-import javafx.application.Application;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
-import javafx.stage.Stage;
-import javafx.stage.Modality;
-import javafx.scene.layout.StackPane;
-import javafx.geometry.Pos;
-import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
