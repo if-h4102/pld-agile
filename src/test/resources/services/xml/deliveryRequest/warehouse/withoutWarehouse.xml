@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<demandeDeLivraisons>
+    <!-- The warehouse has been suppressed -->
+    <livraison adresse="0" duree="100"/>
+    <livraison adresse="3" duree="250"/>
+</demandeDeLivraisons>

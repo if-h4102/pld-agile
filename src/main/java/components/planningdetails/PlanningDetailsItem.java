@@ -1,22 +1,24 @@
 package components.planningdetails;
 
+import components.events.AddWaypointAction;
+import components.events.RemoveWaypointAction;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.fxml.FXML;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import models.AbstractWaypoint;
+import models.Planning;
 import models.Route;
 
 import java.io.IOException;
 
-class PlanningDetailsItem extends AnchorPane {
-    private static final Route DEFAULT_ROUTE = null;
-    @FXML
-    protected Label content;
+public class PlanningDetailsItem extends AnchorPane {
+    private final SimpleObjectProperty<Route> item = new SimpleObjectProperty<>(this, "item", null);
+    private final SimpleObjectProperty<Planning> planning = new SimpleObjectProperty<>(this, "planning", null);
+    private final SimpleIntegerProperty index = new SimpleIntegerProperty(this, "index", 0);
 
-    private SimpleObjectProperty<Route> route;
-
-    PlanningDetailsItem() {
+    public PlanningDetailsItem() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/components/planningdetails/PlanningDetailsItem.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -26,29 +28,70 @@ class PlanningDetailsItem extends AnchorPane {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
-
-        routeProperty().addListener(event -> content.setText(
-            "Duration: " + getRoute().getDuration() + ", Street Sections: " + getRoute().getStreetSections().size()
-            + ", Start: (" + getRoute().getStartWaypoint().getIntersection().getX()
-            + ", " + getRoute().getStartWaypoint().getIntersection().getY()
-            + "), End: (" + getRoute().getEndWaypoint().getIntersection().getX()
-            + ", " + getRoute().getEndWaypoint().getIntersection().getY()
-            + ")"
-        ));
     }
 
-    public final SimpleObjectProperty<Route> routeProperty() {
-        if (route == null) {
-            route = new SimpleObjectProperty<>(this, "route", DEFAULT_ROUTE);
+    /**
+     * @return The observable property for the route displayed by this item.
+     */
+    public final SimpleObjectProperty<Route> itemProperty() {
+        return this.item;
+    }
+
+    public final void setItem(Route value) {
+        this.itemProperty().setValue(value);
+    }
+
+    public final Route getItem() {
+        return this.itemProperty().getValue();
+    }
+
+    /**
+     * @return The observable property for the planning containing the currently
+     * displayed item.
+     */
+    public final SimpleObjectProperty<Planning> planningProperty() {
+        return this.planning;
+    }
+
+    public final void setPlanning(Planning value) {
+        this.planningProperty().setValue(value);
+    }
+
+    public final Planning getPlanning() {
+        return this.planningProperty().getValue();
+    }
+
+    // Index
+    public final SimpleIntegerProperty indexProperty() {
+        return this.index;
+    }
+
+    public final void setIndex(int value) {
+        this.indexProperty().setValue(value);
+    }
+
+    public final int getIndex() {
+        return this.indexProperty().getValue();
+    }
+
+    public void onRemoveButtonAction(ActionEvent actionEvent) {
+        Route item = this.getItem();
+        if (item == null) {
+            return;
         }
-        return route;
+        AbstractWaypoint startWaypoint = item.getStartWaypoint();
+        if (startWaypoint == null) {
+            return;
+        }
+        fireEvent(new RemoveWaypointAction(startWaypoint));
     }
 
-    public final void setRoute(Route value) {
-        routeProperty().setValue(value);
+    public void onEditButtonAction(ActionEvent actionEvent) {
+        System.out.println("Edit waypoint ...");
     }
 
-    public final Route getRoute() {
-        return route == null ? DEFAULT_ROUTE : routeProperty().getValue();
+    public void onAddButtonAction(ActionEvent actionEvent) {
+        fireEvent(new AddWaypointAction(this.getIndex() + 1));
+        System.out.println("Add waypoint ...");
     }
 }

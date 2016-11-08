@@ -1,9 +1,14 @@
 package components.application;
 
+import components.events.AddWaypointAction;
+import components.events.RemoveWaypointAction;
+import components.mapcanvas.IntersectionSelectionEvent;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableObjectValue;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,21 +17,41 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import models.CityMap;
 import models.DeliveryRequest;
+import models.Intersection;
 import models.Planning;
+import services.command.CommandManager;
+import services.map.IMapService;
 import services.xml.Parser;
 
 import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.concurrent.CompletableFuture;
 
 
 public class MainController extends BorderPane {
+    @FXML
+    private BorderPane root;
+    @FXML
+    private Button openCityMapButton;
+    @FXML
+    private Button openDeliveryRequestButton;
+    @FXML
+    private Button computePlanningButton;
+    @FXML
+    private Button undoButton;
+    @FXML
+    private Button redoButton;
     final private ReadOnlyObjectWrapper<MainControllerState> state = new ReadOnlyObjectWrapper<>();
     final private SimpleObjectProperty<CityMap> cityMap = new SimpleObjectProperty<>();
     final private SimpleObjectProperty<DeliveryRequest> deliveryRequest = new SimpleObjectProperty<>();
     final private SimpleObjectProperty<Planning> planning = new SimpleObjectProperty<>();
-    final private Parser parserService = new Parser();
+    final private SimpleListProperty<Intersection> intersections = new SimpleListProperty<>(FXCollections.observableArrayList());
     final private SimpleDoubleProperty mapZoom = new SimpleDoubleProperty(1.0);
+
+    final private Parser parserService = new Parser();
+    final private CommandManager commandManager = new CommandManager();
+    final private SimpleObjectProperty<IMapService> mapService = new SimpleObjectProperty<>(this, "mapService", null);
 
     public MainController() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/components/application/main.fxml"));
@@ -43,16 +68,23 @@ public class MainController extends BorderPane {
         this.setState(new WaitOpenCityMapState());
         this.openDeliveryRequestButton.disableProperty().bind(this.cityMap.isNull());
         this.computePlanningButton.disableProperty().bind(this.deliveryRequest.isNull());
-    }
+        this.undoButton.disableProperty().bind(this.commandManager.undoableProperty().not());
+        this.redoButton.disableProperty().bind(this.commandManager.isRedoable().not());
 
-    @FXML
-    private BorderPane root;
-    @FXML
-    private Button openCityMapButton;
-    @FXML
-    private Button openDeliveryRequestButton;
-    @FXML
-    private Button computePlanningButton;
+        this.root.addEventHandler(RemoveWaypointAction.TYPE, removeWaypointAction -> {
+            Planning planning = this.getPlanning();
+            planning.removeWaypoint(removeWaypointAction.getWaypoint());
+        });
+
+        this.addEventHandler(IntersectionSelectionEvent.INTERSECTION_SELECTION, this::onIntersectionSelection);
+
+        IMapService mapService = () -> {
+            CompletableFuture<Intersection> future = new CompletableFuture<>();
+            this.onPromptIntersection(future);
+            return future;
+        };
+        this.setMapService(mapService);
+    }
 
     protected Parent getRoot() {
         return this.root;
@@ -126,14 +158,27 @@ public class MainController extends BorderPane {
         this.state.setValue(state);
     }
 
-    private void applyState(MainControllerState nextState) {
+    // MapService
+    public SimpleObjectProperty<IMapService> mapServiceProperty() {
+        return this.mapService;
+    }
+
+    public IMapService getMapService() {
+        return this.mapServiceProperty().getValue();
+    }
+
+    public void setMapService(IMapService value) {
+        this.mapServiceProperty().setValue(value);
+    }
+
+    protected void applyState(MainControllerState nextState) {
         MainControllerState currentState = this.getState();
         if (currentState == nextState) {
             return;
         }
         currentState.leaveState(this);
-        nextState.enterState(this);
         this.setState(nextState);
+        nextState.enterState(this);
     }
 
     // handlers
@@ -147,5 +192,21 @@ public class MainController extends BorderPane {
 
     public void onComputePlanningButtonAction(ActionEvent actionEvent) {
         this.applyState(this.getState().onComputePlanningButtonAction(this));
+    }
+
+    public void onPromptIntersection(CompletableFuture<Intersection> future) {
+        this.applyState(this.getState().onPromptIntersection(this, future));
+    }
+
+    public void onIntersectionSelection(IntersectionSelectionEvent event) {
+        this.applyState(this.getState().onIntersectionSelection(this, event));
+    }
+
+    public void onUndoButtonAction(ActionEvent actionEvent) {
+        commandManager.undo();
+    }
+
+    public void onRedoButtonAction(ActionEvent actionEvent) {
+        commandManager.redo();
     }
 }

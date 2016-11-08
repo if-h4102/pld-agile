@@ -1,22 +1,21 @@
 package models;
 
-public class DeliveryAddress extends AbstractWayPoint {
-
+public class DeliveryAddress extends AbstractWaypoint {
     final private int deliveryDuration;
-
-    @Override
-    public int getDuration() {
-        return this.deliveryDuration;
-    }
 
     public DeliveryAddress(Intersection intersection, int deliveryDuration) {
         super(intersection);
         this.deliveryDuration = deliveryDuration;
     }
 
-    @Deprecated
-    public int getDeliveryDuration() {
-        return deliveryDuration;
+    public DeliveryAddress(Intersection intersection, int deliveryDuration, int deliveryTimeStart, int deliveryTimeEnd) {
+        super(intersection, deliveryTimeStart, deliveryTimeEnd);
+        this.deliveryDuration = deliveryDuration;
+    }
+
+    @Override
+    public int getDuration() {
+        return this.deliveryDuration;
     }
 
     @Override
@@ -24,13 +23,11 @@ public class DeliveryAddress extends AbstractWayPoint {
         if (!(obj instanceof DeliveryAddress))
             return false;
 
-        DeliveryAddress other = (DeliveryAddress) obj;
-        return this.deliveryDuration == other.deliveryDuration && super.equals(other);
+        return super.equals(obj);
     }
 
     @Override
     public String toString() {
-        //return "DeliveryAddress [intersection=" + intersection + ", deliveryDuration=" + deliveryDuration + "]";
         return "" + getId();
     }
 }

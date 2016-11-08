@@ -49,13 +49,17 @@ public class CityMap {
         streetSections.put(streetSection.getStartIntersection().getId(), streetSectionsFromStartIntersection);
     }
 
+    public Route shortestPath(AbstractWaypoint startWaypoint, AbstractWaypoint endWaypoint) {
+        return this.shortestPath(startWaypoint, Collections.singletonList(endWaypoint)).get(0);
+    }
+
     // TODO Complexity to improve by using a min-heap for the greys intersections
-    @Requires({"startWayPoint != null", "endWayPoints != null",
-        "intersections.containsValue(startWayPoint.getIntersection())"})
-    protected List<Route> shortestPath(AbstractWayPoint startWayPoint, List<AbstractWayPoint> endWayPoints) {
+    @Requires({"startWaypoint != null", "endWaypoints != null",
+        "intersections.containsValue(startWaypoint.getIntersection())"})
+    protected List<Route> shortestPath(AbstractWaypoint startWaypoint, List<AbstractWaypoint> endWaypoints) {
         Map<Integer, Integer> index = new TreeMap<Integer, Integer>();
         int counter = 0;
-        for(Map.Entry<Integer,Intersection> entry : intersections.entrySet()) {
+        for (Map.Entry<Integer, Intersection> entry : intersections.entrySet()) {
             index.put(entry.getKey(), counter++);
         }
 
@@ -65,12 +69,12 @@ public class CityMap {
         List<Intersection> greys = new LinkedList<Intersection>();
         Map<Integer, Intersection> whites = new TreeMap<Integer, Intersection>(intersections);
 
-        whites.remove(startWayPoint.getId());
-        greys.add(startWayPoint.getIntersection());
+        whites.remove(startWaypoint.getId());
+        greys.add(startWaypoint.getIntersection());
         for (int i = 0; i < durations.length; i++) {
             durations[i] = Integer.MAX_VALUE;
         }
-        durations[index.get(startWayPoint.getId())] = 0;
+        durations[index.get(startWaypoint.getId())] = 0;
 
         while (greys.size() != 0) {
             Intersection minimalGreyIntersection = getMinimalGreyIntersection(index, greys, durations);
@@ -88,7 +92,7 @@ public class CityMap {
             blacks.put(minimalGreyIntersection.getId(), minimalGreyIntersection);
         }
 
-        return computeReturn(index, predecessors, startWayPoint, endWayPoints);
+        return computeReturn(index, predecessors, startWaypoint, endWaypoints);
     }
 
     // TODO Improve complexity
@@ -124,22 +128,22 @@ public class CityMap {
         }
     }
 
-    @Requires({"endWayPoints != null", "startWayPoint != null"})
-    private List<Route> computeReturn(Map<Integer, Integer> index, Intersection[] predecessors, AbstractWayPoint startWayPoint, List<AbstractWayPoint> endWayPoints) {
+    @Requires({"endWaypoints != null", "startWaypoint != null"})
+    private List<Route> computeReturn(Map<Integer, Integer> index, Intersection[] predecessors, AbstractWaypoint startWaypoint, List<AbstractWaypoint> endWaypoints) {
         List<Route> result = new ArrayList<Route>();
-        for (AbstractWayPoint endWayPoint : endWayPoints) {
-            List<StreetSection> streetSections = new LinkedList<StreetSection>();
+        for (AbstractWaypoint endWaypoint : endWaypoints) {
+            List<StreetSection> streetSectionsInCurrentRoute = new LinkedList<StreetSection>();
 
-            Intersection currentIntersection = endWayPoint.getIntersection();
+            Intersection currentIntersection = endWaypoint.getIntersection();
             Intersection precedentIntersection = predecessors[index.get(currentIntersection.getId())];
 
-            while(precedentIntersection != null) {
-                streetSections.add(0, getStreetSection(precedentIntersection, currentIntersection));
+            while (precedentIntersection != null) {
+                streetSectionsInCurrentRoute.add(0, getStreetSection(precedentIntersection, currentIntersection));
                 currentIntersection = precedentIntersection;
                 precedentIntersection = predecessors[index.get(currentIntersection.getId())];
             }
 
-            result.add(new Route(startWayPoint, endWayPoint, streetSections));
+            result.add(new Route(startWaypoint, endWaypoint, streetSectionsInCurrentRoute));
         }
         return result;
     }
@@ -157,26 +161,32 @@ public class CityMap {
         return neighbourIntersections;
     }
 
-    @Requires({"request != null", "request.getWareHouse() != null", "request.getDeliveryAddresses() != null"})
+    @Requires({"request != null", "request.getWarehouse() != null", "request.getDeliveryAddresses() != null"})
     public DeliveryGraph computeDeliveryGraph(DeliveryRequest request) {
-        List<AbstractWayPoint> pointsContainedInRequest = new LinkedList<AbstractWayPoint>();
-        pointsContainedInRequest.add(request.getWareHouse());
+        List<AbstractWaypoint> pointsContainedInRequest = new LinkedList<AbstractWaypoint>();
+        pointsContainedInRequest.add(request.getWarehouse());
 
         Iterable<DeliveryAddress> adressContainedInRequest = request.getDeliveryAddresses();
         for (DeliveryAddress adress : adressContainedInRequest) {
             pointsContainedInRequest.add(adress);
         }
 
-        Map<AbstractWayPoint, Map<AbstractWayPoint, Route>> mappedRoutes = new TreeMap<AbstractWayPoint, Map<AbstractWayPoint, Route>>();
-        for (AbstractWayPoint startPoint : pointsContainedInRequest) {
-            Map<AbstractWayPoint, Route> routesFromGivenStartPoint = new TreeMap<AbstractWayPoint, Route>();
+        Map<AbstractWaypoint, Map<AbstractWaypoint, Route>> mappedRoutes = new TreeMap<AbstractWaypoint, Map<AbstractWaypoint, Route>>();
+        for (int i = 0; i < pointsContainedInRequest.size(); i++) {
+            //always get first element as it will be deleted and pushed back at the end of the list
+            AbstractWaypoint startPoint = pointsContainedInRequest.get(0);
+            Map<AbstractWaypoint, Route> routesFromGivenStartPoint = new TreeMap<AbstractWaypoint, Route>();
+            //remove start point from list to prevent zero point route
+            pointsContainedInRequest.remove(0);//remove startPoint from the list
             List<Route> shortestPathRoutes = shortestPath(startPoint, pointsContainedInRequest);
+            pointsContainedInRequest.add(startPoint);//add startPoint back to the list (at the end)
+
             for (Route route : shortestPathRoutes) {
                 routesFromGivenStartPoint.put(route.getEndWaypoint(), route);
             }
             mappedRoutes.put(startPoint, routesFromGivenStartPoint);
         }
-        return new DeliveryGraph(mappedRoutes);
+        return new DeliveryGraph(request.getCityMap(), mappedRoutes);
     }
 
     public List<Intersection> getIntersections() {
@@ -205,6 +215,10 @@ public class CityMap {
     @Requires({"intersections.containsKey(idIntersection)"})
     public Intersection getIntersection(int idIntersection) {
         return intersections.get(idIntersection);
+    }
+
+    public boolean isIntersectionInCityMap(int idIntersection) {
+        return intersections.containsKey(idIntersection);
     }
 
     @Requires({"intersections.containsValue(startIntersection)", "intersections.containsValue(endIntersection)"})

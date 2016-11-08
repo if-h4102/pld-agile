@@ -1,0 +1,35 @@
+DeliveryAddressCard {
+    -fx-background-color: #ffffff;
+    -fx-border-radius: 2px;
+    -fx-text-fill: rgba(0, 0, 0, 0.87);
+
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, .2), 3, 0, 0, 1);
+}
+
+#remove, #edit, #add {
+    -fx-background-color: transparent;
+    -fx-padding: 0 0 0 0;
+    -fx-effect: none;
+    -fx-border: none;
+    -fx-pref-width: 32px;
+    -fx-pref-height: 32px;
+    visibility: hidden;
+    -fx-border-radius: 2px;
+}
+
+#remove FontIcon, #edit FontIcon, #add FontIcon {
+    -fx-icon-size: 32px;
+    -fx-icon-color: rgba(0, 0, 0, .5);
+}
+
+DeliveryAddressCard:hover #remove, DeliveryAddressCard:hover #edit, DeliveryAddressCard:hover #add {
+    visibility: visible;
+}
+
+#remove:hover, #edit:hover, #add:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.2);
+}
+
+#remove:hover FontIcon, #edit:hover FontIcon, #add:hover FontIcon {
+    -fx-icon-color: rgba(0, 0, 0, .8);
+}

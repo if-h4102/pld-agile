@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<demandeDeLivraisons>
+    <!-- The start delivery time of the warehouse has been modified -->
+    <entrepot adresse="2" heureDepart="25:0:0"/>
+    <livraison adresse="0" duree="100"/>
+    <livraison adresse="3" duree="250"/>
+</demandeDeLivraisons>

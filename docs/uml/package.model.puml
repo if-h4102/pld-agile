@@ -2,7 +2,7 @@
 
 package model {
     class CityMap {
-       #List<Route> shortestPath(startWayPoint: AbstractWayPoint, endWayPoints: List<AbstractWayPoint>)
+       #List<Route> shortestPath(startWaypoint: AbstractWaypoint, endWaypoints: List<AbstractWaypoint>)
        +DeliveryGraph computeDeliveryGraph(request: DeliveryRequest)
        +List<Intersection> getIntersections()
        +List<StreetSection> getStreetSections()
@@ -32,12 +32,16 @@ package model {
         #int getId()
     }
 
-    abstract class AbstractWayPoint {
-        +{abstract} int getDuration()
-        +Intersection getIntersection()
-        +int getX()
-        +int getY()
-        #int getId()
+    abstract class AbstractWaypoint {
+    	-deliveryTimeStart: int
+    	-deliveryTimeEnd: int
+    	+{abstract} int getDuration()
+    	+int getTimeStart()
+    	+int getTimeEnd()
+    	+Intersection getIntersection()
+    	+int getX()
+    	+int getY()
+    	#int getId()
     }
 
     class DeliveryAddress {
@@ -54,14 +58,16 @@ package model {
         -startTime: int
         +void addDeliveryAddress(address: DeliveryAddress)
         +void removeDeliveryAddress(address: DeliveryAddress)
+        +Warehouse getWarehouse()
+        +List<DeliveryAddress> getDeliveryAddresses()
     }
 
     class Planning {
         +int getFullTime()
         +int getRoutes()
-        +Planning addWayPoint(point: AbstractWayPoint, map: CityMap)
-        +Planning addWayPoint(point: AbstractWayPoint, afterPoint: AbstractWayPoint, map: CityMap)
-        +Planning removeWayPoint(point: AbstractWayPoint, map: CityMap)
+        +Planning addWaypoint(point: AbstractWaypoint, map: CityMap)
+        +Planning addWaypoint(point: AbstractWaypoint, afterPoint: AbstractWaypoint, map: CityMap)
+        +Planning removeWaypoint(point: AbstractWaypoint, map: CityMap)
     }
 
     class Route {
@@ -73,20 +79,18 @@ package model {
 
     CityMap o-- StreetSection
     CityMap o-- Intersection
-    AbstractWayPoint --> Intersection
+    AbstractWaypoint --> Intersection
     StreetSection --> Intersection : end
     StreetSection --> Intersection : start
     Route o-- StreetSection
-    Route --> AbstractWayPoint : end
-    Route --> AbstractWayPoint : start
-    AbstractWayPoint <|-- DeliveryAddress
-    AbstractWayPoint <|-- Warehouse
+    Route --> AbstractWaypoint : end
+    Route --> AbstractWaypoint : start
+    AbstractWaypoint <|-- DeliveryAddress
+    AbstractWaypoint <|-- Warehouse
     DeliveryRequest o-- DeliveryAddress
     DeliveryRequest -left-> Warehouse : warehouse
     DeliveryGraph o-- Route : routes
     Planning o-- Route
 }
-
-
 
 @enduml

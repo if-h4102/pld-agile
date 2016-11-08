@@ -1,27 +1,56 @@
 package components.application;
 
 
-import models.CityMap;
 import models.DeliveryGraph;
 import models.DeliveryRequest;
 import models.Planning;
-import services.tsp.AbstractTspSolver;
-import services.tsp.BasicTspSolver;
+import services.tsp.BasicBoundTspSolver;
+import services.tsp.ThreadedTspSolver;
 
 public class ComputingPlanningState extends WaitOpenDeliveryRequestState {
+    final private MainController mainController;
+    private Thread solverThread;
+    private long beforeDijkstraTime;
+    private long beforeTspTime;
+    private long completionTime;
+
+    ComputingPlanningState(MainController mainController) {
+        this.mainController = mainController;
+    }
+
+
     public void enterState(MainController mainController) {
-        System.out.println("Computing...");
-        AbstractTspSolver solver = new BasicTspSolver();
-        DeliveryRequest dg = mainController.getDeliveryRequest();
-        CityMap cm = mainController.getCityMap();
-        DeliveryGraph deliveryGraph = cm.computeDeliveryGraph(dg);
-        Planning planning = solver.solve(deliveryGraph);
-        System.out.println(planning);
+        DeliveryRequest deliveryRequest = mainController.getDeliveryRequest();
+
+        this.beforeDijkstraTime = System.nanoTime();
+        DeliveryGraph deliveryGraph = deliveryRequest.computeDeliveryGraph();
+
+        this.beforeTspTime = System.nanoTime();
+        ThreadedTspSolver tspSolver = new BasicBoundTspSolver();
+        tspSolver.setDeliveryGraph(deliveryGraph);
+        this.solverThread = new Thread(tspSolver);
+        this.solverThread.start();
+
+        try {
+            this.solverThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Planning planning = tspSolver.getBestPlanning();
         mainController.setPlanning(planning);
-        System.out.println("Computed");
+        mainController.applyState(new ComputedPlanningState(mainController));
     }
 
     public void leaveState(MainController mainController) {
+        this.completionTime = System.nanoTime();
+        long fullDuration = (this.completionTime - this.beforeDijkstraTime) / 1000000;
+        long tspDuration = (this.completionTime - this.beforeTspTime) / 1000000;
+        long dijkstraDuration = (this.beforeTspTime - this.beforeDijkstraTime) / 1000000;
+        System.out.println("Computed in " + (fullDuration) + " ms (tsp: " + (tspDuration) + " ms, dijktra: " + (dijkstraDuration) + " ms)");
+    }
 
+    public MainControllerState onComputePlanningButtonAction(MainController mainController) {
+        System.out.println("Computing");
+        return this;
     }
 }

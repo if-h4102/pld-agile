@@ -6,10 +6,10 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.junit.Test;
+
 import static org.junit.Assert.assertTrue;
 
 public class CityMapTest {
-
     @Test
     public void deepEqualsTest() {
         ArrayList<Intersection> baseI = new ArrayList<Intersection>();
@@ -76,14 +76,14 @@ public class CityMapTest {
         modifiedStreetSectionI.add(new Intersection(3, 1, 9));
         ArrayList<StreetSection> modifiedStreetSectionSS = new ArrayList<StreetSection>();
         // The first two streetSection have been modified
-        modifiedStreetSectionSS.add(new StreetSection(255, 23, "h2", modifiedStreetSectionI.get(0), modifiedStreetSectionI.get(1)));
-        modifiedStreetSectionSS.add(new StreetSection(255, 21, "h2", modifiedStreetSectionI.get(1), modifiedStreetSectionI.get(0)));
+        modifiedStreetSectionSS.add(new StreetSection(156, 23, "h0", baseI.get(2), baseI.get(3)));
+        modifiedStreetSectionSS.add(new StreetSection(156, 21, "h0", baseI.get(3), baseI.get(2)));
         modifiedStreetSectionSS.add(new StreetSection(125, 42, "h0", modifiedStreetSectionI.get(1), modifiedStreetSectionI.get(2)));
         modifiedStreetSectionSS.add(new StreetSection(125, 35, "h0", modifiedStreetSectionI.get(2), modifiedStreetSectionI.get(1)));
         modifiedStreetSectionSS.add(new StreetSection(431, 24, "h1", modifiedStreetSectionI.get(1), modifiedStreetSectionI.get(3)));
         modifiedStreetSectionSS.add(new StreetSection(431, 34, "h1", modifiedStreetSectionI.get(3), modifiedStreetSectionI.get(1)));
         CityMap modifiedStreetSection = new CityMap(modifiedStreetSectionI, modifiedStreetSectionSS);
-        
+
         ArrayList<Intersection> moreStreetSectionI = new ArrayList<Intersection>();
         moreStreetSectionI.add(new Intersection(0, 1, 5));
         moreStreetSectionI.add(new Intersection(1, 4, 3));
@@ -108,32 +108,32 @@ public class CityMapTest {
         assertTrue(!base.equals(modifiedStreetSection));
         assertTrue(!base.equals(moreStreetSection));
     }
-    
+
     @Test
     public void computeDeliveryGraphTest() {
         List<Intersection> intersections = new ArrayList<Intersection>();
-        Intersection intersection0 = new Intersection(52,1,2);
-        Intersection intersection1 = new Intersection(133,2,3);
-        Intersection intersection2 = new Intersection(259,4,3);
-        Intersection intersection3 = new Intersection(123,4,1);
-        Intersection intersection4 = new Intersection(925,2,1);
+        Intersection intersection0 = new Intersection(52, 1, 2);
+        Intersection intersection1 = new Intersection(133, 2, 3);
+        Intersection intersection2 = new Intersection(259, 4, 3);
+        Intersection intersection3 = new Intersection(123, 4, 1);
+        Intersection intersection4 = new Intersection(925, 2, 1);
         intersections.add(intersection0);
         intersections.add(intersection1);
         intersections.add(intersection2);
         intersections.add(intersection3);
         intersections.add(intersection4);
-        
+
         List<StreetSection> streetSections = new ArrayList<StreetSection>();
-        StreetSection streetSection01 = new StreetSection(3,1,"h0",intersection0, intersection1);
-        StreetSection streetSection04 = new StreetSection(5,1,"h1",intersection0, intersection4);
-        StreetSection streetSection12 = new StreetSection(6,1,"h2",intersection1, intersection2);
-        StreetSection streetSection14 = new StreetSection(1,1,"h3",intersection1, intersection4);
-        StreetSection streetSection23 = new StreetSection(2,1,"h4",intersection2, intersection3);
-        StreetSection streetSection30 = new StreetSection(3,1,"v0",intersection3, intersection0);
-        StreetSection streetSection32 = new StreetSection(7,1,"v1",intersection3, intersection2);
-        StreetSection streetSection41 = new StreetSection(1,1,"v2",intersection4, intersection1);
-        StreetSection streetSection42 = new StreetSection(3,1,"v3",intersection4, intersection2);
-        StreetSection streetSection43 = new StreetSection(6,1,"v4",intersection4, intersection3);
+        StreetSection streetSection01 = new StreetSection(3, 1, "h0", intersection0, intersection1);
+        StreetSection streetSection04 = new StreetSection(5, 1, "h1", intersection0, intersection4);
+        StreetSection streetSection12 = new StreetSection(6, 1, "h2", intersection1, intersection2);
+        StreetSection streetSection14 = new StreetSection(1, 1, "h3", intersection1, intersection4);
+        StreetSection streetSection23 = new StreetSection(2, 1, "h4", intersection2, intersection3);
+        StreetSection streetSection30 = new StreetSection(3, 1, "v0", intersection3, intersection0);
+        StreetSection streetSection32 = new StreetSection(7, 1, "v1", intersection3, intersection2);
+        StreetSection streetSection41 = new StreetSection(1, 1, "v2", intersection4, intersection1);
+        StreetSection streetSection42 = new StreetSection(3, 1, "v3", intersection4, intersection2);
+        StreetSection streetSection43 = new StreetSection(6, 1, "v4", intersection4, intersection3);
         streetSections.add(streetSection01);
         streetSections.add(streetSection04);
         streetSections.add(streetSection12);
@@ -144,112 +144,111 @@ public class CityMapTest {
         streetSections.add(streetSection41);
         streetSections.add(streetSection42);
         streetSections.add(streetSection43);
-        
-        CityMap cityMap = new CityMap(intersections,streetSections);
-        
+
+        CityMap cityMap = new CityMap(intersections, streetSections);
+
         Warehouse warehouse = new Warehouse(intersection0);
 
         Set<DeliveryAddress> deliveryAdress = new TreeSet<DeliveryAddress>();
-        DeliveryAddress deliveryAdress0 = new DeliveryAddress(intersection1,5);
-        DeliveryAddress deliveryAdress1 = new DeliveryAddress(intersection2,5);
-        DeliveryAddress deliveryAdress2 = new DeliveryAddress(intersection4,5);
+        DeliveryAddress deliveryAdress0 = new DeliveryAddress(intersection1, 5);
+        DeliveryAddress deliveryAdress1 = new DeliveryAddress(intersection2, 5);
+        DeliveryAddress deliveryAdress2 = new DeliveryAddress(intersection4, 5);
         deliveryAdress.add(deliveryAdress0);
         deliveryAdress.add(deliveryAdress1);
         deliveryAdress.add(deliveryAdress2);
-        
-        DeliveryRequest request = new DeliveryRequest(warehouse, deliveryAdress, 8);
-        
+
+        DeliveryRequest request = new DeliveryRequest(cityMap, warehouse, deliveryAdress, 8);
+
         DeliveryGraph deliveryGraph = cityMap.computeDeliveryGraph(request);
-        
+
         Route deliveryGraphRoute;
         Route expectedRoute;
         List<StreetSection> expectedRouteStreetSections = new ArrayList<StreetSection>();
-        
+
         deliveryGraphRoute = deliveryGraph.getRoute(warehouse, deliveryAdress0);
         expectedRouteStreetSections.add(streetSection01);
-        expectedRoute = new Route(warehouse,deliveryAdress0,expectedRouteStreetSections);
+        expectedRoute = new Route(warehouse, deliveryAdress0, expectedRouteStreetSections);
         assertTrue(deliveryGraphRoute.equals(expectedRoute));
-        
+
         expectedRouteStreetSections.clear();
         deliveryGraphRoute = deliveryGraph.getRoute(warehouse, deliveryAdress1);
         expectedRouteStreetSections.add(streetSection01);
         expectedRouteStreetSections.add(streetSection14);
         expectedRouteStreetSections.add(streetSection42);
-        expectedRoute = new Route(warehouse,deliveryAdress1,expectedRouteStreetSections);
+        expectedRoute = new Route(warehouse, deliveryAdress1, expectedRouteStreetSections);
         assertTrue(deliveryGraphRoute.equals(expectedRoute));
-        
+
         expectedRouteStreetSections.clear();
         deliveryGraphRoute = deliveryGraph.getRoute(warehouse, deliveryAdress2);
         expectedRouteStreetSections.add(streetSection01);
         expectedRouteStreetSections.add(streetSection14);
-        expectedRoute = new Route(warehouse,deliveryAdress2,expectedRouteStreetSections);
+        expectedRoute = new Route(warehouse, deliveryAdress2, expectedRouteStreetSections);
         assertTrue(deliveryGraphRoute.equals(expectedRoute));
-        
+
         expectedRouteStreetSections.clear();
         deliveryGraphRoute = deliveryGraph.getRoute(deliveryAdress0, warehouse);
         expectedRouteStreetSections.add(streetSection14);
         expectedRouteStreetSections.add(streetSection42);
         expectedRouteStreetSections.add(streetSection23);
         expectedRouteStreetSections.add(streetSection30);
-        expectedRoute = new Route(deliveryAdress0,warehouse,expectedRouteStreetSections);
+        expectedRoute = new Route(deliveryAdress0, warehouse, expectedRouteStreetSections);
         assertTrue(deliveryGraphRoute.equals(expectedRoute));
-        
+
         expectedRouteStreetSections.clear();
         deliveryGraphRoute = deliveryGraph.getRoute(deliveryAdress0, deliveryAdress1);
         expectedRouteStreetSections.add(streetSection14);
         expectedRouteStreetSections.add(streetSection42);
-        expectedRoute = new Route(deliveryAdress0,deliveryAdress1,expectedRouteStreetSections);
+        expectedRoute = new Route(deliveryAdress0, deliveryAdress1, expectedRouteStreetSections);
         assertTrue(deliveryGraphRoute.equals(expectedRoute));
-        
+
         expectedRouteStreetSections.clear();
         deliveryGraphRoute = deliveryGraph.getRoute(deliveryAdress0, deliveryAdress2);
         expectedRouteStreetSections.add(streetSection14);
-        expectedRoute = new Route(deliveryAdress0,deliveryAdress2,expectedRouteStreetSections);
+        expectedRoute = new Route(deliveryAdress0, deliveryAdress2, expectedRouteStreetSections);
         assertTrue(deliveryGraphRoute.equals(expectedRoute));
-        
+
         expectedRouteStreetSections.clear();
         deliveryGraphRoute = deliveryGraph.getRoute(deliveryAdress1, warehouse);
         expectedRouteStreetSections.add(streetSection23);
         expectedRouteStreetSections.add(streetSection30);
-        expectedRoute = new Route(deliveryAdress1,warehouse,expectedRouteStreetSections);
+        expectedRoute = new Route(deliveryAdress1, warehouse, expectedRouteStreetSections);
         assertTrue(deliveryGraphRoute.equals(expectedRoute));
-        
+
         expectedRouteStreetSections.clear();
         deliveryGraphRoute = deliveryGraph.getRoute(deliveryAdress1, deliveryAdress0);
         expectedRouteStreetSections.add(streetSection23);
         expectedRouteStreetSections.add(streetSection30);
         expectedRouteStreetSections.add(streetSection01);
-        expectedRoute = new Route(deliveryAdress1,deliveryAdress0,expectedRouteStreetSections);
+        expectedRoute = new Route(deliveryAdress1, deliveryAdress0, expectedRouteStreetSections);
         assertTrue(deliveryGraphRoute.equals(expectedRoute));
-        
+
         expectedRouteStreetSections.clear();
         deliveryGraphRoute = deliveryGraph.getRoute(deliveryAdress1, deliveryAdress2);
         expectedRouteStreetSections.add(streetSection23);
         expectedRouteStreetSections.add(streetSection30);
         expectedRouteStreetSections.add(streetSection01);
         expectedRouteStreetSections.add(streetSection14);
-        expectedRoute = new Route(deliveryAdress1,deliveryAdress2,expectedRouteStreetSections);
+        expectedRoute = new Route(deliveryAdress1, deliveryAdress2, expectedRouteStreetSections);
         assertTrue(deliveryGraphRoute.equals(expectedRoute));
-        
+
         expectedRouteStreetSections.clear();
         deliveryGraphRoute = deliveryGraph.getRoute(deliveryAdress2, warehouse);
         expectedRouteStreetSections.add(streetSection42);
         expectedRouteStreetSections.add(streetSection23);
         expectedRouteStreetSections.add(streetSection30);
-        expectedRoute = new Route(deliveryAdress2,warehouse,expectedRouteStreetSections);
+        expectedRoute = new Route(deliveryAdress2, warehouse, expectedRouteStreetSections);
         assertTrue(deliveryGraphRoute.equals(expectedRoute));
-        
+
         expectedRouteStreetSections.clear();
         deliveryGraphRoute = deliveryGraph.getRoute(deliveryAdress2, deliveryAdress0);
         expectedRouteStreetSections.add(streetSection41);
-        expectedRoute = new Route(deliveryAdress2,deliveryAdress0,expectedRouteStreetSections);
+        expectedRoute = new Route(deliveryAdress2, deliveryAdress0, expectedRouteStreetSections);
         assertTrue(deliveryGraphRoute.equals(expectedRoute));
-        
+
         expectedRouteStreetSections.clear();
         deliveryGraphRoute = deliveryGraph.getRoute(deliveryAdress2, deliveryAdress1);
         expectedRouteStreetSections.add(streetSection42);
-        expectedRoute = new Route(deliveryAdress2,deliveryAdress1,expectedRouteStreetSections);
+        expectedRoute = new Route(deliveryAdress2, deliveryAdress1, expectedRouteStreetSections);
         assertTrue(deliveryGraphRoute.equals(expectedRoute));
-        
     }
 }

@@ -1,87 +1,148 @@
 package models;
 
 import com.google.java.contract.Requires;
-import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.TransformationList;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Planning {
     /**
-     * The SORTED list of routes constituting the current planning.
+     * The city-map containing the intersections of the waypoints used by the planning.
      */
-    final private SimpleListProperty<Route> routes = new SimpleListProperty<>();
+    final private ReadOnlyObjectWrapper<CityMap> cityMap = new ReadOnlyObjectWrapper<>(this, "cityMap");
 
     /**
-     * Construct a new Planning based on the given sorted list of routes,
-     * transforming it to suit JavaFX needs.
-     * @param routes an sorted list of routes.
+     * The circular list of waypoints of the current planning.
      */
-    public Planning(List<Route> routes) {
-        this(FXCollections.observableArrayList(routes));  // Copy the values in `routes` to an ObservableList
+    final private ReadOnlyListWrapper<AbstractWaypoint> waypoints = new ReadOnlyListWrapper<>(this, "waypoints");
+
+    /**
+     * The circular list of routes of the current planning.
+     */
+    final private ReadOnlyListWrapper<Route> routes = new ReadOnlyListWrapper<>(this, "routes");
+
+    final private Map<AbstractWaypoint, Integer> waypointWaitingTime;
+
+    private int fullTime;
+
+    /**
+     * Construct a new Planning based on the given sorted list of waypoints.
+     *
+     * @param waypoints a sorted list of waypoints.
+     */
+    public Planning(CityMap cityMap, Collection<AbstractWaypoint> waypoints, Map<AbstractWaypoint, Integer> waitingTimes, int fullTime) {
+        this.cityMap.setValue(cityMap);
+        this.waypoints.setValue(FXCollections.observableArrayList(waypoints));
+        this.waypointWaitingTime = waitingTimes; // TODO: clone ?
+        this.fullTime = fullTime;
+        this.updateRoutes();
+    }
+
+    public ReadOnlyObjectProperty<CityMap> cityMapProperty() {
+        return this.cityMap.getReadOnlyProperty();
+    }
+
+    public CityMap getCityMap() {
+        return this.cityMap.getValue();
     }
 
     /**
-     * Construct a new Planning based on the given sorted list of routes.
-     * @param routes an sorted list of routes.
-     */
-    public Planning(ObservableList<Route> routes) {
-        this.routes.setValue(routes);
-    }
-
-    /**
-     * Get the total amount of time that the delivery man will need
-     * to complete all deliveries and loads.
+     * Get the total amount of time that the delivery man will need to complete all deliveries and loads.
+     *
      * @return the total amount of time needed to complete all deliveries and loads.
      */
+    // The full time is now a parameter of planning, so the penalty are in it
     public int getFullTime() {
-        int fullTime = 0;
-        for(Route r: this.routes) {
-            fullTime += r.getDuration();
-            fullTime += r.getStartWaypoint().getDuration();
-        }
+//        int fullTime = 0;
+//        for (Route r : this.routes) {
+//            fullTime += r.getDuration();
+//            fullTime += r.getStartWaypoint().getDuration();
+//        }
+//        for (int waitingTime : waypointWaitingTime.values()) {
+//            fullTime += waitingTime;
+//        }
         return fullTime;
     }
 
     /**
-     * Get all the routes of the current planning,
-     * wrapped for JavaFX.
-     * @return the current sorted list of routes.
+     * Get the time that the delivery man must wait at the given waypoint
+     *
+     * @param waypoint The wait point where the delivery man will wait
+     * @return The waiting time of the delivery man
      */
-    public SimpleListProperty<Route> getRoutes(){
-        return this.routes;
+    public int getWaitingTimeAtWaypoint(AbstractWaypoint waypoint) {
+        if (waypointWaitingTime.containsKey(waypoint)) // Avoid the nullPointerException if the waypoint is not in the map
+            return waypointWaitingTime.get(waypoint);
+        return 0;
     }
 
     /**
-     * Add a way point to the current planning,
+     * Get all the waypoints of the current planning, wrapped for JavaFX.
+     *
+     * @return the current sorted list of routes.
+     */
+    public ReadOnlyListProperty<AbstractWaypoint> waypointsProperty() {
+        return this.waypoints.getReadOnlyProperty();
+    }
+
+    /**
+     * Get all the waypoints of the current planning.
+     *
+     * @return the current sorted list of routes.
+     */
+    public ObservableList<AbstractWaypoint> getWaypoints() {
+        return this.waypointsProperty().getValue();
+    }
+
+    /**
+     * Get all the routes of the current planning, wrapped for JavaFX.
+     *
+     * @return the current sorted list of routes.
+     */
+    public ReadOnlyListProperty<Route> routesProperty() {
+        return this.routes.getReadOnlyProperty();
+    }
+
+    /**
+     * Get all the routes of the current planning.
+     *
+     * @return the current sorted list of routes.
+     */
+    public ObservableList<Route> getRoutes() {
+        return this.routesProperty().getValue();
+    }
+
+    /**
+     * Add a waypoint to the current planning,
      * and update the current routes consequently.
-     * @param point the way point to add to the current planning.
-     * @param map the map with which the soon to be created new routes will be computed.
+     *
+     * @param point the waypoint to add to the current planning.
      * @return the updated current planning.
      */
-    public Planning addWayPoint(AbstractWayPoint point, CityMap map) {
-        // Compute the best position to introduce the given way point
+    public Planning addWaypoint(AbstractWaypoint point) {
+        // Compute the best position to introduce the given waypoint
         int bestTime = Integer.MAX_VALUE;
         int bestPosition = 0;
         Route[] newRoutes = new Route[2];
         int index = 0;
-        for(Route r : this.routes) {
-            int time =
-                map.shortestPath(r.getStartWaypoint(), Collections.singletonList(point)).get(0).getDuration() +
-                map.shortestPath(point, Collections.singletonList(r.getEndWaypoint())).get(0).getDuration();
+        for (Route r : this.routes) {
+            int time = this.getCityMap().shortestPath(r.getStartWaypoint(), Collections.singletonList(point)).get(0).getDuration()
+                + this.getCityMap().shortestPath(point, Collections.singletonList(r.getEndWaypoint())).get(0).getDuration();
             // TODO: style guide ?
-            if(time < bestTime) {
+            if (time < bestTime) {
                 bestTime = time;
                 bestPosition = index;
-                newRoutes[0] = map.shortestPath(r.getStartWaypoint(), Collections.singletonList(point)).get(0);
-                newRoutes[1] = map.shortestPath(point, Collections.singletonList(r.getEndWaypoint())).get(0);
+                newRoutes[0] = this.getCityMap().shortestPath(r.getStartWaypoint(), Collections.singletonList(point)).get(0);
+                newRoutes[1] = this.getCityMap().shortestPath(point, Collections.singletonList(r.getEndWaypoint())).get(0);
             }
         }
         // Remove the now unnecessary route
         this.routes.remove(bestPosition);
-        // Introduce the way point
+        // Introduce the waypoint
         this.routes.add(bestPosition, newRoutes[1]);
         this.routes.add(bestPosition, newRoutes[0]);
 
@@ -91,77 +152,69 @@ public class Planning {
     }
 
     /**
-     * Add a way point to the current planning after the given way point,
+     * Add a waypoint to the current planning after the given waypoint,
      * and update the current routes consequently.
-     * @param point the way point to add to the current planning.
-     * @param afterPoint the way point after which the new way point must be added.
-     * @param map the map with which the soon to be created new routes will be computed.
+     *
+     * @param waypoint The waypoint to add to the current planning.
+     * @param index    The index where to add the waypoint. The current waypoint
+     *                 at this index and the following waypoints will be moved
+     *                 by one.
      * @return the updated current planning.
      */
-    public Planning addWayPoint(AbstractWayPoint point, AbstractWayPoint afterPoint, CityMap map) {
-        // Look for the position of the given afterPoint
-        int position = 0;
-        for(int i = 0; i < this.routes.size(); i++){
-            Route route = this.routes.get(i);
-            if(route.getStartWaypoint().equals(afterPoint)) {
-                position = i;
-                break;
-            }
-        }
-        // Split the affected route
-        this.routes.remove(position);
-        this.routes.add(position, map.shortestPath(
-            this.routes.get(position).getStartWaypoint(),
-            Collections.singletonList(point)).get(0));
-        this.routes.add(position, map.shortestPath(
-            point,
-            Collections.singletonList(this.routes.get(position).getEndWaypoint())).get(0));
-        return this;
+    @Requires({"!this.waypoints.contains(waypoint)"})
+    public void addWaypoint(AbstractWaypoint waypoint, int index) {
+        this.waypoints.add(index, waypoint);
+        this.updateRoutes();
     }
 
     /**
-     * Remove a way point to the current planning,
+     * Add a waypoint to the current planning after the given waypoint,
      * and update the current routes consequently.
-     * Please not that the removed way point can't be
-     * the first warehouse.
-     * @param point the way point to remove from the current planning.
-     * @param map the map with which the soon to be created new route
-     *            will be computed.
+     *
+     * @param waypoint      the waypoint to add to the current planning.
+     * @param afterWaypoint the waypoint after which the new waypoint must be added.
      * @return the updated current planning.
      */
-    @Requires("!(point.equals(this.getRoutes().iterator().next()))")
-    public Planning removeWayPoint(AbstractWayPoint point, CityMap map) {
-        // NOTE: the following algorithm works only if the current list is already sorted
-        // Let's look for the position of the given way point
-        AbstractWayPoint start = null;
-        AbstractWayPoint end = null;
-        int index = 0;
-        int[] routesToRemove = new int[2];
-        for(Route r : this.routes) {
-            if(start != null) {
-                // We just found the way point we were looking for in the previous iteration
-                // As the routes list must be sorted, we know have the other point we want
-                end = r.getEndWaypoint();
-                routesToRemove[1] = index;
-                // We have everything, no need to stay here anymore
-                break;
-            }
-            if(r.getEndWaypoint().equals(point)) {
-                // Ok, we just found the route ending with the given point
-                // The next one is therefore starting with it, as the routes list must be sorted
-                start = r.getStartWaypoint();
-                routesToRemove[0] = index;
-            }
-            index++;
+    @Requires({"!this.waypoints.contains(waypoint)", "this.waypoints.contains(afterWaypoint)"})
+    public void addWaypoint(AbstractWaypoint waypoint, AbstractWaypoint afterWaypoint) {
+        int index = this.waypoints.indexOf(afterWaypoint) + 1;
+        this.addWaypoint(waypoint, index);
+        this.updateRoutes();
+    }
+
+    /**
+     * Remove a waypoint to the current planning, and update the current routes consequently. Please not that the removed waypoint can't
+     * be the first warehouse.
+     *
+     * @param waypoint The waypoint to remove from the current planning.
+     */
+    @Requires({"this.waypoints.contains(waypoint)", "!waypoint.equals(this.waypoints.get(0))"})
+    public void removeWaypoint(AbstractWaypoint waypoint) {
+        int index = this.waypoints.indexOf(waypoint);
+        this.waypoints.remove(index);
+        this.routes.remove(index);
+        this.routes.remove(index - 1);
+        this.routes.add(index - 1, this.getCityMap().shortestPath(this.getWaypoint(index-1), this.getWaypoint(index)));
+        this.waypoints.remove(waypoint);
+        // this.updateRoutes();
+    }
+
+    public AbstractWaypoint getWaypoint(int index) {
+        int size = this.waypoints.size();  // TODO: require(size > 0)
+        return this.waypoints.get(index % size);
+    }
+
+    protected List<Route> computeRoutes() {
+        List<Route> result = new LinkedList<>();
+        for (int i = 0; i < this.waypoints.size(); i++) {
+            AbstractWaypoint startWaypoint = this.getWaypoint(i);
+            AbstractWaypoint endWaypoint = this.getWaypoint(i + 1);
+            result.add(this.getCityMap().shortestPath(startWaypoint, endWaypoint));
         }
-        // Now we can compute the shortest path between the two previously found way point
-        Route newRoute = map.shortestPath(start, Collections.singletonList(end)).get(0);
-        // TODO: handle errors
-        // Now we can remove the two old routes using the way point we want to remove
-        this.routes.remove(routesToRemove[0]);
-        this.routes.remove(routesToRemove[1]);
-        // Finally we can add the previously created route
-        this.routes.add(routesToRemove[0], newRoute);
-        return this;
+        return result;
+    }
+
+    protected void updateRoutes() {
+        this.routes.setValue(FXCollections.observableArrayList(this.computeRoutes()));
     }
 }

@@ -16,7 +16,7 @@ package services {
         class AdvancedTspSolver {
         }
 
-        class WayPointIterator {
+        class WaypointIterator {
         }
     }
 }

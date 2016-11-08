@@ -7,7 +7,7 @@ participant "it: Iterator" as it
 CPS -> TSP : solve(**deliveryGraph**: DeliveryGraph)
 activate TSP
 
-    TSP -> TSP : branchAndBound(\n\t**lastSeen**: AbstractWayPoint,\n\t**unseen**: AbstractWayPoint[],\n\t**seen**: AbstractWayPoint[],\n\t**deliveryGraph**: DeliveryGraph,\n\t**cost** : int)
+    TSP -> TSP : branchAndBound(\n\t**lastSeen**: AbstractWaypoint,\n\t**unseen**: AbstractWaypoint[],\n\t**seen**: AbstractWaypoint[],\n\t**deliveryGraph**: DeliveryGraph,\n\t**cost** : int)
     activate TSP
 
         alt unseen.size() == 0
@@ -31,7 +31,7 @@ activate TSP
                         Some subcalls are omitted here
                         for more clarity
                     end note
-                    TSP -> TSP : branchAndBound(\n\t**next**: AbstractWayPoint,\n\t**unseen**: AbstractWayPoint[],\n\t**seen**: AbstractWayPoint[],\n\t**deliveryGraph**: DeliveryGraph,\n\t**newCost** : int)
+                    TSP -> TSP : branchAndBound(\n\t**next**: AbstractWaypoint,\n\t**unseen**: AbstractWaypoint[],\n\t**seen**: AbstractWaypoint[],\n\t**deliveryGraph**: DeliveryGraph,\n\t**newCost** : int)
                     activate TSP
                         note left : Recursive call
                     deactivate TSP
