@@ -120,8 +120,6 @@ public class MapCanvas extends Canvas {
 
     @SuppressWarnings("restriction")
     private void clear() {
-
-
         double width = getWidth();
         double height = getHeight();
         GraphicsContext gc = getGraphicsContext2D();
@@ -233,6 +231,8 @@ public class MapCanvas extends Canvas {
     @SuppressWarnings("restriction")
     @Requires("getPlanning() != null")
     private void drawPlanning() {
+    	Color currentColor =  Color.BLUE;
+    	
         GraphicsContext gc = getGraphicsContext2D();
 
         Planning planning = getPlanning();
@@ -240,14 +240,28 @@ public class MapCanvas extends Canvas {
         Iterable<Route> listRoutes = planning.getRoutes();
 
         int number = 1;
+        int countSections = 1;
+        int totalSections = 0;
         for (Route route : listRoutes) {
-            gc.setStroke(Color.ORANGE);
             List<StreetSection> streetSections = route.getStreetSections();
+            
+               totalSections += streetSections.size();
+            
+        }
+        
+        for (Route route : listRoutes) {
+            gc.setStroke(currentColor);
+            List<StreetSection> streetSections = route.getStreetSections();
+            
             for (StreetSection section : streetSections) {
                 gc.setLineWidth(4);
-                gc.setStroke(Color.ORANGE);
+                
+                currentColor = getColor(currentColor, countSections++, totalSections);
+                
+                gc.setStroke(currentColor);
                 gc.strokeLine(section.getStartIntersection().getX(), section.getStartIntersection().getY(),
                     section.getEndIntersection().getX(), section.getEndIntersection().getY());
+                drawArrowBetweenStreetSection(section, currentColor);
             }
         }
         drawDeliveryRequest();
@@ -262,6 +276,53 @@ public class MapCanvas extends Canvas {
         }
 
     }
+    
+    public Color getColor(Color color, int step, int nbStep){
+    	
+    	if(step*3 < nbStep){
+    		color =  new Color((color.getRed()+0.05)%1, color.getGreen(), color.getBlue(), color.getOpacity());
+    	}
+    	else if(step*3 < 2*nbStep){
+    		color =  new Color(color.getRed(), (color.getGreen()+0.05)%1, color.getBlue(), color.getOpacity());
+    	}
+    	else{
+    		color =  new Color(color.getRed(), color.getGreen(), (color.getBlue()+0.05)%1, color.getOpacity());
+    	}
+    	
+    	
+    	
+    	return color;
+    }
+    
+    
+    public void drawArrowBetweenStreetSection(StreetSection street, Color color){
+
+        double xStart = street.getStartIntersection().getX();
+        double xEnd = street.getEndIntersection().getX();
+        double yStart = street.getStartIntersection().getY();
+        double yEnd = street.getEndIntersection().getY();
+        
+        double alpha = Math.atan2(yStart-yEnd,xStart-xEnd);
+        System.out.println("alpha = " +alpha);
+        
+        double xthird = (xStart + 2*xEnd)/3;
+        double ythird = (yStart + 2*yEnd)/3;
+        
+        double lengthCross = 10 ;
+        double xCross1 = xthird + lengthCross * Math.cos(alpha+Math.PI/6);
+        double yCross1 = ythird + lengthCross * Math.sin(alpha+Math.PI/6);
+        double xCross2 = xthird + lengthCross * Math.cos(alpha+11*Math.PI/6);
+        double yCross2 = ythird + lengthCross * Math.sin(alpha+11*Math.PI/6);
+        
+        GraphicsContext gc = getGraphicsContext2D();
+        gc.setStroke(color);
+        gc.setLineWidth(2);
+        gc.strokeLine(xthird, ythird, xCross1, yCross1);
+        gc.strokeLine(xthird, ythird, xCross2, yCross2);
+            
+        
+    }
+    
 
     @Override
     public boolean isResizable() {

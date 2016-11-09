@@ -3,6 +3,8 @@ package components.waypointcard;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import models.AbstractWaypoint;
 
@@ -88,5 +90,6 @@ public abstract class WaypointCardBase<WP extends AbstractWaypoint> extends Anch
         this.nameProperty().setValue(value);
     }
 
+    abstract public ObservableList<Node> getCornerControls();
     abstract protected String computeName();
 }

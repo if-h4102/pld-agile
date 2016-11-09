@@ -1,9 +1,12 @@
 package components.planningdetails;
 
+import components.application.MainControllerState;
 import components.events.AddWaypointAction;
-import javafx.beans.property.SimpleListProperty;
+import components.events.SaveDeliveryAddress;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -11,26 +14,24 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
-import models.*;
+import models.AbstractWaypoint;
+import models.DeliveryAddress;
+import models.Planning;
+import models.Route;
+import org.jetbrains.annotations.NotNull;
 import services.map.IMapService;
 
 import java.io.IOException;
-import java.util.concurrent.CompletableFuture;
 
 public class PlanningDetails extends ScrollPane {
     @FXML
     protected VBox vBox;
     private final SimpleObjectProperty<Planning> planning = new SimpleObjectProperty<>(this, "planning", null);
     private final SimpleObjectProperty<IMapService> mapService = new SimpleObjectProperty<>(this, "mapService", null);
-
-    final private ChangeListener<Planning> planningChangeListener;
-    final private ListChangeListener<Route> planningRoutesChangeListener;
+    private final ReadOnlyObjectWrapper<IPlanningDetailsState> state = new ReadOnlyObjectWrapper<>(this, "state", new DefaultState(this));
 
     public PlanningDetails() {
         super();
-
-        this.planningChangeListener = (observable, oldValue, newValue) -> this.onPlanningChange(oldValue, newValue);
-        this.planningRoutesChangeListener = (change) -> this.refreshAll();
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/components/planningdetails/PlanningDetails.fxml"));
         fxmlLoader.setRoot(this);
@@ -42,47 +43,9 @@ public class PlanningDetails extends ScrollPane {
             throw new RuntimeException(exception);
         }
 
-        observeItems();
-        this.addEventHandler(AddWaypointAction.TYPE, this::onAddWaypointAction);
-    }
-
-    public void observeItems() {
-        this.planningProperty().addListener(this.planningChangeListener);
-//        final ObservableList<Node> itemNodes = this.vBox.getChildren();
-//
-//        itemsProperty().addListener(new ListChangeListener<E>() {
-//            @Override
-//            public void onChanged(Change<? extends E> change) {
-//                refreshAll();
-////                while (change.next()) {
-////                    if (change.wasAdded()) {
-////                        itemNodes.add(new PlanningDetailsItem());
-////                    }
-////                }
-//            }
-//        });
-    }
-
-    private void refreshAll() {
-        final ObservableList<Node> itemNodes = this.vBox.getChildren();
-        itemNodes.clear();
-        final Planning planning = this.getPlanning();
-        if (planning == null) {
-            return;
-        }
-        final ObservableList<Route> routes = planning.getRoutes();
-        if (routes == null) {
-            return;
-        }
-
-        int index = 0;
-        for (Route item : routes) {
-            final PlanningDetailsItem node = new PlanningDetailsItem();
-            node.setIndex(index++);
-            node.setItem(item);
-            node.setPlanning(planning);
-            itemNodes.add(node);
-        }
+        this.planningProperty().addListener(this::onPlanningChange);
+        this.addEventHandler(AddWaypointAction.TYPE, this::onAddWaypointButtonAction);
+        this.addEventHandler(SaveDeliveryAddress.TYPE, this::onSaveNewWaypoint);
     }
 
     public final SimpleObjectProperty<Planning> planningProperty() {
@@ -109,35 +72,67 @@ public class PlanningDetails extends ScrollPane {
         this.mapServiceProperty().setValue(value);
     }
 
-    public void onPlanningChange(Planning oldValue, Planning newValue) {
-        if (oldValue == newValue) {
-            return;
-        }
-        if (oldValue != null) {
-            oldValue.routesProperty().removeListener(this.planningRoutesChangeListener);
-        }
-        if (newValue != null) {
-            newValue.routesProperty().addListener(this.planningRoutesChangeListener);
-        }
-        this.refreshAll();
+    @NotNull
+    public ReadOnlyObjectProperty<IPlanningDetailsState> stateProperty() {
+        return this.state.getReadOnlyProperty();
     }
 
-    public void onAddWaypointAction (AddWaypointAction action) {
-        IMapService mapService = this.getMapService();
-        if (mapService == null) {
-            System.err.println("Missing map service");
+    @NotNull
+    public IPlanningDetailsState getState() {
+        return this.state.getValue();
+    }
+
+    protected void setState(@NotNull IPlanningDetailsState value) {
+        this.state.setValue(value);
+    }
+
+    protected void waypointsToPlanningDetails() {
+        final ObservableList<Node> itemNodes = this.vBox.getChildren();
+        itemNodes.clear();
+        final Planning planning = this.getPlanning();
+        if (planning == null) {
+            return;
         }
-        this.getMapService()
-            .promptIntersection()
-            .thenAccept(intersection -> {
-                System.out.println("Got intersection:");
-                System.out.println(intersection);
-                DeliveryAddress deliveryAddress = new DeliveryAddress(intersection, 5 * 60);
-                Planning planning = this.getPlanning();
-                int index = action.getIndex();
-                AbstractWaypoint after = planning.getRoutes().get(index - 1).getStartWaypoint();
-                planning.addWaypoint(deliveryAddress, after);
-                System.out.println("foo");
-            });
+        final ObservableList<Route> routes = planning.getRoutes();
+        if (routes == null) {
+            return;
+        }
+
+        int index = 0;
+        for (Route item : routes) {
+            final PlanningDetailsItem node = new PlanningDetailsItem();
+            node.setIndex(index++);
+            node.setItem(item);
+            node.setPlanning(planning);
+            itemNodes.add(node);
+        }
+    }
+
+    protected void onPlanningChange(ObservableValue<? extends Planning> observable, Planning oldValue, Planning newValue) {
+        System.out.println("Planning change");
+        this.changeState(this.getState().onPlanningChange(observable, oldValue, newValue));
+    }
+
+    protected void onPlanningWaypointsChange(ListChangeListener.Change<? extends AbstractWaypoint> listChange) {
+        System.out.println("Waypoints change");
+        this.changeState(this.getState().onPlanningWaypointsChange(listChange));
+    }
+
+    public void onAddWaypointButtonAction(AddWaypointAction action) {
+        this.changeState(this.getState().onAddWaypointAction(action));
+    }
+
+    public void onSaveNewWaypoint(SaveDeliveryAddress action) {
+        this.changeState(this.getState().onSaveNewWaypoint(action));
+    }
+
+    protected void changeState(@NotNull IPlanningDetailsState nextState) {
+        IPlanningDetailsState currentState = this.getState();
+        if (currentState == nextState) {
+            return;
+        }
+        currentState.leaveState(nextState);
+        this.setState(nextState);
+        nextState.enterState(currentState);
     }
 }

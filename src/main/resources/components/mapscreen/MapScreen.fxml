@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.*?>
 
 <?import components.waypointcard.DeliveryAddressCard?>
+<?import components.waypointcard.EditableDeliveryAddressCard?>
 <fx:root fx:id="root" prefHeight="480.0" prefWidth="640.0"
          stylesheets="/components/mapscreen/MapScreen.css"
          type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.65"

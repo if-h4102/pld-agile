@@ -72,6 +72,22 @@
             <artifactId>ikonli-material-pack</artifactId>
             <version>1.8.0</version>
         </dependency>
+        <dependency>
+            <!--
+            To generate PDF files
+            -->
+            <groupId>com.itextpdf</groupId>
+            <artifactId>itextpdf</artifactId>
+            <version>5.0.6</version>
+        </dependency>
+        <dependency>
+            <!--
+            NotNull annotations
+            -->
+            <groupId>com.intellij</groupId>
+            <artifactId>annotations</artifactId>
+            <version>12.0</version>
+        </dependency>
     </dependencies>
 
     <build>

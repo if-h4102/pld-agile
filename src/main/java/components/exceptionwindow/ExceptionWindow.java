@@ -1,17 +1,8 @@
 package components.exceptionwindow;
 
-import java.awt.Dialog.ModalityType;
-
-import javafx.application.Application;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
-import javafx.stage.Stage;
-import javafx.stage.Modality;
-import javafx.scene.layout.StackPane;
-import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 
 public class ExceptionWindow {
 
@@ -34,21 +25,8 @@ public class ExceptionWindow {
             }
         }
         
-        StackPane root = new StackPane();
-        
-        Text text = new Text(displayedMessage);
-        text.setFont(new Font(20));
-        text.setTextAlignment(TextAlignment.CENTER);
-        
-        root.getChildren().addAll(text);
-        root.setAlignment(text, Pos.CENTER);
-        
-        Scene scene = new Scene(root, 400, 200);
-    
-        Stage stage = new Stage();
-        stage.setTitle("Error window."); 
-        stage.setScene(scene); 
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.show();
+        Alert alert = new Alert(AlertType.ERROR, displayedMessage, ButtonType.OK);
+        alert.setTitle("Error window");
+        alert.showAndWait();
     }
 }
