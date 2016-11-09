@@ -1,6 +1,7 @@
 package components.application;
 
 import components.events.RemoveWaypointAction;
+import components.events.SaveDeliveryAddress;
 import components.mapcanvas.IntersectionSelectionEvent;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -13,11 +14,15 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import models.AbstractWaypoint;
 import models.CityMap;
+import models.DeliveryAddress;
 import models.DeliveryRequest;
 import models.Intersection;
 import models.Planning;
+import services.command.AddWaypointAfterCommand;
 import services.command.CommandManager;
+import services.command.RemoveWaypointCommand;
 import services.map.IMapService;
 import services.pdf.planningPrinter;
 import services.xml.Parser;
@@ -73,8 +78,17 @@ public class MainController extends BorderPane {
         this.redoButton.disableProperty().bind(this.commandManager.isRedoable().not());
         this.generateRoadmapButton.disableProperty().bind(this.planning.isNull());
         
+        this.root.addEventHandler(SaveDeliveryAddress.TYPE, event-> {
+           AbstractWaypoint abstractWaypoint = event.getDeliveryAddress();
+           int index = event.getIndex();
+           AddWaypointAfterCommand addWaypointAfterCommand = new AddWaypointAfterCommand(abstractWaypoint,index,this.planning.getValue(),this.cityMap.getValue());
+           this.commandManager.execute(addWaypointAfterCommand);
+           modifyComputePlanningButtonDisabledProperty(true);
+        });
+        
         this.root.addEventHandler(RemoveWaypointAction.TYPE, removeWaypointAction -> {
-            getPlanning().removeWaypoint(removeWaypointAction.getWaypoint());
+            RemoveWaypointCommand removeWaypointAfterCommand = new RemoveWaypointCommand(removeWaypointAction.getWaypoint(),this.planning.getValue(),this.cityMap.getValue());
+            this.commandManager.execute(removeWaypointAfterCommand);
             modifyComputePlanningButtonDisabledProperty(true);
         });
 

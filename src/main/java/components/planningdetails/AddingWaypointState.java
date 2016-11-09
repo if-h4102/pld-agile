@@ -8,6 +8,9 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import models.*;
+import services.command.AddWaypointAfterCommand;
+import services.command.CommandManager;
+
 import org.jetbrains.annotations.NotNull;
 
 public class AddingWaypointState extends PlanningDetailsState {
@@ -47,7 +50,7 @@ public class AddingWaypointState extends PlanningDetailsState {
         System.out.println("Saving new address");
         DeliveryAddress deliveryAddress = event.getDeliveryAddress();
         Planning planning = this.planningDetails.getPlanning();
-        planning.addWaypoint(deliveryAddress, this.index);
+        event.setIndex(this.index);
 
         this.planningDetails.waypointsToPlanningDetails();
 

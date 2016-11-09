@@ -33,6 +33,9 @@ public class CommandManager {
     public void execute(AbstractCommand command) {
         this.done.push(command).execute();
         // TODO: add mechanism to tell if the command was successful or not ?
+        if (this.undoable.getValue() == false) {
+            this.undoable.setValue(true);
+        }
     }
 
     /**
@@ -44,6 +47,12 @@ public class CommandManager {
             return false;
         }
         this.undone.push(this.done.pop().getReversed()).execute();
+        if (this.undoable.getValue() == true && this.done.isEmpty()) {
+            this.undoable.setValue(false);
+        }
+        if (this.redoable.getValue() == false) {
+            this.redoable.setValue(true);
+        }
         return true;
     }
 
@@ -56,6 +65,12 @@ public class CommandManager {
             return false;
         }
         this.done.push(this.undone.pop().getReversed()).execute();
+        if (this.redoable.getValue() == true && this.undone.isEmpty()) {
+            this.redoable.setValue(false);
+        }
+        if (this.undoable.getValue() == false) {
+            this.undoable.setValue(true);
+        }
         return true;
     }
 
@@ -70,7 +85,24 @@ public class CommandManager {
     public void setUndoable(boolean value) {
         undoableProperty().setValue(value);
     }
+    
+    public SimpleBooleanProperty redoableProperty() {
+        return this.redoable;
+    }
 
+    public boolean getRedoable() {
+        return redoableProperty().getValue();
+    }
+
+    public void setRedoable(boolean value) {
+        redoableProperty().setValue(value);
+    }
+
+    public SimpleBooleanProperty isUndoable() {
+        this.undoable.setValue(!this.done.isEmpty());
+        return this.undoable;
+    }
+    
     public SimpleBooleanProperty isRedoable() {
         this.redoable.setValue(!this.undone.isEmpty());
         return this.redoable;
