@@ -1,24 +1,30 @@
 package components.application;
 
-
 import javafx.stage.FileChooser;
 import models.DeliveryRequest;
 import services.xml.exception.ParserException;
 import java.io.File;
 import java.io.IOException;
-
 import components.exceptionwindow.ExceptionWindow;
 
 public class WaitOpenDeliveryRequestState extends WaitOpenCityMapState {
-    public void enterState(MainController mainController) {
+
+    public WaitOpenDeliveryRequestState(MainController mainController) {
+        super(mainController);
+    }
+
+    @Override
+    public void enterState() {
         mainController.setDeliveryRequest(null); // Reset any previous delivery request
     }
 
-    public void leaveState(MainController mainController) {
+    @Override
+    public void leaveState() {
 
     }
 
-    public MainControllerState onOpenDeliveryRequestButtonAction(MainController mainController) {
+    @Override
+    public MainControllerState onOpenDeliveryRequestButtonAction() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Delivery Request");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Delivery Request file (*.xml)", "xml"));
@@ -32,12 +38,12 @@ public class WaitOpenDeliveryRequestState extends WaitOpenCityMapState {
         try {
             currentDeliveryRequest = mainController.getParserService().getDeliveryRequest(deliveryRequestFile, mainController.getCityMap());
         } catch (IOException | ParserException e) {
-            ExceptionWindow exceptionWindow = new ExceptionWindow(e.getMessage());
+            new ExceptionWindow(e.getMessage());
         }
 
         mainController.setDeliveryRequest(currentDeliveryRequest);
         mainController.setPlanning(null);
 
-        return new ReadyState();
+        return new ReadyState(mainController);
     }
 }

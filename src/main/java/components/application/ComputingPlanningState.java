@@ -9,18 +9,18 @@ import services.tsp.BasicBoundTspSolver;
 import services.tsp.ThreadedTspSolver;
 
 public class ComputingPlanningState extends WaitOpenDeliveryRequestState {
-    final private MainController mainController;
     private Thread solverThread;
     private long beforeDijkstraTime;
     private long beforeTspTime;
     private long completionTime;
 
     ComputingPlanningState(MainController mainController) {
-        this.mainController = mainController;
+        super(mainController);
     }
 
 
-    public void enterState(MainController mainController) {
+    @Override
+    public void enterState() {
 
         DeliveryRequest deliveryRequest = mainController.getDeliveryRequest();
 
@@ -46,7 +46,8 @@ public class ComputingPlanningState extends WaitOpenDeliveryRequestState {
         mainController.applyState(new ComputedPlanningState(mainController));
     }
 
-    public void leaveState(MainController mainController) {
+    @Override
+    public void leaveState() {
         this.completionTime = System.nanoTime();
         long fullDuration = (this.completionTime - this.beforeDijkstraTime) / 1000000;
         long tspDuration = (this.completionTime - this.beforeTspTime) / 1000000;
@@ -54,7 +55,8 @@ public class ComputingPlanningState extends WaitOpenDeliveryRequestState {
         System.out.println("Computed in " + (fullDuration) + " ms (tsp: " + (tspDuration) + " ms, dijktra: " + (dijkstraDuration) + " ms)");
     }
 
-    public MainControllerState onComputePlanningButtonAction(MainController mainController) {
+    @Override
+    public MainControllerState onComputePlanningButtonAction() {
         System.out.println("Computing");
         return this;
     }
