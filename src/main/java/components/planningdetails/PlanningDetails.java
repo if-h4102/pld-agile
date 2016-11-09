@@ -86,28 +86,6 @@ public class PlanningDetails extends ScrollPane {
         this.state.setValue(value);
     }
 
-    protected void waypointsToPlanningDetails() {
-        final ObservableList<Node> itemNodes = this.vBox.getChildren();
-        itemNodes.clear();
-        final Planning planning = this.getPlanning();
-        if (planning == null) {
-            return;
-        }
-        final ObservableList<Route> routes = planning.getRoutes();
-        if (routes == null) {
-            return;
-        }
-
-        int index = 0;
-        for (Route item : routes) {
-            final PlanningDetailsItem node = new PlanningDetailsItem();
-            node.setIndex(index++);
-            node.setItem(item);
-            node.setPlanning(planning);
-            itemNodes.add(node);
-        }
-    }
-
     protected void onPlanningChange(ObservableValue<? extends Planning> observable, Planning oldValue, Planning newValue) {
         System.out.println("Planning change");
         this.changeState(this.getState().onPlanningChange(observable, oldValue, newValue));
@@ -134,5 +112,31 @@ public class PlanningDetails extends ScrollPane {
         currentState.leaveState(nextState);
         this.setState(nextState);
         nextState.enterState(currentState);
+    }
+
+    protected void waypointsToPlanningDetails() {
+        final ObservableList<Node> itemNodes = this.vBox.getChildren();
+        itemNodes.clear();
+        final Planning planning = this.getPlanning();
+        if (planning == null) {
+            return;
+        }
+        final ObservableList<Route> routes = planning.getRoutes();
+        if (routes == null) {
+            return;
+        }
+
+        int index = 0;
+        for (Route item : routes) {
+            final PlanningDetailsItem node = new PlanningDetailsItem();
+            node.setIndex(index++);
+            node.setItem(item);
+            node.setPlanning(planning);
+            itemNodes.add(node);
+        }
+    }
+
+    protected void refreshView() {
+        this.getState().refreshView();
     }
 }

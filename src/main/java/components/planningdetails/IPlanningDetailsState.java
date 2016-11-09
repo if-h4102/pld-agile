@@ -14,4 +14,5 @@ public interface IPlanningDetailsState {
     IPlanningDetailsState onPlanningChange(ObservableValue<? extends Planning> observable, Planning oldValue, Planning newValue);
     IPlanningDetailsState onAddWaypointAction(AddWaypointAction action);
     IPlanningDetailsState onSaveNewWaypoint(SaveDeliveryAddress action);
+    void refreshView();
 }

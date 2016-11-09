@@ -15,6 +15,7 @@ public abstract class PlanningDetailsState implements IPlanningDetailsState {
     }
 
     public IPlanningDetailsState enterState(IPlanningDetailsState previousState) {
+        this.refreshView();
         return this;
     }
 
@@ -26,12 +27,12 @@ public abstract class PlanningDetailsState implements IPlanningDetailsState {
         return this;
     }
 
-    public IPlanningDetailsState onPlanningWaypointsChange(ListChangeListener.Change<? extends AbstractWaypoint> listChange) {
-        this.planningDetails.waypointsToPlanningDetails();
+    public IPlanningDetailsState onAddWaypoint(AddWaypointAction action) {
         return this;
     }
 
-    public IPlanningDetailsState onAddWaypoint(AddWaypointAction action) {
+    public IPlanningDetailsState onPlanningWaypointsChange(ListChangeListener.Change<? extends AbstractWaypoint> listChange) {
+        this.refreshView();
         return this;
     }
 
@@ -45,10 +46,15 @@ public abstract class PlanningDetailsState implements IPlanningDetailsState {
         if (newValue != null) {
             newValue.waypointsProperty().addListener(this.planningDetails::onPlanningWaypointsChange);
         }
+        this.refreshView();
         return this;
     }
 
     public IPlanningDetailsState onAddWaypointAction(AddWaypointAction action) {
         return new SelectingWaypointState(this.planningDetails, 1);
+    }
+
+    public void refreshView() {
+        this.planningDetails.waypointsToPlanningDetails();
     }
 }
