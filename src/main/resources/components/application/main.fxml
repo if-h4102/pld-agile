@@ -82,7 +82,4 @@
       </AnchorPane>
     </SplitPane>
   </center>
-   <bottom>
-      <AnchorPane prefHeight="21.0" prefWidth="640.0" BorderPane.alignment="CENTER" />
-   </bottom>
 </fx:root>
