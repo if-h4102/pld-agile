@@ -86,8 +86,10 @@ public class MapCanvas extends Canvas {
                 	Warehouse warehouse = getDeliveryRequest().getWarehouse();
                 	if (eventX < warehouse.getX() + DEFAULT_DELIVERY_SIZE / 2 && eventX > warehouse.getX() - DEFAULT_DELIVERY_SIZE / 2
                             && eventY < warehouse.getY() + DEFAULT_DELIVERY_SIZE / 2 && eventY > warehouse.getY() - DEFAULT_DELIVERY_SIZE / 2){
-                		WarehouseSelectionEvent deliver = new WarehouseSelectionEvent(warehouse, e.getX(), e.getY());
-                        fireEvent(deliver);
+                		WarehouseSelectionEvent warehouseEvent = new WarehouseSelectionEvent(warehouse, e.getX(), e.getY());
+                        fireEvent(warehouseEvent);
+                        DeliverySelectionEvent nullDeliver = new DeliverySelectionEvent(null, e.getX(), e.getY());
+                        fireEvent(nullDeliver);
                         IntersectionSelectionEvent nullIntersect = new IntersectionSelectionEvent(null, e.getX(), e.getY());
                         fireEvent(nullIntersect);
                         return;
@@ -100,6 +102,8 @@ public class MapCanvas extends Canvas {
                             fireEvent(deliver);
                             IntersectionSelectionEvent nullIntersect = new IntersectionSelectionEvent(null, e.getX(), e.getY());
                             fireEvent(nullIntersect);
+                            WarehouseSelectionEvent nullWarehouse = new WarehouseSelectionEvent(null, e.getX(), e.getY());
+                            fireEvent(nullWarehouse);
                             return;
                         }
                     }
@@ -112,6 +116,8 @@ public class MapCanvas extends Canvas {
                         fireEvent(intersect);
                         DeliverySelectionEvent nullDeliver = new DeliverySelectionEvent(null, e.getX(), e.getY());
                         fireEvent(nullDeliver);
+                        WarehouseSelectionEvent nullWarehouse = new WarehouseSelectionEvent(null, e.getX(), e.getY());
+                        fireEvent(nullWarehouse);
                         return;
                     }
                 }
