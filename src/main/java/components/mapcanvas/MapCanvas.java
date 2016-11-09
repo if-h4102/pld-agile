@@ -20,6 +20,7 @@ import models.Planning;
 import models.Route;
 import models.StreetSection;
 import models.Warehouse;
+import services.map.MapRenderer;
 
 import java.awt.Rectangle;
 import java.util.List;
@@ -175,126 +176,16 @@ public class MapCanvas extends Canvas {
 
         updateTransform();
 
-        drawCityMap();
-        if (getDeliveryRequest() == null) {
-            return;
-        }
-        drawDeliveryRequest();
-        if (getPlanning() == null) {
-            return;
-        }
-        drawPlanning();
-    }
+        MapRenderer mapRenderer = new MapRenderer();
+        GraphicsContext gc = this.getGraphicsContext2D();
 
-
-    @SuppressWarnings("restriction")
-    @Requires("getCityMap() != null")
-    private void drawCityMap() {
-        GraphicsContext gc = getGraphicsContext2D();
-        CityMap map = getCityMap();
-        intersections = map.getIntersections();
-
-        List<StreetSection> streetSections = map.getStreetSections();
-        for (StreetSection section : streetSections) {
-            gc.setLineWidth(2);
-            gc.setStroke(Color.GREY);
-            gc.strokeLine(section.getStartIntersection().getX(), section.getStartIntersection().getY(),
-                section.getEndIntersection().getX(), section.getEndIntersection().getY());
-        }
-
-        for (Intersection inter : intersections) {
-            gc.fillOval(inter.getX() - DEFAULT_INTERSECTION_SIZE / 2, inter.getY() - DEFAULT_INTERSECTION_SIZE / 2,
-                DEFAULT_INTERSECTION_SIZE, DEFAULT_INTERSECTION_SIZE);
+        mapRenderer.drawCityMap(gc, this.getCityMap());
+        if (this.getPlanning() != null) {
+            mapRenderer.drawPlanning(gc, this.getPlanning());
+        } else if (this.getDeliveryRequest() != null) {
+            mapRenderer.drawDeliveryRequest(gc, this.getDeliveryRequest());
         }
     }
-
-    @SuppressWarnings("restriction")
-    @Requires("getDeliveryRequest() != null")
-    private void drawDeliveryRequest() {
-        GraphicsContext gc = getGraphicsContext2D();
-        DeliveryRequest deliveryRequest = getDeliveryRequest();
-
-        Iterable<DeliveryAddress> listDeliveryAddresses = deliveryRequest.getDeliveryAddresses();
-        Warehouse warehouse = deliveryRequest.getWarehouse();
-
-        for (DeliveryAddress delivery : listDeliveryAddresses) {
-            gc.setFill(Color.BLUE);
-            gc.fillOval(delivery.getIntersection().getX() - DEFAULT_DELIVERY_SIZE / 2, delivery.getIntersection().getY() - DEFAULT_DELIVERY_SIZE / 2,
-                DEFAULT_DELIVERY_SIZE, DEFAULT_DELIVERY_SIZE);
-        }
-        gc.setFill(Color.RED);
-        gc.fillOval(warehouse.getIntersection().getX() - DEFAULT_DELIVERY_SIZE / 2, warehouse.getIntersection().getY() - DEFAULT_DELIVERY_SIZE / 2,
-            DEFAULT_DELIVERY_SIZE, DEFAULT_DELIVERY_SIZE);
-        gc.setFill(Color.BLACK);
-    }
-
-    @SuppressWarnings("restriction")
-    @Requires("getPlanning() != null")
-    private void drawPlanning() {
-    	Color colorStart = Color.BLUE;
-    	Color currentColor = colorStart;
-    	
-        GraphicsContext gc = getGraphicsContext2D();
-
-        Planning planning = getPlanning();
-
-        Iterable<Route> listRoutes = planning.getRoutes();
-
-        int number = 1;
-        for (Route route : listRoutes) {
-            gc.setStroke(currentColor);
-            List<StreetSection> streetSections = route.getStreetSections();
-            for (StreetSection section : streetSections) {
-                gc.setLineWidth(4);
-                //currentColor = currentColor.color(currentColor.getRed()+10, currentColor.getGreen()+10, currentColor.getBlue()+10);
-                gc.setStroke(currentColor);
-                gc.strokeLine(section.getStartIntersection().getX(), section.getStartIntersection().getY(),
-                    section.getEndIntersection().getX(), section.getEndIntersection().getY());
-                drawArrowBetweenStreetSection(section, currentColor);
-            }
-        }
-        drawDeliveryRequest();
-        for(Route route : listRoutes){
-            gc.setLineWidth(3);
-            gc.setStroke(Color.BLACK);
-            gc.strokeText("" + number, route.getStartWaypoint().getIntersection().getX(), route.getStartWaypoint().getIntersection().getY());
-            gc.setStroke(Color.WHITE);
-            gc.setLineWidth(1);
-            gc.strokeText("" + number, route.getStartWaypoint().getIntersection().getX(), route.getStartWaypoint().getIntersection().getY());
-            number++;
-        }
-
-    }
-    
-    
-    public void drawArrowBetweenStreetSection(StreetSection street, Color color){
-
-        double xStart = street.getStartIntersection().getX();
-        double xEnd = street.getEndIntersection().getX();
-        double yStart = street.getStartIntersection().getY();
-        double yEnd = street.getEndIntersection().getY();
-        
-        double alpha = Math.atan2(yStart-yEnd,xStart-xEnd);
-        System.out.println("alpha = " +alpha);
-        
-        double xthird = (xStart + 2*xEnd)/3;
-        double ythird = (yStart + 2*yEnd)/3;
-        
-        double lengthCross = 10 ;
-        double xCross1 = xthird + lengthCross * Math.cos(alpha+Math.PI/6);
-        double yCross1 = ythird + lengthCross * Math.sin(alpha+Math.PI/6);
-        double xCross2 = xthird + lengthCross * Math.cos(alpha+11*Math.PI/6);
-        double yCross2 = ythird + lengthCross * Math.sin(alpha+11*Math.PI/6);
-        
-        GraphicsContext gc = getGraphicsContext2D();
-        gc.setStroke(color);
-        gc.setLineWidth(2);
-        gc.strokeLine(xthird, ythird, xCross1, yCross1);
-        gc.strokeLine(xthird, ythird, xCross2, yCross2);
-            
-        
-    }
-    
 
     @Override
     public boolean isResizable() {
