@@ -11,6 +11,7 @@ import models.DeliveryAddress;
 import models.DeliveryRequest;
 import models.Intersection;
 import models.Planning;
+import models.Warehouse;
 import components.mapcanvas.DeliverySelectionEvent;
 import components.mapcanvas.IntersectionSelectionEvent;
 
@@ -21,6 +22,7 @@ import components.waypointcard.DeliveryAddressCard;
 import components.waypointcard.WarehouseCard;
 import components.intersectioncard.IntersectionCard;
 import components.mapcanvas.MapCanvas;
+import components.mapcanvas.WarehouseSelectionEvent;
 
 public class MapScreen extends AnchorPane {
     private static final CityMap DEFAULT_CITY_MAP = null;
@@ -47,6 +49,8 @@ public class MapScreen extends AnchorPane {
     private SimpleObjectProperty<Planning> planning;
     private SimpleObjectProperty<Intersection> activeIntersection;
     private SimpleObjectProperty<DeliveryAddress> activeDelivery;
+    private SimpleObjectProperty<Warehouse> activeWarehouse;
+    
 
     @SuppressWarnings("restriction")
     public MapScreen() {
@@ -60,6 +64,11 @@ public class MapScreen extends AnchorPane {
             throw new RuntimeException(exception);
         }
 
+        canvas.addEventHandler(WarehouseSelectionEvent.WAREHOUSE_SELECTION, event -> {
+            System.out.println("handler intersection");
+            updateWarehouseTooltip(event);
+        });
+        
         canvas.addEventHandler(IntersectionSelectionEvent.INTERSECTION_SELECTION, event -> {
             System.out.println("handler intersection");
             updateIntersectionTooltip(event);
@@ -71,7 +80,7 @@ public class MapScreen extends AnchorPane {
         });
         
         
-
+        tooltipwarehouse.visibleProperty().bind(activeWarehouse.isNotNull());
         tooltipDelivery.visibleProperty().bind(activeDelivery.isNotNull());
         tooltip.visibleProperty().bind(activeIntersection.isNotNull());
     }
@@ -164,7 +173,7 @@ public class MapScreen extends AnchorPane {
     }
 
     /**
-     * Set the city map
+     * Set the active intersection
      *
      * @param value
      */
@@ -177,18 +186,16 @@ public class MapScreen extends AnchorPane {
     }
 
     /**
-     * Update the position of the tooltip
+     * Update the position of the tooltip when clicked on intersection
      *
      */
     public void updateIntersectionTooltip (IntersectionSelectionEvent event) {
         tooltip = tooltipOptimalPosition(tooltip, event.getX(),event.getY());
-
-        System.out.println(event.getIntersection());
         setActiveIntersection(event.getIntersection());
     }
 
     /**
-     * The active interserction
+     * The active delivery address
      *      *
      * @return The cityMap property
      */
@@ -200,7 +207,7 @@ public class MapScreen extends AnchorPane {
     }
 
     /**
-     *
+     * set the active delivery address
      *
      * @param value
      */
@@ -212,13 +219,72 @@ public class MapScreen extends AnchorPane {
         return activeDelivery == null ? null : activeDeliveryProperty().getValue();
     }
     /**
-     * Update the position of the tooltip
+     * Update the position of the delivery tooltip
      *
      */
     public void updateDeliveryTooltip (DeliverySelectionEvent event) {
         tooltipDelivery = tooltipDeliveryOptimalPosition(tooltipDelivery, event.getX(),event.getY());
-        System.out.println(event.getDeliveryAddress());
         setActiveDelivery(event.getDeliveryAddress());
+    }
+    
+    /**
+     * The active delivery address
+     *      *
+     * @return The cityMap property
+     */
+    public final SimpleObjectProperty<Warehouse> activeWarehouseProperty() {
+        if (activeWarehouse == null) {
+            activeWarehouse = new SimpleObjectProperty<>(this, "activeWarehouse", null);
+        }
+        return activeWarehouse;
+    }
+
+    /**
+     * set the active warehouse
+     *
+     * @param value
+     */
+    public final void setActiveWarehouse(Warehouse value) {
+        activeWarehouseProperty().setValue(value);
+    }
+
+    public final Warehouse getActiveWarehouse() {
+        return activeWarehouse == null ? null : activeWarehouseProperty().getValue();
+    }
+    
+    /**
+     * Update the position of the warehouse tooltip
+     *
+     */
+    public void updateWarehouseTooltip (WarehouseSelectionEvent event) {
+        tooltipwarehouse = tooltipWarehouseOptimalPosition(tooltipwarehouse, event.getX(),event.getY());
+        setActiveWarehouse(event.getWarehouse());
+    }
+    
+    /**
+     * Find the optimal origin for the tooltip
+     *
+     * @return The tooltip
+     */
+    public WarehouseCard tooltipWarehouseOptimalPosition(WarehouseCard tooltipWarehouse, double x, double y){
+        double h = canvas.getHeight();
+        double w = canvas.getWidth();
+        double htool = tooltipWarehouse.getHeight();
+        double wtool = tooltipWarehouse.getWidth();
+        if(x+wtool > w){
+        	tooltipWarehouse.setLayoutX(x-wtool-5);
+        }
+        else {
+        	tooltipWarehouse.setLayoutX(x+5);
+        }
+        if(y+htool > h){
+        	tooltipWarehouse.setLayoutY(y-htool-5);
+        }
+        else{
+        	tooltipWarehouse.setLayoutY(y+5);
+        }
+
+        return tooltipWarehouse;
     }
 
 
@@ -232,7 +298,6 @@ public class MapScreen extends AnchorPane {
         double w = canvas.getWidth();
         double htool = tooltip.getHeight();
         double wtool = tooltip.getWidth();
-        System.out.println(h + " " + w +" " + htool+" "+ wtool + " "+ x+ " "+ y);
         if(x+wtool > w){
             tooltip.setLayoutX(x-wtool-5);
         }
@@ -259,7 +324,6 @@ public class MapScreen extends AnchorPane {
         double w = canvas.getWidth();
         double htool = tooltipDelivery.getHeight();
         double wtool = tooltipDelivery.getWidth();
-        System.out.println(h + " " + w +" " + htool+" "+ wtool + " "+ x+ " "+ y);
         if(x+wtool > w){
             tooltipDelivery.setLayoutX(x-wtool-5);
         }
