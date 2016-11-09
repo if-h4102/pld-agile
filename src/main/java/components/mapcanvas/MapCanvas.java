@@ -233,7 +233,7 @@ public class MapCanvas extends Canvas {
     @SuppressWarnings("restriction")
     @Requires("getPlanning() != null")
     private void drawPlanning() {
-    	Color currentColor =  Color.BLUE;
+    	Color currentColor =  Color.BLACK;
     	
         GraphicsContext gc = getGraphicsContext2D();
 
@@ -242,8 +242,8 @@ public class MapCanvas extends Canvas {
         Iterable<Route> listRoutes = planning.getRoutes();
 
         int number = 1;
-        int countSections = 1;
-        int totalSections = 0;
+        double countSections = 1;
+        double totalSections = 0;
         for (Route route : listRoutes) {
             List<StreetSection> streetSections = route.getStreetSections();
             
@@ -258,7 +258,7 @@ public class MapCanvas extends Canvas {
             for (StreetSection section : streetSections) {
                 gc.setLineWidth(4);
                 
-                currentColor = getColor(currentColor, countSections++, totalSections);
+                currentColor = getColor(countSections++, totalSections);
                 
                 gc.setStroke(currentColor);
                 gc.strokeLine(section.getStartIntersection().getX(), section.getStartIntersection().getY(),
@@ -279,20 +279,27 @@ public class MapCanvas extends Canvas {
 
     }
     
-    public Color getColor(Color color, int step, int nbStep){
-    	
-    	if(step*3 < nbStep){
-    		color =  new Color((color.getRed()+0.05)%1, color.getGreen(), color.getBlue(), color.getOpacity());
+    public Color getColor(double step, double nbStep){
+    	System.out.println(nbStep);
+    	System.out.println(step/(nbStep/3));
+    	double red =0;
+    	double green = 0;
+    	double blue = 0;
+
+    	if(3*step < nbStep){
+    		red = 1-(3*step/nbStep);
+    		green = 3*step/nbStep;
     	}
-    	else if(step*3 < 2*nbStep){
-    		color =  new Color(color.getRed(), (color.getGreen()+0.05)%1, color.getBlue(), color.getOpacity());
+    	else if(3*step < 2*nbStep){
+    		green = 1-(step/(2*nbStep/3));
+    		blue = step/(2*nbStep/3);
     	}
     	else{
-    		color =  new Color(color.getRed(), color.getGreen(), (color.getBlue()+0.05)%1, color.getOpacity());
+    		red = step/(nbStep);
+    		blue = 1-(step/(nbStep));
+    		
     	}
-    	
-    	
-    	
+    	Color color =  new Color(red,green,blue,1);
     	return color;
     }
     
@@ -305,7 +312,6 @@ public class MapCanvas extends Canvas {
         double yEnd = street.getEndIntersection().getY();
         
         double alpha = Math.atan2(yStart-yEnd,xStart-xEnd);
-        System.out.println("alpha = " +alpha);
         
         double xthird = (xStart + 2*xEnd)/3;
         double ythird = (yStart + 2*yEnd)/3;
