@@ -2,16 +2,24 @@ package components.planningdetails;
 
 import components.events.AddWaypointAction;
 import components.events.SaveDeliveryAddress;
+import components.mapcanvas.DeliverySelectionEvent;
+import components.mapcanvas.IntersectionSelectionEvent;
+import components.mapcanvas.WarehouseSelectionEvent;
 import components.waypointcard.EditableDeliveryAddressCard;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
 import models.*;
 import services.command.AddWaypointAfterCommand;
 import services.command.CommandManager;
 
 import org.jetbrains.annotations.NotNull;
+
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 
 public class AddingWaypointState extends PlanningDetailsState {
     private final int index;
@@ -33,7 +41,8 @@ public class AddingWaypointState extends PlanningDetailsState {
         DeliveryAddress tmpDeliveryAddress = new DeliveryAddress(intersection, 0);
         EditableDeliveryAddressCard editable = new EditableDeliveryAddressCard();
         editable.setWaypoint(tmpDeliveryAddress);
-
+        
+        
         nodes.add(this.index, editable);
 
         return this;
