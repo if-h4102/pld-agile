@@ -22,7 +22,9 @@ import models.StreetSection;
 import models.Warehouse;
 
 import java.awt.Rectangle;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MapCanvas extends Canvas {
     private static final CityMap DEFAULT_CITY_MAP = null;
@@ -231,37 +233,49 @@ public class MapCanvas extends Canvas {
     @SuppressWarnings("restriction")
     @Requires("getPlanning() != null")
     private void drawPlanning() {
-    	Color currentColor =  Color.BLUE;
+    	Color currentColor =  Color.BLACK;
     	
         GraphicsContext gc = getGraphicsContext2D();
 
         Planning planning = getPlanning();
 
         Iterable<Route> listRoutes = planning.getRoutes();
-
+        
+        //Map containing the number of each streetSection crossed
+        HashMap<StreetSection, Integer> sectionMap = getSectionMap(listRoutes); 
+        
+        //Route number
         int number = 1;
-        int countSections = 1;
-        int totalSections = 0;
+        //actual section
+        double countSections = 1;
+        //total number of sections
+        double totalSections = 0;
+        //Count the total numbers of section 
         for (Route route : listRoutes) {
-            List<StreetSection> streetSections = route.getStreetSections();
-            
-               totalSections += streetSections.size();
-            
+            List<StreetSection> streetSections = route.getStreetSections();        
+               totalSections += streetSections.size();        
         }
         
+        //Stroke the line and the arrow
         for (Route route : listRoutes) {
             gc.setStroke(currentColor);
             List<StreetSection> streetSections = route.getStreetSections();
             
             for (StreetSection section : streetSections) {
-                gc.setLineWidth(4);
-                
-                currentColor = getColor(currentColor, countSections++, totalSections);
-                
+            	gc.setLineWidth(4);
+            	currentColor = getColor(countSections++, totalSections);            
                 gc.setStroke(currentColor);
+            	int passings = sectionMap.get(section);
+            	if(passings > 1){
+            		gc.strokeLine(section.getStartIntersection().getX()-2*passings, section.getStartIntersection().getY()-2*passings,
+                            section.getEndIntersection().getX()-2*passings, section.getEndIntersection().getY()-2*passings);
+            		sectionMap.put(section,passings-1);
+            	}
+            	else{
                 gc.strokeLine(section.getStartIntersection().getX(), section.getStartIntersection().getY(),
-                    section.getEndIntersection().getX(), section.getEndIntersection().getY());
-                drawArrowBetweenStreetSection(section, currentColor);
+                    section.getEndIntersection().getX(), section.getEndIntersection().getY());    
+            	}
+            	drawArrowBetweenStreetSection(section, currentColor);
             }
         }
         drawDeliveryRequest();
@@ -277,20 +291,43 @@ public class MapCanvas extends Canvas {
 
     }
     
-    public Color getColor(Color color, int step, int nbStep){
+    
+    public HashMap<StreetSection, Integer> getSectionMap(Iterable<Route> listRoutes){
+    	HashMap<StreetSection, Integer> sectionMap = new HashMap<StreetSection, Integer>();
     	
-    	if(step*3 < nbStep){
-    		color =  new Color((color.getRed()+0.05)%1, color.getGreen(), color.getBlue(), color.getOpacity());
+    	for (Route route : listRoutes) {
+            List<StreetSection> streetSections = route.getStreetSections();        
+            for (StreetSection section : streetSections) {
+                if(sectionMap.containsKey(section)==false){
+                	sectionMap.put(section, 1);
+                }
+                else{
+                	sectionMap.put(section, sectionMap.get(section)+1);
+                }
+            }
+        }
+    	return sectionMap;
+    }
+    
+    public Color getColor(double step, double nbStep){
+    	double red =0;
+    	double green = 0;
+    	double blue = 0;
+
+    	if(3*step < nbStep){
+    		red = 1-(3*step/nbStep);
+    		green = 3*step/nbStep;
     	}
-    	else if(step*3 < 2*nbStep){
-    		color =  new Color(color.getRed(), (color.getGreen()+0.05)%1, color.getBlue(), color.getOpacity());
+    	else if(3*step < 2*nbStep){
+    		green = 1-(step/(2*nbStep/3));
+    		blue = step/(2*nbStep/3);
     	}
     	else{
-    		color =  new Color(color.getRed(), color.getGreen(), (color.getBlue()+0.05)%1, color.getOpacity());
+    		red = step/(nbStep);
+    		blue = 1-(step/(nbStep));
+    		
     	}
-    	
-    	
-    	
+    	Color color =  new Color(red,green,blue,1);
     	return color;
     }
     
@@ -303,7 +340,6 @@ public class MapCanvas extends Canvas {
         double yEnd = street.getEndIntersection().getY();
         
         double alpha = Math.atan2(yStart-yEnd,xStart-xEnd);
-        System.out.println("alpha = " +alpha);
         
         double xthird = (xStart + 2*xEnd)/3;
         double ythird = (yStart + 2*yEnd)/3;
