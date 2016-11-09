@@ -1,29 +1,31 @@
 package components.application;
 
 import models.Intersection;
-
 import java.util.concurrent.CompletableFuture;
 
 public class ComputedPlanningState extends WaitOpenDeliveryRequestState {
-    final private MainController mainController;
 
     ComputedPlanningState(MainController mainController) {
-        this.mainController = mainController;
+        super(mainController);
     }
 
-    public void enterState(MainController mainController) {
-
-    }
-
-    public void leaveState(MainController mainController) {
+    @Override
+    public void enterState() {
 
     }
 
-    public MainControllerState onPromptIntersection(MainController mainController, CompletableFuture<Intersection> future) {
+    @Override
+    public void leaveState() {
+
+    }
+
+    @Override
+    public MainControllerState onPromptIntersection(CompletableFuture<Intersection> future) {
         return new SelectingIntersectionState(this.mainController, future);
     }
 
-    public MainControllerState onComputePlanningButtonAction(MainController mainController) {
+    @Override
+    public MainControllerState onComputePlanningButtonAction() {
         System.out.println("Computed");
         return this;
     }

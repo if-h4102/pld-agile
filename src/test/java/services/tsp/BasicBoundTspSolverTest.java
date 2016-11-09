@@ -55,8 +55,8 @@ public class BasicBoundTspSolverTest {
         return file;
     }
 
-    private Planning getPlanning(String subLocation) throws URISyntaxException, IOException, ParserException {
-        String location = "/services/tsp/" + subLocation;
+    private Planning getPlanning(String directoryPath) throws URISyntaxException, IOException, ParserException {
+        String location = "/services/tsp/" + directoryPath;
         Parser parser = new Parser();
         File cityMapXmlFile = getFile(location + "/cityMap.xml");
         CityMap cityMap = parser.getCityMap(cityMapXmlFile);
