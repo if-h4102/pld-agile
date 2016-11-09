@@ -86,12 +86,7 @@ public class PlanningDetailsItem extends AnchorPane {
         fireEvent(new RemoveWaypointAction(startWaypoint));
     }
 
-    public void onEditButtonAction(ActionEvent actionEvent) {
-        System.out.println("Edit waypoint ...");
-    }
-
     public void onAddButtonAction(ActionEvent actionEvent) {
         fireEvent(new AddWaypointAction(this.getIndex() + 1));
-        System.out.println("Add waypoint ...");
     }
 }

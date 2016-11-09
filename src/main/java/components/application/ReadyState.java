@@ -1,16 +1,23 @@
 package components.application;
 
-
 public class ReadyState extends WaitOpenDeliveryRequestState {
-    public void enterState(MainController mainController) {
+
+    public ReadyState(MainController mainController) {
+        super(mainController);
+    }
+
+    @Override
+    public void enterState() {
         mainController.modifyComputePlanningButtonDisabledProperty(false);
     }
 
-    public void leaveState(MainController mainController) {
+    @Override
+    public void leaveState() {
 
     }
 
-    public MainControllerState onComputePlanningButtonAction(MainController mainController) {
+    @Override
+    public MainControllerState onComputePlanningButtonAction() {
         return new ComputingPlanningState(mainController);
     }
 }

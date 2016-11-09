@@ -122,8 +122,6 @@ public class MapCanvas extends Canvas {
 
     @SuppressWarnings("restriction")
     private void clear() {
-
-
         double width = getWidth();
         double height = getHeight();
         GraphicsContext gc = getGraphicsContext2D();

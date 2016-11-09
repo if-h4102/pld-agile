@@ -17,12 +17,7 @@
       <cornerControls>
         <Button fx:id="add" graphicTextGap="2.0" mnemonicParsing="false" onAction="#onAddButtonAction" AnchorPane.rightAnchor="32" AnchorPane.topAnchor="0">
           <graphic>
-            <FontIcon iconLiteral="gmi-add" scaleX="0.75" scaleY="0.75" />
-          </graphic>
-        </Button>
-        <Button fx:id="edit" graphicTextGap="2.0" mnemonicParsing="false" onAction="#onEditButtonAction" AnchorPane.rightAnchor="32" AnchorPane.topAnchor="0">
-          <graphic>
-            <FontIcon iconLiteral="gmi-edit" scaleX="0.75" scaleY="0.75" />
+            <FontIcon iconLiteral="gmi-add" />
           </graphic>
         </Button>
         <Button fx:id="remove" graphicTextGap="2.0" mnemonicParsing="false" onAction="#onRemoveButtonAction" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">

@@ -1,15 +1,11 @@
 package components.application;
 
-import components.events.AddWaypointAction;
 import components.events.RemoveWaypointAction;
 import components.mapcanvas.IntersectionSelectionEvent;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableObjectValue;
-import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -52,7 +48,6 @@ public class MainController extends BorderPane {
     final private SimpleObjectProperty<CityMap> cityMap = new SimpleObjectProperty<>();
     final private SimpleObjectProperty<DeliveryRequest> deliveryRequest = new SimpleObjectProperty<>();
     final private SimpleObjectProperty<Planning> planning = new SimpleObjectProperty<>();
-    final private SimpleListProperty<Intersection> intersections = new SimpleListProperty<>(FXCollections.observableArrayList());
     final private SimpleDoubleProperty mapZoom = new SimpleDoubleProperty(1.0);
 
     final private Parser parserService = new Parser();
@@ -71,7 +66,7 @@ public class MainController extends BorderPane {
             throw new RuntimeException(exception);
         }
 
-        this.setState(new WaitOpenCityMapState());
+        this.setState(new WaitOpenCityMapState(this));
         this.openDeliveryRequestButton.disableProperty().bind(this.cityMap.isNull());
         this.computePlanningButton.setDisable(true);
         this.undoButton.disableProperty().bind(this.commandManager.undoableProperty().not());
@@ -79,19 +74,18 @@ public class MainController extends BorderPane {
         this.generateRoadmapButton.disableProperty().bind(this.planning.isNull());
         
         this.root.addEventHandler(RemoveWaypointAction.TYPE, removeWaypointAction -> {
-            Planning planning = this.getPlanning();
-            planning.removeWaypoint(removeWaypointAction.getWaypoint());
+            getPlanning().removeWaypoint(removeWaypointAction.getWaypoint());
             modifyComputePlanningButtonDisabledProperty(true);
         });
 
         this.addEventHandler(IntersectionSelectionEvent.INTERSECTION_SELECTION, this::onIntersectionSelection);
 
-        IMapService mapService = () -> {
+        IMapService newMapService = () -> {
             CompletableFuture<Intersection> future = new CompletableFuture<>();
             this.onPromptIntersection(future); 
             return future;
         };
-        this.setMapService(mapService);
+        this.setMapService(newMapService);
     }
 
     protected Parent getRoot() {
@@ -184,41 +178,41 @@ public class MainController extends BorderPane {
         if (currentState == nextState) {
             return;
         }
-        currentState.leaveState(this);
+        currentState.leaveState();
         this.setState(nextState);
-        nextState.enterState(this);
+        nextState.enterState();
     }
 
     // handlers
-    public void onOpenCityMapButtonAction(ActionEvent actionEvent) {
-        this.applyState(this.getState().onOpenCityMapButtonAction(this));
+    public void onOpenCityMapButtonAction() {
+        this.applyState(this.getState().onOpenCityMapButtonAction());
     }
 
-    public void onOpenDeliveryRequestButtonAction(ActionEvent actionEvent) {
-        this.applyState(this.getState().onOpenDeliveryRequestButtonAction(this));
+    public void onOpenDeliveryRequestButtonAction() {
+        this.applyState(this.getState().onOpenDeliveryRequestButtonAction());
     }
 
-    public void onComputePlanningButtonAction(ActionEvent actionEvent) {
-        this.applyState(this.getState().onComputePlanningButtonAction(this));
+    public void onComputePlanningButtonAction() {
+        this.applyState(this.getState().onComputePlanningButtonAction());
     }
 
     public void onPromptIntersection(CompletableFuture<Intersection> future) {
-        this.applyState(this.getState().onPromptIntersection(this, future));
+        this.applyState(this.getState().onPromptIntersection(future));
     }
 
     public void onIntersectionSelection(IntersectionSelectionEvent event) {
-        this.applyState(this.getState().onIntersectionSelection(this, event));
+        this.applyState(this.getState().onIntersectionSelection(event));
     }
 
-    public void onUndoButtonAction(ActionEvent actionEvent) {
+    public void onUndoButtonAction() {
         commandManager.undo();
     }
 
-    public void onRedoButtonAction(ActionEvent actionEvent) {
+    public void onRedoButtonAction() {
         commandManager.redo();
     }
     
-    public void onGenerateRoadmapButtonAction(ActionEvent actionEvent) {
+    public void onGenerateRoadmapButtonAction() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose planning directory");
         fileChooser.setInitialFileName("Planning.pdf");

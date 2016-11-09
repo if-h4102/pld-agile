@@ -1,6 +1,5 @@
 package components.application;
 
-
 import javafx.stage.FileChooser;
 import models.CityMap;
 import services.xml.exception.ParserException;
@@ -9,15 +8,23 @@ import java.io.IOException;
 import components.exceptionwindow.ExceptionWindow;
 
 public class WaitOpenCityMapState extends MainControllerState {
-    public void enterState(MainController mainController) {
+
+    public WaitOpenCityMapState(MainController mController) {
+        super(mController);
+    }
+
+    @Override
+    public void enterState() {
 
     }
 
-    public void leaveState(MainController mainController) {
+    @Override
+    public void leaveState() {
 
     }
 
-    public MainControllerState onOpenCityMapButtonAction(MainController mainController) {
+    @Override
+    public MainControllerState onOpenCityMapButtonAction() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open City Map");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("City Map file (*.xml)", "xml"));
@@ -31,11 +38,11 @@ public class WaitOpenCityMapState extends MainControllerState {
         try {
             currentCityMap = mainController.getParserService().getCityMap(cityMapFile);
         } catch (IOException | ParserException e) {
-            ExceptionWindow exceptionWindow = new ExceptionWindow(e.getMessage());
+            new ExceptionWindow(e.getMessage());
         }
 
         mainController.setCityMap(currentCityMap);
 
-        return new WaitOpenDeliveryRequestState();
+        return new WaitOpenDeliveryRequestState(mainController);
     }
 }

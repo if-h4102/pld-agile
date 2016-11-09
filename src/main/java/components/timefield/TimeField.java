@@ -24,7 +24,7 @@ public class TimeField extends HBox {
     @FXML
     protected TextField secondsField;
 
-    public TimeField () {
+    public TimeField() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/components/timefield/TimeField.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -42,10 +42,13 @@ public class TimeField extends HBox {
         minutesField.disableProperty().bind(this.disableProperty());
         secondsField.disableProperty().bind(this.disableProperty());
 
-        timeProperty().addListener((observable, oldValue, newValue) -> this.onTimeChange(oldValue.intValue(), newValue.intValue()));
-        hoursProperty().addListener((observable, oldValue, newValue) -> this.onHoursChange(oldValue.intValue(), newValue.intValue()));
-        minutesProperty().addListener((observable, oldValue, newValue) -> this.onMinutesChange(oldValue.intValue(), newValue.intValue()));
-        secondsProperty().addListener((observable, oldValue, newValue) -> this.onSecondsChange(oldValue.intValue(), newValue.intValue()));
+        this.timeProperty().addListener((observable, oldValue, newValue) -> this.onTimeChange(oldValue.intValue(), newValue.intValue()));
+        this.hoursProperty().addListener((observable, oldValue, newValue) -> this.onHoursChange(oldValue.intValue(), newValue.intValue()));
+        this.minutesProperty().addListener((observable, oldValue, newValue) -> this.onMinutesChange(oldValue.intValue(), newValue.intValue()));
+        this.secondsProperty().addListener((observable, oldValue, newValue) -> this.onSecondsChange(oldValue.intValue(), newValue.intValue()));
+        this.hoursTextProperty().addListener((observable, oldValue, newValue) -> this.onHoursTextChange(oldValue, newValue));
+        this.minutesTextProperty().addListener((observable, oldValue, newValue) -> this.onMinutesTextChange(oldValue, newValue));
+        this.secondsTextProperty().addListener((observable, oldValue, newValue) -> this.onSecondsTextChange(oldValue, newValue));
     }
 
     /**
@@ -90,6 +93,9 @@ public class TimeField extends HBox {
         this.hoursProperty().setValue(value);
     }
 
+    /**
+     * @return The observable property for the minutes.
+     */
     public final SimpleIntegerProperty minutesProperty() {
         return this.minutes;
     }
@@ -174,7 +180,10 @@ public class TimeField extends HBox {
         if (!hoursText.equals(this.getHoursText())) {
             this.setHoursText(hoursText);
         }
-        // TODO: update time
+        TimeStructure curTime = new TimeStructure(this.getTime());
+        if (curTime.hours != newValue) {
+            setTime(new TimeStructure(newValue, curTime.minutes, curTime.seconds).time);
+        }
     }
 
     protected void onMinutesChange(int oldValue, int newValue) {
@@ -185,7 +194,10 @@ public class TimeField extends HBox {
         if (!minutesText.equals(this.getMinutesText())) {
             this.setMinutesText(minutesText);
         }
-        // TODO: update time
+        TimeStructure curTime = new TimeStructure(this.getTime());
+        if (curTime.minutes != newValue) {
+            setTime(new TimeStructure(curTime.hours, newValue, curTime.seconds).time);
+        }
     }
 
     protected void onSecondsChange(int oldValue, int newValue) {
@@ -196,7 +208,49 @@ public class TimeField extends HBox {
         if (!secondsText.equals(this.getSecondsText())) {
             this.setSecondsText(secondsText);
         }
-        // TODO: update time
+        TimeStructure curTime = new TimeStructure(this.getTime());
+        if (curTime.seconds != newValue) {
+            setTime(new TimeStructure(curTime.hours, curTime.minutes, newValue).time);
+        }
+    }
+
+    protected void onHoursTextChange(String oldValue, String newValue) {
+        if (newValue.equals(oldValue)) {
+            return;
+        }
+        int hours;
+        try {
+            hours = Integer.parseInt(newValue, 10);
+        } catch (NumberFormatException e) {
+            hours = 0;
+        }
+        this.setHours(hours);
+    }
+
+    protected void onMinutesTextChange(String oldValue, String newValue) {
+        if (newValue.equals(oldValue)) {
+            return;
+        }
+        int minutes;
+        try {
+            minutes = Integer.parseInt(newValue, 10);
+        } catch (NumberFormatException e) {
+            minutes = 0;
+        }
+        this.setMinutes(minutes);
+    }
+
+    protected void onSecondsTextChange(String oldValue, String newValue) {
+        if (newValue.equals(oldValue)) {
+            return;
+        }
+        int seconds;
+        try {
+            seconds = Integer.parseInt(newValue, 10);
+        } catch (NumberFormatException e) {
+            seconds = 0;
+        }
+        this.setSeconds(seconds);
     }
 
     // TODO: onHoursTextChange
@@ -208,12 +262,14 @@ public class TimeField extends HBox {
         public final int hours;
         public final int minutes;
         public final int seconds;
+
         TimeStructure(int hours, int minutes, int seconds) {
             this.hours = hours;
             this.minutes = minutes;
             this.seconds = seconds;
             this.time = hours * 3600 + minutes * 60 + seconds;
         }
+
         TimeStructure(int time) {
             this.time = time;
             this.hours = time / 3600;

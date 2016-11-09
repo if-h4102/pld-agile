@@ -51,6 +51,18 @@ public class Parser {
     private static final String NAME_ATTRIBUTE_DELIVERY_REQUEST_START_DELIVERY_TIME = "debutPlage";
     private static final String NAME_ATTRIBUTE_DELIVERY_REQUEST_END_DELIVERY_TIME = "finPlage";
 
+    /**
+     * Returns the cityMap described by the file given in parameter. This file must be at the xml format, and follow the correct syntax. If
+     * not, an exception will be thrown.
+     * 
+     * @param xmlFile
+     *            The file containing the xml description of the city map.
+     * @return The city map described by the xml file.
+     * @throws IOException
+     *             If the file is not reachable by the application.
+     * @throws ParserException
+     *             If the file is not syntactically of meaningfully correct
+     */
     public CityMap getCityMap(File xmlFile) throws IOException, ParserException {
         Map<Integer, Intersection> intersections = new TreeMap<Integer, Intersection>();
         ArrayList<StreetSection> streetSections = new ArrayList<StreetSection>();
@@ -85,6 +97,16 @@ public class Parser {
         return new CityMap(intersections.values(), streetSections);
     }
 
+    /**
+     * Add an intersection in the parameter intersections. The intersection added is the intersection described by the intersectionElement
+     * 
+     * @param intersectionElement
+     *            The xml element describing the intersection to add.
+     * @param intersections
+     *            The Collection of intersections where the new intersection will be added
+     * @throws ParserException
+     *             If the element describing the intersection is not correct.
+     */
     private void addIntersection(Element intersectionElement, Map<Integer, Intersection> intersections) throws ParserException {
         if (!attributeExist(intersectionElement, NAME_ATTRIBUTE_INTERSECTION_ID, NAME_ATTRIBUTE_INTERSECTION_X,
                 NAME_ATTRIBUTE_INTERSECTION_Y))
@@ -115,6 +137,20 @@ public class Parser {
         intersections.put(id, intersection);
     }
 
+    /**
+     * Returns the street section described by the streetSectionElement.
+     * 
+     * @param streetSectionElement
+     *            The xml element describing the street section.
+     * @param intersections
+     *            The map of intersections of the city map where the street section is. This map must contains all the intersection of the
+     *            city map.
+     * @param streetSections
+     *            The street sections already parsed. An error will be thrown if the current street section is already in this collection.
+     * @return The street section described by the streetSectionElement.
+     * @throws ParserException
+     *             If the element describing the street section is not correct, or the street section has already been added.
+     */
     private StreetSection getStreetSection(Element streetSectionElement, Map<Integer, Intersection> intersections,
             Collection<StreetSection> streetSections) throws ParserException {
         if (!attributeExist(streetSectionElement, NAME_ATTRIBUTE_STREET_SECTION_START, NAME_ATTRIBUTE_STREET_SECTION_END,
@@ -145,7 +181,6 @@ public class Parser {
             throw new ParserIntegerValueException("The length of a street section must be positive", length);
         if (speed < 0)
             throw new ParserIntegerValueException("The speed of a street section must be positive", speed);
-        // TODO test if time == 0?
 
         Intersection intersectionStart = intersections.get(idIntersectionStart);
         Intersection intersectionEnd = intersections.get(idIntersectionEnd);
@@ -158,6 +193,20 @@ public class Parser {
         return streetSection;
     }
 
+    /**
+     * Returns the delivery request described by the xml file provided in parameter. This file must be at the format xml and respect the
+     * right syntax.
+     * 
+     * @param xmlFile
+     *            The file describing the returned delivery request.
+     * @param cityMap
+     *            The city map on which the delivery request will be applied.
+     * @return The delivery request described by the xmlFile.
+     * @throws IOException
+     *             If the file is not reachable by the application.
+     * @throws ParserException
+     *             If the xmlFile does not respect the right syntax.
+     */
     public DeliveryRequest getDeliveryRequest(File xmlFile, CityMap cityMap) throws IOException, ParserException {
         Warehouse warehouse = null;
         Collection<DeliveryAddress> deliveryAddresses = new ArrayList<DeliveryAddress>();
@@ -179,7 +228,7 @@ public class Parser {
 
         Element warehouseElement = (Element) (warehouseNode.item(0));
         warehouse = getWarehouse(warehouseElement, cityMap);
-        startPlanningTimestamp = getStartPlanningTimestamp(warehouseElement);
+        startPlanningTimestamp = warehouse.getTimeStart();
 
         NodeList deliveryAddressesNodes = deliveryRequestDocument.getElementsByTagName(DELIVERY_ADDRESS_NAME);
         if (deliveryAddressesNodes.getLength() < 1)
@@ -193,16 +242,30 @@ public class Parser {
         return new DeliveryRequest(cityMap, warehouse, deliveryAddresses, startPlanningTimestamp);
     }
 
+    /**
+     * Returns the warehouse described by the warehouseElement.
+     * 
+     * @param warehouseElement
+     *            The xml element describing the warehouse.
+     * @param cityMap
+     *            The city map where the warehouse is.
+     * @return The warehouse described by the warehouseElement.
+     * @throws ParserException
+     *             If the warehouse element is not correct.
+     */
     private Warehouse getWarehouse(Element warehouseElement, CityMap cityMap) throws ParserException {
-        if (!attributeExist(warehouseElement, NAME_ATTRIBUTE_WAREHOUSE_ID))
+        if (!attributeExist(warehouseElement, NAME_ATTRIBUTE_WAREHOUSE_ID, NAME_ATTRIBUTE_WAREHOUSE_START_PLANNING_TIME))
             throw new ParserMissingAttributeException("An attribute is missing to construct the warehouse");
 
-        int startPlanningTime = getStartPlanningTimestamp(warehouseElement);
+        int startPlanningTime;
         int idIntersection;
         try {
             idIntersection = Integer.parseInt(warehouseElement.getAttribute(NAME_ATTRIBUTE_WAREHOUSE_ID));
+            startPlanningTime = getTime(warehouseElement.getAttribute(NAME_ATTRIBUTE_WAREHOUSE_START_PLANNING_TIME));
         } catch (NumberFormatException e) {
             throw new ParserShouldBeIntegerValueException(e);
+        } catch (ParserTimeSyntaxException e) {
+            throw new ParserTimeSyntaxException("The start planning time must be on the format hh:mm:ss", e);
         }
 
         if (!cityMap.isIntersectionInCityMap(idIntersection))
@@ -211,18 +274,21 @@ public class Parser {
         return new Warehouse(cityMap.getIntersection(idIntersection), startPlanningTime);
     }
 
-    private int getStartPlanningTimestamp(Element warehouseElement) throws ParserException {
-        if (!attributeExist(warehouseElement, NAME_ATTRIBUTE_WAREHOUSE_START_PLANNING_TIME))
-            throw new ParserMissingAttributeException("The start planning time is missing");
-
-        String stringStartTimestamp = warehouseElement.getAttribute(NAME_ATTRIBUTE_WAREHOUSE_START_PLANNING_TIME);
-        try {
-            return getTime(stringStartTimestamp);
-        } catch (ParserTimeSyntaxException e) {
-            throw new ParserTimeSyntaxException("The start planning time must be on the format hh:mm:ss");
-        }
-    }
-
+    /**
+     * Returns the deliveryAddress described by the deliveryAddressElement.
+     * 
+     * @param deliveryAddressElement
+     *            The element describing the delivery address.
+     * @param cityMap
+     *            The city map where the delivery address is.
+     * @param deliveryAddresses
+     *            The collection of already parsed delivery address. An error is thrown if the current delivery address is already in this
+     *            collection.
+     * @return The delivery address described by the deliveryAddressElement.
+     * @throws ParserException
+     *             If the element described the delivery address is not correct, or the current delivery address is already in the
+     *             collection of delivery addresses.
+     */
     private DeliveryAddress getDeliveryAddress(Element deliveryAddressElement, CityMap cityMap,
             Collection<DeliveryAddress> deliveryAddresses) throws ParserException {
         if (!attributeExist(deliveryAddressElement, NAME_ATTRIBUTE_DELIVERY_REQUEST_DURATION, NAME_ATTRIBUTE_DELIVERY_REQUEST_ID))
@@ -256,6 +322,19 @@ public class Parser {
         return deliveryAddress;
     }
 
+    /**
+     * Returns the time constraints of the delivery address described by the delivery address element. If no time constraints are available,
+     * standard time constraints are returned.
+     * 
+     * @param deliveryAddressElement
+     *            The xml element containing the time constraints.
+     * @param deliveryDuration
+     *            The delivery duration associated to the delivery address.
+     * @return The time constraints of the delivery address. This is formatted as an array: the first cell is the start delivery time and
+     *         the second cell is the end delivery time.
+     * @throws ParserException
+     *             If the time constraints are not correct.
+     */
     private int[] getTimeConstraints(Element deliveryAddressElement, int deliveryDuration) throws ParserException {
         boolean isStartDeliveryTime = deliveryAddressElement.hasAttribute(NAME_ATTRIBUTE_DELIVERY_REQUEST_START_DELIVERY_TIME);
         boolean isEndDeliveryTime = deliveryAddressElement.hasAttribute(NAME_ATTRIBUTE_DELIVERY_REQUEST_END_DELIVERY_TIME);
@@ -284,7 +363,18 @@ public class Parser {
         return result;
     }
 
-    // String... is as a String[] in this method, but is called with syntax : (string1, string2, string3)
+    // String... is as a String[] in this method, but is called with syntax :
+    // (string1, string2, string3)
+    /**
+     * Returns true or false whereas the provided string in parameters are attributes of the provided element.
+     * 
+     * @param element
+     *            The element which should have the string provided as attributes.
+     * @param attributes
+     *            The list of attributes that the element should have.
+     * @return true if the element have all the attributes provided, false if at least one attribute is missing. The method could return
+     *         true if the element has more attributes than the list, as long as all the attributes in the list are in the element.
+     */
     private boolean attributeExist(Element element, String... attributes) {
         for (String attribute : attributes) {
             if (!element.hasAttribute(attribute))
@@ -293,6 +383,15 @@ public class Parser {
         return true;
     }
 
+    /**
+     * Returns the timestamp representing by the provided stringTime.
+     * 
+     * @param stringTime
+     *            The string that will be convert to timestamp. This string must be at the format hh:mm:ss
+     * @return The timestamp representing by the provided stringTime.
+     * @throws ParserTimeSyntaxException
+     *             If the stringTime is not at the right format.
+     */
     private int getTime(String stringTime) throws ParserTimeSyntaxException {
         String errorMessage = "The format of a time must be hh:mm:ss";
 
@@ -308,7 +407,7 @@ public class Parser {
             minutes = Integer.parseInt(stringHoursMinutesSeconds[1]);
             seconds = Integer.parseInt(stringHoursMinutesSeconds[2]);
         } catch (NumberFormatException e) {
-            throw new ParserTimeSyntaxException(errorMessage);
+            throw new ParserTimeSyntaxException(errorMessage, e);
         }
 
         if (hours < 0 || hours >= 24 || minutes < 0 || minutes >= 60 || seconds < 0 || seconds >= 60)

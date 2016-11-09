@@ -2,35 +2,42 @@ package components.application;
 
 import components.mapcanvas.IntersectionSelectionEvent;
 import models.Intersection;
-
 import java.util.concurrent.CompletableFuture;
 
 public abstract class MainControllerState {
-    public void enterState(MainController mainController) {
+    final protected MainController mainController;
+    
+    public MainControllerState(MainController mainController) {
+        this.mainController = mainController;
+    }
+
+    public void enterState() {
 
     }
 
-    public void leaveState(MainController mainController) {
+    public void leaveState() {
 
     }
 
-    public MainControllerState onOpenCityMapButtonAction(MainController mainController) {
+    public MainControllerState onOpenCityMapButtonAction() {
         return this;
     }
 
-    public MainControllerState onOpenDeliveryRequestButtonAction(MainController mainController) {
+    public MainControllerState onOpenDeliveryRequestButtonAction() {
         return this;
     }
 
-    public MainControllerState onComputePlanningButtonAction(MainController mainController) {
+    public MainControllerState onComputePlanningButtonAction() {
         return this;
     }
 
-    public MainControllerState onPromptIntersection(MainController mainController, CompletableFuture<Intersection> future) {
+    @SuppressWarnings("unused")
+    public MainControllerState onPromptIntersection(CompletableFuture<Intersection> future) {
         return this;
     }
 
-    public MainControllerState onIntersectionSelection(MainController mainController, IntersectionSelectionEvent event) {
+    @SuppressWarnings("unused")
+    public MainControllerState onIntersectionSelection(IntersectionSelectionEvent event) {
         return this;
     }
 }

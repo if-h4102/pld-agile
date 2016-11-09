@@ -20,7 +20,7 @@ public class ThreadedTspSolver extends AbstractTspSolver implements Runnable {
      */
     private final int MIN_EXPLORATION_WIDTH = 3; //min number of route tried from a given point
     private final int EXPLORATION_WIDTH_DIVISOR = 1; //divisor of the total number of accessible points
-    //finale width exploration is: MIN_EXPLORATION_WIDTH + (number of accessible points) / EXPLORATION_WIDTH_DIVISOR
+    //final width exploration is: MIN_EXPLORATION_WIDTH + (number of accessible points) / EXPLORATION_WIDTH_DIVISOR
     //set to 1 to disable width exploration limitation
     private final int MAX_NUMBER_OF_MIN_COST = 1000; //branch cut if cost of currant branch is bigger than this constant
     //multiply by the minimum cost to reach an accessible point.
@@ -38,6 +38,7 @@ public class ThreadedTspSolver extends AbstractTspSolver implements Runnable {
      * the best result can be get using getBestPlanning(), during compute time it return the best found so far
      * once compute finished it's the best the algo can found.
      */
+    @Override
     public void run() {
         if (graph == null) {
             System.err.println("Please set a deliveryGraph before trying to solve TSP");
