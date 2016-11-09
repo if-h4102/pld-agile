@@ -89,7 +89,7 @@ public class MapRenderer {
         Iterable<Route> listRoutes = planning.getRoutes();
 
         //Map containing the number of each streetSection crossed
-        HashMap<StreetSection, Integer> sectionMap = getSectionMap(listRoutes);
+        HashMap<StreetSection, Integer> sectionMap = new HashMap<StreetSection, Integer>();
 
         //actual section
         int countSections = 1;
@@ -104,19 +104,25 @@ public class MapRenderer {
         for (Route route : listRoutes) {
             gc.setStroke(currentColor);
             List<StreetSection> streetSections = route.getStreetSections();
-
             for (StreetSection section : streetSections) {
                 gc.setLineWidth(4);
                 currentColor = getColor(countSections++, totalSections);
                 gc.setStroke(currentColor);
-                int passings = sectionMap.get(section);
-                if (passings > 1) {
-                    gc.strokeLine(section.getStartIntersection().getX() - 2 * passings, section.getStartIntersection().getY() - 2 * passings,
-                        section.getEndIntersection().getX() - 2 * passings, section.getEndIntersection().getY() - 2 * passings);
-                    sectionMap.put(section, passings - 1);
-                } else {
+                if (!sectionMap.containsKey(section)) {
+                    sectionMap.put(section, 1);
                     gc.strokeLine(section.getStartIntersection().getX(), section.getStartIntersection().getY(),
                         section.getEndIntersection().getX(), section.getEndIntersection().getY());
+                } else {
+                    int passings = sectionMap.get(section);
+                    sectionMap.put(section, passings + 1);
+                    System.out.println("passing" + passings);
+                    if (Math.abs(section.getStartIntersection().getX() - section.getEndIntersection().getX()) > Math.abs(section.getStartIntersection().getY() - section.getEndIntersection().getY())) {
+                        gc.strokeLine(section.getStartIntersection().getX() - 4 * passings, section.getStartIntersection().getY(),
+                            section.getEndIntersection().getX() - 4 * passings, section.getEndIntersection().getY());
+                    } else {
+                        gc.strokeLine(section.getStartIntersection().getX(), section.getStartIntersection().getY() - 4 * passings,
+                            section.getEndIntersection().getX(), section.getEndIntersection().getY() - 4 * passings);
+                    }
                 }
                 drawArrowBetweenStreetSection(gc, section, currentColor);
             }
