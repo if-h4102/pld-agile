@@ -231,8 +231,7 @@ public class MapCanvas extends Canvas {
     @SuppressWarnings("restriction")
     @Requires("getPlanning() != null")
     private void drawPlanning() {
-    	Color colorStart = Color.BLUE;
-    	Color currentColor = colorStart;
+    	Color currentColor =  Color.BLUE;
     	
         GraphicsContext gc = getGraphicsContext2D();
 
@@ -241,12 +240,24 @@ public class MapCanvas extends Canvas {
         Iterable<Route> listRoutes = planning.getRoutes();
 
         int number = 1;
+        int countSections = 1;
+        int totalSections = 0;
+        for (Route route : listRoutes) {
+            List<StreetSection> streetSections = route.getStreetSections();
+            
+               totalSections += streetSections.size();
+            
+        }
+        
         for (Route route : listRoutes) {
             gc.setStroke(currentColor);
             List<StreetSection> streetSections = route.getStreetSections();
+            
             for (StreetSection section : streetSections) {
                 gc.setLineWidth(4);
-                //currentColor = currentColor.color(currentColor.getRed()+10, currentColor.getGreen()+10, currentColor.getBlue()+10);
+                
+                currentColor = getColor(currentColor, countSections++, totalSections);
+                
                 gc.setStroke(currentColor);
                 gc.strokeLine(section.getStartIntersection().getX(), section.getStartIntersection().getY(),
                     section.getEndIntersection().getX(), section.getEndIntersection().getY());
@@ -264,6 +275,23 @@ public class MapCanvas extends Canvas {
             number++;
         }
 
+    }
+    
+    public Color getColor(Color color, int step, int nbStep){
+    	
+    	if(step*3 < nbStep){
+    		color =  new Color((color.getRed()+0.05)%1, color.getGreen(), color.getBlue(), color.getOpacity());
+    	}
+    	else if(step*3 < 2*nbStep){
+    		color =  new Color(color.getRed(), (color.getGreen()+0.05)%1, color.getBlue(), color.getOpacity());
+    	}
+    	else{
+    		color =  new Color(color.getRed(), color.getGreen(), (color.getBlue()+0.05)%1, color.getOpacity());
+    	}
+    	
+    	
+    	
+    	return color;
     }
     
     
