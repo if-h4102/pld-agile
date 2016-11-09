@@ -25,6 +25,8 @@
       		  onAction="#onUndoButtonAction" text="%undo"/>
       <Button fx:id="redoButton" mnemonicParsing="false"
   			  onAction="#onRedoButtonAction" text="%redo"/>
+  	  <Button fx:id="generateRoadmapButton" mnemonicParsing="false"
+  	  		  onAction="#onGenerateRoadmapButtonAction" text="%generateRoadMap"/>
     </ToolBar>
   </top>
   <center>

@@ -15,14 +15,18 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import models.CityMap;
 import models.DeliveryRequest;
 import models.Intersection;
 import models.Planning;
 import services.command.CommandManager;
 import services.map.IMapService;
+import services.pdf.planningPrinter;
 import services.xml.Parser;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -42,6 +46,8 @@ public class MainController extends BorderPane {
     private Button undoButton;
     @FXML
     private Button redoButton;
+    @FXML
+    private Button generateRoadmapButton;
     final private ReadOnlyObjectWrapper<MainControllerState> state = new ReadOnlyObjectWrapper<>();
     final private SimpleObjectProperty<CityMap> cityMap = new SimpleObjectProperty<>();
     final private SimpleObjectProperty<DeliveryRequest> deliveryRequest = new SimpleObjectProperty<>();
@@ -70,7 +76,8 @@ public class MainController extends BorderPane {
         this.computePlanningButton.setDisable(true);
         this.undoButton.disableProperty().bind(this.commandManager.undoableProperty().not());
         this.redoButton.disableProperty().bind(this.commandManager.isRedoable().not());
-
+        this.generateRoadmapButton.disableProperty().bind(this.planning.isNull());
+        
         this.root.addEventHandler(RemoveWaypointAction.TYPE, removeWaypointAction -> {
             Planning planning = this.getPlanning();
             planning.removeWaypoint(removeWaypointAction.getWaypoint());
@@ -209,6 +216,16 @@ public class MainController extends BorderPane {
 
     public void onRedoButtonAction(ActionEvent actionEvent) {
         commandManager.redo();
+    }
+    
+    public void onGenerateRoadmapButtonAction(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose planning directory");
+        fileChooser.setInitialFileName("Planning.pdf");
+        File file = fileChooser.showSaveDialog(new Stage());
+        if (file != null) {
+            planningPrinter.generatePdfFromPlanning(this.planning.getValue(), file.getPath());
+        }
     }
     
     // buttons properties modifier
