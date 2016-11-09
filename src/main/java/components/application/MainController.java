@@ -75,7 +75,7 @@ public class MainController extends BorderPane {
         this.openDeliveryRequestButton.disableProperty().bind(this.cityMap.isNull());
         this.computePlanningButton.setDisable(true);
         this.undoButton.disableProperty().bind(this.commandManager.undoableProperty().not());
-        this.redoButton.disableProperty().bind(this.commandManager.isRedoable().not());
+        this.redoButton.disableProperty().bind(this.commandManager.redoableProperty().not());
         this.generateRoadmapButton.disableProperty().bind(this.planning.isNull());
         
         this.root.addEventHandler(SaveDeliveryAddress.TYPE, event-> {
