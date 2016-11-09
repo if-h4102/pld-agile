@@ -2,6 +2,7 @@
 
 <?import components.mapcanvas.MapCanvas?>
 <?import components.intersectioncard.IntersectionCard?>
+<?import components.waypointcard.WarehouseCard?>
 <?import javafx.scene.layout.*?>
 
 <?import components.waypointcard.DeliveryAddressCard?>
@@ -22,4 +23,5 @@
   />
   <IntersectionCard fx:id="tooltip" intersection="${controller.activeIntersection}"/>
   <DeliveryAddressCard fx:id="tooltipDelivery" waypoint="${controller.activeDelivery}"/>
+  <WarehouseCard fx:id="tooltipwarehouse" waypoint="${controller.activeWarehouse}"/>
 </fx:root>

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import components.citymapdetails.CityMapDetails?>
 <?import components.deliveryrequestdetails.DeliveryRequestDetails?>
+<?import components.informationarea.InformationArea?>
 <?import components.mapscreen.MapScreen?>
 <?import components.planningdetails.PlanningDetails?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.ToolBar?>
@@ -40,16 +39,9 @@
         <!--<fx:include fx:id="mapView" source="MapScreen.fxml" />-->
       </AnchorPane>
       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-        <BorderPane AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-          <bottom>
-            <ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-              <buttons>
-
-              </buttons>
-            </ButtonBar>
-          </bottom>
+        <BorderPane layoutX="-121.0" prefWidth="277.0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
           <center>
-            <Accordion BorderPane.alignment="CENTER">
+            <Accordion prefHeight="438.0" prefWidth="239.0" BorderPane.alignment="CENTER">
               <panes>
                 <TitledPane animated="false" text="Delivery Request">
                   <content>
@@ -76,11 +68,18 @@
               </panes>
             </Accordion>
           </center>
+          <bottom>
+            <BorderPane>
+             <bottom>
+              <InformationArea prefHeight="30.0" prefWidth="500.0">
+
+              </InformationArea>
+             </bottom>
+            </BorderPane>
+          </bottom>
         </BorderPane>
+
       </AnchorPane>
     </SplitPane>
   </center>
-   <bottom>
-      <AnchorPane prefHeight="21.0" prefWidth="640.0" BorderPane.alignment="CENTER" />
-   </bottom>
 </fx:root>

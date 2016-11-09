@@ -13,7 +13,7 @@
          stylesheets="/components/planningdetails/PlanningDetailsItem.css" type="AnchorPane"
          xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1">
   <VBox AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0">
-    <WaypointCard waypoint="${controller.item.startWaypoint}" >
+    <WaypointCard waypoint="${controller.item.startWaypoint}" onClick={$controller.item>
       <cornerControls>
         <Button fx:id="add" graphicTextGap="2.0" mnemonicParsing="false" onAction="#onAddButtonAction" AnchorPane.rightAnchor="32" AnchorPane.topAnchor="0">
           <graphic>

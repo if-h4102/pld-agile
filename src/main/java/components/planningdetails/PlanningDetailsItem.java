@@ -28,6 +28,7 @@ public class PlanningDetailsItem extends AnchorPane {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
+        
     }
 
     /**
