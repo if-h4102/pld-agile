@@ -12,16 +12,16 @@ import javafx.scene.layout.AnchorPane;
 import models.AbstractWaypoint;
 import models.Planning;
 import models.Route;
-import services.map.WaypointPlanning;
+import services.map.IMapService;
+import services.map.MapService;
 
 import java.io.IOException;
 
 public class PlanningDetailsItem extends AnchorPane {
     private final SimpleObjectProperty<Route> item = new SimpleObjectProperty<>(this, "item", null);
     private final SimpleObjectProperty<Planning> planning = new SimpleObjectProperty<>(this, "planning", null);
-    private SimpleObjectProperty<AbstractWaypoint> waypoint = new SimpleObjectProperty<>(this,"waypoint", null);
+    private SimpleObjectProperty<IMapService> mapService = new SimpleObjectProperty<>(this,"mapService", null);
     private final SimpleIntegerProperty index = new SimpleIntegerProperty(this, "index", 0);
-    private WaypointPlanning activeWaypoint;
 
     public PlanningDetailsItem() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/components/planningdetails/PlanningDetailsItem.fxml"));
@@ -33,15 +33,8 @@ public class PlanningDetailsItem extends AnchorPane {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
-        
-        this.activeWaypoint.waypointProperty().addListener(new ChangeListener(){
 
-			@Override
-			public void changed(activeWaypoint.waypointProperty() observable, Object oldValue, Object newValue) {
-				// TODO Auto-generated method stub
-				
-			});
-        
+        this.mapServiceProperty().addListener(this::onMapServiceChange);
     }
 
     /**
@@ -74,7 +67,7 @@ public class PlanningDetailsItem extends AnchorPane {
     public final Planning getPlanning() {
         return this.planningProperty().getValue();
     }
-    
+
 
     // Index
     public final SimpleIntegerProperty indexProperty() {
@@ -103,5 +96,34 @@ public class PlanningDetailsItem extends AnchorPane {
 
     public void onAddButtonAction(ActionEvent actionEvent) {
         fireEvent(new AddWaypointAction(this.getIndex() + 1));
+    }
+
+    public SimpleObjectProperty<IMapService> mapServiceProperty() {
+        return this.mapService;
+    }
+
+    public IMapService getMapService() {
+        return this.mapServiceProperty().getValue();
+    }
+
+    public void setMapService(IMapService value) {
+        this.mapServiceProperty().setValue(value);
+    }
+
+    protected void onMapServiceChange(ObservableValue<? extends IMapService> observable, IMapService oldValue, IMapService newValue) {
+        if (oldValue == newValue) {
+            return;
+        }
+        System.out.println("Item: Service changed");
+        if (oldValue != null) {
+            oldValue.activeWaypointProperty().removeListener(this::onActiveWaypointChange);
+        }
+        if (newValue != null) {
+            newValue.activeWaypointProperty().addListener(this::onActiveWaypointChange);
+        }
+    }
+
+    protected void onActiveWaypointChange(ObservableValue<? extends AbstractWaypoint> observable, AbstractWaypoint oldValue, AbstractWaypoint newValue) {
+        System.out.println("Item: ActiveWaypoint change");
     }
 }

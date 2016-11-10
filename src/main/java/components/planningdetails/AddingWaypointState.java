@@ -38,8 +38,8 @@ public class AddingWaypointState extends PlanningDetailsState {
         DeliveryAddress tmpDeliveryAddress = new DeliveryAddress(intersection, 0);
         EditableDeliveryAddressCard editable = new EditableDeliveryAddressCard();
         editable.setWaypoint(tmpDeliveryAddress);
-        
-        
+
+
         nodes.add(this.index, editable);
 
         return this;
@@ -84,8 +84,8 @@ public class AddingWaypointState extends PlanningDetailsState {
         }
         return this;
     }
-    
-    public IPlanningDetailsState onWaypointChange(ObservableValue<? extends AbstractWaypoint> observable, AbstractWaypoint oldValue, AbstractWaypoint newValue) {
+
+    public IPlanningDetailsState onActiveWaypointChange(ObservableValue<? extends AbstractWaypoint> observable, AbstractWaypoint oldValue, AbstractWaypoint newValue) {
         if (oldValue == newValue) {
             return this;
         }

@@ -47,8 +47,8 @@ public abstract class PlanningDetailsState implements IPlanningDetailsState {
         }
         return this;
     }
-    
-    public IPlanningDetailsState onWaypointChange(ObservableValue<? extends AbstractWaypoint> observable, AbstractWaypoint oldValue, AbstractWaypoint newValue) {
+
+    public IPlanningDetailsState onActiveWaypointChange(ObservableValue<? extends AbstractWaypoint> observable, AbstractWaypoint oldValue, AbstractWaypoint newValue) {
         if (oldValue == newValue) {
             return this;
         }

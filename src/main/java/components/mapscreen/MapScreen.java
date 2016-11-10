@@ -13,7 +13,7 @@ import models.DeliveryRequest;
 import models.Intersection;
 import models.Planning;
 import models.Warehouse;
-import services.map.WaypointPlanning;
+import services.map.MapService;
 import components.mapcanvas.DeliverySelectionEvent;
 import components.mapcanvas.IntersectionSelectionEvent;
 
@@ -51,8 +51,8 @@ public class MapScreen extends AnchorPane {
     private SimpleObjectProperty<Intersection> activeIntersection;
     private SimpleObjectProperty<DeliveryAddress> activeDelivery;
     private SimpleObjectProperty<Warehouse> activeWarehouse;
-    private WaypointPlanning activeWaypoint;
-    
+    private MapService activeWaypoint;
+
 
     @SuppressWarnings("restriction")
     public MapScreen() {
@@ -70,7 +70,7 @@ public class MapScreen extends AnchorPane {
             System.out.println("handler intersection");
             updateWarehouseTooltip(event);
         });
-        
+
         canvas.addEventHandler(IntersectionSelectionEvent.INTERSECTION_SELECTION, event -> {
             System.out.println("handler intersection");
             updateIntersectionTooltip(event);
@@ -80,8 +80,8 @@ public class MapScreen extends AnchorPane {
             System.out.println("handler delivery address");
             updateDeliveryTooltip(event);
         });
-        
-        
+
+
         tooltipwarehouse.visibleProperty().bind(activeWarehouse.isNotNull());
         tooltipDelivery.visibleProperty().bind(activeDelivery.isNotNull());
         tooltip.visibleProperty().bind(activeIntersection.isNotNull());
@@ -228,7 +228,7 @@ public class MapScreen extends AnchorPane {
         tooltipDelivery = tooltipDeliveryOptimalPosition(tooltipDelivery, event.getX(),event.getY());
         setActiveDelivery(event.getDeliveryAddress());
     }
-    
+
     /**
      * The active delivery address
      *      *
@@ -253,7 +253,7 @@ public class MapScreen extends AnchorPane {
     public final Warehouse getActiveWarehouse() {
         return activeWarehouse == null ? null : activeWarehouseProperty().getValue();
     }
-    
+
     /**
      * Update the position of the warehouse tooltip
      *
@@ -262,8 +262,8 @@ public class MapScreen extends AnchorPane {
         tooltipwarehouse = tooltipWarehouseOptimalPosition(tooltipwarehouse, event.getX(),event.getY());
         setActiveWarehouse(event.getWarehouse());
     }
-    
-    // waypoint 
+
+    // waypoint
     /**
      * @return The observable property for the waypoint containing the currently
      * displayed item.
@@ -279,7 +279,7 @@ public class MapScreen extends AnchorPane {
     public final AbstractWaypoint getWaypoint() {
         return this.waypointProperty().getValue();
     }
-    
+
     /**
      * Find the optimal origin for the tooltip
      *
@@ -291,7 +291,7 @@ public class MapScreen extends AnchorPane {
     	tooltipWarehouse.setLayoutY(optimal.getY());
         return tooltipWarehouse;
     }
-    
+
     public Point optimalPosition(double height, double width, double x, double y){
     	double h = canvas.getHeight();
         double w = canvas.getWidth();

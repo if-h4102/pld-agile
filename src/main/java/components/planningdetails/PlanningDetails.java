@@ -1,6 +1,5 @@
 package components.planningdetails;
 
-import components.application.MainControllerState;
 import components.events.AddWaypointAction;
 import components.events.SaveDeliveryAddress;
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -15,12 +14,10 @@ import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import models.AbstractWaypoint;
-import models.DeliveryAddress;
 import models.Planning;
 import models.Route;
 import org.jetbrains.annotations.NotNull;
 import services.map.IMapService;
-import services.map.WaypointPlanning;
 
 import java.io.IOException;
 
@@ -30,7 +27,6 @@ public class PlanningDetails extends ScrollPane {
     private final SimpleObjectProperty<Planning> planning = new SimpleObjectProperty<>(this, "planning", null);
     private final SimpleObjectProperty<IMapService> mapService = new SimpleObjectProperty<>(this, "mapService", null);
     private final ReadOnlyObjectWrapper<IPlanningDetailsState> state = new ReadOnlyObjectWrapper<>(this, "state", new DefaultState(this));
-    private WaypointPlanning activeWaypoint;
 
     public PlanningDetails() {
         super();
@@ -44,8 +40,8 @@ public class PlanningDetails extends ScrollPane {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
-        
-        this.activeWaypoint.waypointProperty().addListener(this::onWaypointChange);
+
+        this.mapServiceProperty().addListener(this::onMapServiceChange);
         this.planningProperty().addListener(this::onPlanningChange);
         this.addEventHandler(AddWaypointAction.TYPE, this::onAddWaypointButtonAction);
         this.addEventHandler(SaveDeliveryAddress.TYPE, this::onSaveNewWaypoint);
@@ -63,7 +59,7 @@ public class PlanningDetails extends ScrollPane {
     public final Planning getPlanning() {
         return this.planningProperty().getValue();
     }
-    
+
 
     public SimpleObjectProperty<IMapService> mapServiceProperty() {
         return this.mapService;
@@ -109,6 +105,7 @@ public class PlanningDetails extends ScrollPane {
             node.setIndex(index++);
             node.setItem(item);
             node.setPlanning(planning);
+            node.mapServiceProperty().bind(this.mapServiceProperty());
             itemNodes.add(node);
         }
     }
@@ -117,22 +114,23 @@ public class PlanningDetails extends ScrollPane {
         System.out.println("Planning change");
         this.changeState(this.getState().onPlanningChange(observable, oldValue, newValue));
     }
-    
-    protected void onWaypointChange(ObservableValue<? extends AbstractWaypoint> observable, AbstractWaypoint oldValue, AbstractWaypoint newValue) {
-        System.out.println("Waypoint change");
-        this.changeState(this.getState().onWaypointChange(observable, oldValue, newValue));
+
+    protected void onMapServiceChange(ObservableValue<? extends IMapService> observable, IMapService oldValue, IMapService newValue) {
+        if (oldValue == newValue) {
+            return;
+        }
+        System.out.println("Service changed");
+        if (oldValue != null) {
+            oldValue.activeWaypointProperty().removeListener(this::onActiveWaypointChange);
+        }
+        if (newValue != null) {
+            newValue.activeWaypointProperty().addListener(this::onActiveWaypointChange);
+        }
     }
-    
-    protected void onServiceChange(ObservableValue<? extends WaypointPlanning> observable, WaypointPlanning oldValue, WaypointPlanning newValue){
-    	if (oldValue == newValue) {
-           return ;
-       }
-       if (oldValue != null) {
-           oldValue.waypointProperty().removeListener(this.planningDetails::onPlanningWaypointsChange);
-       }
-       if (newValue != null) {
-           newValue.waypointProperty().addListener(this.planningDetails::onPlanningWaypointsChange);
-       }
+
+    protected void onActiveWaypointChange(ObservableValue<? extends AbstractWaypoint> observable, AbstractWaypoint oldValue, AbstractWaypoint newValue) {
+        System.out.println("ActiveWaypoint change");
+        this.changeState(this.getState().onActiveWaypointChange(observable, oldValue, newValue));
     }
 
     protected void onPlanningWaypointsChange(ListChangeListener.Change<? extends AbstractWaypoint> listChange) {

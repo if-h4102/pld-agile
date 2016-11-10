@@ -13,14 +13,13 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import models.AbstractWaypoint;
 import models.CityMap;
 import models.DeliveryRequest;
 import models.Intersection;
 import models.Planning;
 import services.command.CommandManager;
 import services.map.IMapService;
-import services.map.WaypointPlanning;
+import services.map.MapService;
 import services.pdf.planningPrinter;
 import services.xml.Parser;
 
@@ -54,10 +53,9 @@ public class MainController extends BorderPane {
 
     final private Parser parserService = new Parser();
     final private CommandManager commandManager = new CommandManager();
+
     final private SimpleObjectProperty<IMapService> mapService = new SimpleObjectProperty<>(this, "mapService", null);
 
-    final private WaypointPlanning activeWaypoint = new WaypointPlanning();
-    
     	public MainController() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/components/application/main.fxml"));
         fxmlLoader.setResources(ResourceBundle.getBundle("locales.Locale", new Locale("en", "US")));
@@ -76,7 +74,7 @@ public class MainController extends BorderPane {
         this.undoButton.disableProperty().bind(this.commandManager.undoableProperty().not());
         this.redoButton.disableProperty().bind(this.commandManager.isRedoable().not());
         this.generateRoadmapButton.disableProperty().bind(this.planning.isNull());
-        
+
         this.root.addEventHandler(RemoveWaypointAction.TYPE, removeWaypointAction -> {
             getPlanning().removeWaypoint(removeWaypointAction.getWaypoint());
             modifyComputePlanningButtonDisabledProperty(true);
@@ -84,11 +82,7 @@ public class MainController extends BorderPane {
 
         this.addEventHandler(IntersectionSelectionEvent.INTERSECTION_SELECTION, this::onIntersectionSelection);
 
-        IMapService newMapService = () -> {
-            CompletableFuture<Intersection> future = new CompletableFuture<>();
-            this.onPromptIntersection(future); 
-            return future;
-        };
+        IMapService newMapService = new MapService(this);
         this.setMapService(newMapService);
     }
 
@@ -125,7 +119,7 @@ public class MainController extends BorderPane {
     public void setPlanning(Planning planning) {
         planningProperty().setValue(planning);
     }
-    
+
 
 
     // mapZoom
@@ -217,7 +211,7 @@ public class MainController extends BorderPane {
     public void onRedoButtonAction() {
         commandManager.redo();
     }
-    
+
     public void onGenerateRoadmapButtonAction() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose planning directory");
@@ -227,7 +221,7 @@ public class MainController extends BorderPane {
             planningPrinter.generatePdfFromPlanning(this.planning.getValue(), file.getPath());
         }
     }
-    
+
     // buttons properties modifier
     public void modifyComputePlanningButtonDisabledProperty(boolean disable) {
         if (this.computePlanningButton.isDisable() != disable) {
