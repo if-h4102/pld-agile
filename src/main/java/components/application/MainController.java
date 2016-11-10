@@ -75,7 +75,7 @@ public class MainController extends BorderPane {
 
         this.setState(new WaitOpenCityMapState(this));
         this.openDeliveryRequestButton.disableProperty().bind(this.cityMap.isNull());
-        this.computePlanningButton.setDisable(true);
+        this.computePlanningButton.setDisable(true);        
         this.undoButton.disableProperty().bind(this.commandManager.undoableProperty().not());
         this.redoButton.disableProperty().bind(this.commandManager.redoableProperty().not());
         this.generateRoadmapButton.disableProperty().bind(this.planning.isNull());
@@ -199,6 +199,10 @@ public class MainController extends BorderPane {
         currentState.leaveState();
         this.setState(nextState);
         nextState.enterState();
+    }
+    
+    protected void setTextToComputePlanningButton(String text) {
+        computePlanningButton.setText(text);
     }
 
     // handlers

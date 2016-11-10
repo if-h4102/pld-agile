@@ -46,6 +46,6 @@ public class WaitOpenDeliveryRequestState extends WaitOpenCityMapState {
         mainController.setDeliveryRequest(currentDeliveryRequest);
         mainController.setPlanning(null);
 
-        return new ReadyState(mainController);
+        return new ReadyToComputeState(mainController);
     }
 }

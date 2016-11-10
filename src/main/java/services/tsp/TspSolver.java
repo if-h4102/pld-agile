@@ -37,8 +37,11 @@ public class TspSolver extends AbstractThreadedTspSolver {
      */
     @Override
     public void run() {
-        doRun();
-        notifyListeners(bestPlanning);
+        try {
+            doRun();
+        } finally {
+            notifyListeners(bestPlanning);
+        }
     }
 
     private void doRun() {
@@ -88,6 +91,7 @@ public class TspSolver extends AbstractThreadedTspSolver {
     private void updateBestPlanning() {
         this.bestPlanning = new Planning(graph.getCityMap(), Arrays.asList(this.bestSolution), bestSolutionWaitingTime, bestSolutionCost);
         this.bestPlanningObservable.setValue(bestPlanning);
+        //notifyListeners(bestPlanning);
     }
 
     /**
@@ -135,6 +139,9 @@ public class TspSolver extends AbstractThreadedTspSolver {
     private void branchAndBound(AbstractWaypoint lastSeenNode, ArrayList<AbstractWaypoint> unseen, ArrayList<AbstractWaypoint> seen,
             int seenCost, Map<AbstractWaypoint, Map<AbstractWaypoint, Integer>> costs, Map<AbstractWaypoint, Integer> deliveryDurations,
             Map<AbstractWaypoint, Integer> wayPointWaitingTime) {
+        if (stop) {
+            return;
+        }
         if (unseen.size() == 0) {
             // All nodes have been seen
             // Just complete the circuit...
