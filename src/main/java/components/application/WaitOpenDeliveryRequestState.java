@@ -7,6 +7,9 @@ import java.io.File;
 import java.io.IOException;
 import components.exceptionwindow.ExceptionWindow;
 
+/**
+ * This class represents the state before than the user open a delivery request.
+ */
 public class WaitOpenDeliveryRequestState extends WaitOpenCityMapState {
 
     public WaitOpenDeliveryRequestState(MainController mainController) {

@@ -1,10 +1,13 @@
 package services.tools;
 
-/**
- * Created by nicolas on 08/11/16.
- */
 public class timeTools {
 
+    /**
+     * Return a string which contains the given time with the correct format
+     * (separate hours, minutes and seconds).
+     * @param time The time to convert into string.
+     * @return The string which contains the givent time with the coorect format.
+     */
     public static String printTime(int time){
         int hour = time/3600;
         int minute = (time%3600)/60;

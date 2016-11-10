@@ -13,9 +13,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.List;
 
-/**
- * Created by nicolas on 07/11/16.
- */
 public class planningPrinter {
 
     private static final Font titleFont = FontFactory.getFont(FontFactory.COURIER, 30, Font.BOLD, new CMYKColor(255, 255, 255, 0));
@@ -24,7 +21,12 @@ public class planningPrinter {
     private static final Font instructionFont = FontFactory.getFont(FontFactory.COURIER, 10, Font.NORMAL, new CMYKColor(255, 255, 255, 0));
     private static final float instructionLeftMargin = 20;
     private static final float instructionLeftMarginWOHour = 60;
-
+    
+    /**
+     * Generate a planning at the .pdf format and put it at the given file path.
+     * @param planning The planning used to the generation.
+     * @param destinationFilePath The file path where is put the generated planning.
+     */
     public static void generatePdfFromPlanning(Planning planning, String destinationFilePath) {
 
         Document document = new Document();

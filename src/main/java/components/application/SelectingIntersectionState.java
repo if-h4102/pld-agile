@@ -5,7 +5,7 @@ import components.mapcanvas.IntersectionSelectionEvent;
 import models.Intersection;
 
 import java.util.concurrent.CompletableFuture;
-
+// TODO class to comment
 public class SelectingIntersectionState extends WaitOpenDeliveryRequestState {;
     final private CompletableFuture<Intersection> future;
 

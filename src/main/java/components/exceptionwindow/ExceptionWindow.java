@@ -6,6 +6,10 @@ import javafx.scene.control.ButtonType;
 
 public class ExceptionWindow {
 
+    /**
+     * Construct an exception window which display the given exception message. 
+     * @param exceptionMessage The message to display.
+     */
     public ExceptionWindow (String exceptionMessage) {
         // Reshape the exception message to be sure it fits in the error window.
         String[] splitedMessage = exceptionMessage.split(" ");
