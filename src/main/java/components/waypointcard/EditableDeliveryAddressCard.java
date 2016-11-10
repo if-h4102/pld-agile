@@ -10,6 +10,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -159,15 +161,26 @@ public class EditableDeliveryAddressCard extends WaypointCardBase<DeliveryAddres
         this.setName(this.computeName());
     }
 
-    protected DeliveryAddress computeWaypoint() {
+    protected DeliveryAddress computeWaypoint() throws Exception {
         DeliveryAddress result;
 
         DeliveryAddress oldWaypoint = this.getWaypoint();
         Intersection intersection = oldWaypoint == null ? null : oldWaypoint.getIntersection();
         int deliveryDuration = this.getDeliveryDuration();
+
+        if (deliveryDuration < 0) {
+            throw new Exception("Delivery duration must be positive");
+        }
+
         if (this.getHasTimeConstraints()) {
             int startTime = this.getStartTime();
             int endTime = this.getEndTime();
+            if (endTime < startTime) {
+                throw new Exception("End time must be greater than start time");
+            } else if (startTime + deliveryDuration < endTime) {
+                throw new Exception("The time constraints are too narrow: delivery duration does not fit!");
+            }
+
             result = new DeliveryAddress(intersection, deliveryDuration, startTime, endTime);
         } else {
             result = new DeliveryAddress(intersection, deliveryDuration);
@@ -176,9 +189,14 @@ public class EditableDeliveryAddressCard extends WaypointCardBase<DeliveryAddres
     }
 
     public void onSaveButtonAction(ActionEvent actionEvent) {
-        DeliveryAddress current = this.computeWaypoint();
+        DeliveryAddress current;
+        try {
+            current = this.computeWaypoint();
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
+            return;
+        }
         this.setWaypoint(current);
-        System.out.println("Saving");
         this.fireEvent(new SaveDeliveryAddress(current));
     }
 }

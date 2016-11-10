@@ -22,6 +22,9 @@ import org.jetbrains.annotations.NotNull;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AddingWaypointState extends PlanningDetailsState {
     private final int index;
     private final EditableDeliveryAddressCard editableCard;
@@ -32,6 +35,29 @@ public class AddingWaypointState extends PlanningDetailsState {
         this.index = index;
         this.intersection = intersection;
         this.editableCard = new EditableDeliveryAddressCard();
+    }
+
+    @Override
+    public void refreshView() {
+        super.refreshView();
+        ObservableList<Node> nodes = this.planningDetails.planningDetailsVBox.getChildren();
+        if (nodes.size() == 0) {
+            return;
+        }
+        List<PlanningDetailsItem> itemNodes = new ArrayList<>();
+        for (Node node : nodes) {
+            if (node instanceof PlanningDetailsItem) {
+                itemNodes.add((PlanningDetailsItem) node);
+            } else {
+                System.err.println("Unexpected node");
+                System.err.println(node);
+            }
+        }
+        for (PlanningDetailsItem pdi : itemNodes) {
+            pdi.setDisplayAddButton(false);
+            pdi.setDisplayRemoveButton(false);
+        }
+        itemNodes.get(this.index).setDisplayDataBefore(false);
     }
 
     @Override

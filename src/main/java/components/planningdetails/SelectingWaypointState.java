@@ -12,7 +12,17 @@ import services.map.IMapService;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The SelectingWaypointState represents the state of the PlanningDetails
+ * when the use clicked on the "add" button to add a new waypoint and we are
+ * waiting for him to choose the address (Intersecion) where to add the new
+ * Waypoint.
+ */
 public class SelectingWaypointState extends PlanningDetailsState {
+    /**
+     * The index (position) where the new waypoint should be added in the
+     * planning.
+     */
     private final int index;
 
     public SelectingWaypointState(PlanningDetails planningDetails, int index) {
@@ -36,25 +46,26 @@ public class SelectingWaypointState extends PlanningDetailsState {
         this.planningDetails.changeState(new AddingWaypointState(this.planningDetails, this.index, intersection));
     }
 
-    @Override
-    @NotNull
-    public IPlanningDetailsState onPlanningWaypointsChange(ListChangeListener.Change<? extends PlanningWaypoint> listChange) {
-        // Prevent
-        return this;
-    }
-
-    @Override
-    @NotNull
-    public IPlanningDetailsState onAddWaypoint(AddWaypointAction action) {
-        return this;
-    }
-
+    /**
+     * Restore the default state when the user cancels the selection of address
+     * for the waypoint.
+     *
+     * @param action An object representing the user action.
+     * @return The default state to use.
+     */
     @Override
     @NotNull
     public IPlanningDetailsState onCancelAddWaypointAction(@NotNull CancelAddWaypointAction action) {
         return new DefaultState(this.planningDetails);
     }
 
+    /**
+     * In the SelectingWaypointState state, a node is creating for each Planning
+     * Waypoint. The "add" and "remove" buttons are disabled for all the
+     * spaces and existing waypoints. The space were the waypoint currently
+     * be constructed will be added contains a "cancel" button to abort the
+     * addition of the waypoint.
+     */
     @Override
     public void refreshView() {
         super.refreshView();
@@ -70,6 +81,10 @@ public class SelectingWaypointState extends PlanningDetailsState {
                 System.err.println("Unexpected node");
                 System.err.println(node);
             }
+        }
+        for (PlanningDetailsItem pdi : itemNodes) {
+            pdi.setDisplayAddButton(false);
+            pdi.setDisplayRemoveButton(false);
         }
         itemNodes.get(this.index).setDisplayAddButton(false);
         itemNodes.get(this.index).setDisplayCancelAddButton(true);

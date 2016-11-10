@@ -79,7 +79,12 @@ public class MapCanvas extends Canvas {
                 eventY /= calZoom;
                 eventX += DEFAULT_OFFSET_X;
                 eventY += DEFAULT_OFFSET_Y;
-
+                DeliverySelectionEvent nullDeliverclear = new DeliverySelectionEvent(null, e.getX(), e.getY());
+                fireEvent(nullDeliverclear);
+                IntersectionSelectionEvent nullIntersectclear = new IntersectionSelectionEvent(null, e.getX(), e.getY());
+                fireEvent(nullIntersectclear);
+                WarehouseSelectionEvent nullWarehouseclear = new WarehouseSelectionEvent(null, e.getX(), e.getY());
+                fireEvent(nullWarehouseclear);
                 if(getDeliveryRequest() != null){
                 	Warehouse warehouse = getDeliveryRequest().getWarehouse();
                 	if (eventX < warehouse.getX() + DEFAULT_DELIVERY_SIZE / 2 && eventX > warehouse.getX() - DEFAULT_DELIVERY_SIZE / 2
