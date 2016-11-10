@@ -74,7 +74,21 @@ un pattern state. Nous l'avons utilisé deux fois dans notre application:
 pour les détails du planning (affichage, attente d'ajout, formulaire d'ajout)
 et pour la racine (cf diagramme d'état-transition UML).
 
-De plus, pour gérer efficacement les undo/redo des modifications apportées par
+De plus, pour pouvoir permettre différents moyens de résolution du problème 
+du voyageur de commerce, nous utilisons un _pattern strategy_. Ce patron de 
+conceptionétait également particulièrement adapté à un mode de développement 
+itératif, puisque nous avons commencé par une implémentation naïve puis nous 
+sommes dirigé vers d'autres plus approfondies, sans pour autant perdre notre 
+état d'avancement.
+
+Dans le but d'avoir une IHM qui s'actualise automatiquement en fonction des 
+données, nous utilisons un pattern observable. En revanche, nous nous 
+servons de javafx, ce qui nous conduit à avoir un pattern _observable_ 
+différent de celui que nous connaissons bien: en effet, la granularité 
+d'observation se trouve au niveau des *attributs* d'un objet, et non de 
+l'objet lui-même.
+
+Finalement, pour gérer efficacement les undo/redo des modifications apportées par
 l'utilisateur sur la tournée calculée, nous utilisons le design pattern 
 commande.
 
