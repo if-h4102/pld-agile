@@ -295,6 +295,4 @@ public class PlanningDetailsItem extends AnchorPane {
     public void onWaypointCardClickedAction(MouseEvent event){
     	this.getMapService().setActiveWaypoint(this.getItem().getTargetWaypoint());
     }
-
-
 }
