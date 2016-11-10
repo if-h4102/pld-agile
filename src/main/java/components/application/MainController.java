@@ -13,12 +13,14 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import models.AbstractWaypoint;
 import models.CityMap;
 import models.DeliveryRequest;
 import models.Intersection;
 import models.Planning;
 import services.command.CommandManager;
 import services.map.IMapService;
+import services.map.WaypointPlanning;
 import services.pdf.planningPrinter;
 import services.xml.Parser;
 
@@ -54,7 +56,9 @@ public class MainController extends BorderPane {
     final private CommandManager commandManager = new CommandManager();
     final private SimpleObjectProperty<IMapService> mapService = new SimpleObjectProperty<>(this, "mapService", null);
 
-    public MainController() {
+    final private WaypointPlanning activeWaypoint = new WaypointPlanning();
+    
+    	public MainController() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/components/application/main.fxml"));
         fxmlLoader.setResources(ResourceBundle.getBundle("locales.Locale", new Locale("en", "US")));
         fxmlLoader.setRoot(this);
@@ -121,6 +125,8 @@ public class MainController extends BorderPane {
     public void setPlanning(Planning planning) {
         planningProperty().setValue(planning);
     }
+    
+
 
     // mapZoom
     public SimpleDoubleProperty mapZoomProperty() {

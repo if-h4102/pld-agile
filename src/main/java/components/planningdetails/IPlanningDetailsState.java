@@ -12,6 +12,8 @@ public interface IPlanningDetailsState {
     IPlanningDetailsState leaveState(IPlanningDetailsState nextState);
     IPlanningDetailsState onPlanningWaypointsChange(ListChangeListener.Change<? extends AbstractWaypoint> listChange);
     IPlanningDetailsState onPlanningChange(ObservableValue<? extends Planning> observable, Planning oldValue, Planning newValue);
+    IPlanningDetailsState onWaypointChange(ObservableValue<? extends AbstractWaypoint> observable, AbstractWaypoint oldValue, AbstractWaypoint newValue);
     IPlanningDetailsState onAddWaypointAction(AddWaypointAction action);
     IPlanningDetailsState onSaveNewWaypoint(SaveDeliveryAddress action);
+    
 }

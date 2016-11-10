@@ -84,6 +84,19 @@ public class AddingWaypointState extends PlanningDetailsState {
         }
         return this;
     }
+    
+    public IPlanningDetailsState onWaypointChange(ObservableValue<? extends AbstractWaypoint> observable, AbstractWaypoint oldValue, AbstractWaypoint newValue) {
+        if (oldValue == newValue) {
+            return this;
+        }
+        if (oldValue != null) {
+            //oldValue.waypointsProperty().removeListener(this.planningDetails::onPlanningWaypointsChange);
+        }
+        if (newValue != null) {
+            //newValue.waypointsProperty().addListener(this.planningDetails::onPlanningWaypointsChange);
+        }
+        return this;
+    }
 
     @Override
     public IPlanningDetailsState onAddWaypointAction(AddWaypointAction action) {

@@ -47,6 +47,20 @@ public abstract class PlanningDetailsState implements IPlanningDetailsState {
         }
         return this;
     }
+    
+    public IPlanningDetailsState onWaypointChange(ObservableValue<? extends AbstractWaypoint> observable, AbstractWaypoint oldValue, AbstractWaypoint newValue) {
+        if (oldValue == newValue) {
+            return this;
+        }
+        if (oldValue != null) {
+            //oldValue.removeListener(this.::onPlanningWaypointsChange);
+        }
+        if (newValue != null) {
+            //newValue.waypointsProperty().addListener(this.planningDetails::onPlanningWaypointsChange);
+        	//newValue.
+        }
+        return this;
+    }
 
     public IPlanningDetailsState onAddWaypointAction(AddWaypointAction action) {
         return new SelectingWaypointState(this.planningDetails, 1);

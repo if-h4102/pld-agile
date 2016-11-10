@@ -43,4 +43,16 @@ public class DefaultState extends PlanningDetailsState {
         this.planningDetails.waypointsToPlanningDetails();
         return this;
     }
+    
+    public IPlanningDetailsState onWaypointChange(ObservableValue<? extends AbstractWaypoint> observable, AbstractWaypoint oldValue, AbstractWaypoint newValue) {
+        if (oldValue == newValue) {
+            return this;
+        }
+        super.onWaypointChange(observable, oldValue, newValue);
+        
+        //this.planningDetails.waypointsToPlanningDetails();
+        
+        return this;
+    }
+
 }

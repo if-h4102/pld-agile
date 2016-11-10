@@ -4,19 +4,24 @@ import components.events.AddWaypointAction;
 import components.events.RemoveWaypointAction;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 import models.AbstractWaypoint;
 import models.Planning;
 import models.Route;
+import services.map.WaypointPlanning;
 
 import java.io.IOException;
 
 public class PlanningDetailsItem extends AnchorPane {
     private final SimpleObjectProperty<Route> item = new SimpleObjectProperty<>(this, "item", null);
     private final SimpleObjectProperty<Planning> planning = new SimpleObjectProperty<>(this, "planning", null);
+    private SimpleObjectProperty<AbstractWaypoint> waypoint = new SimpleObjectProperty<>(this,"waypoint", null);
     private final SimpleIntegerProperty index = new SimpleIntegerProperty(this, "index", 0);
+    private WaypointPlanning activeWaypoint;
 
     public PlanningDetailsItem() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/components/planningdetails/PlanningDetailsItem.fxml"));
@@ -28,6 +33,14 @@ public class PlanningDetailsItem extends AnchorPane {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
+        
+        this.activeWaypoint.waypointProperty().addListener(new ChangeListener(){
+
+			@Override
+			public void changed(activeWaypoint.waypointProperty() observable, Object oldValue, Object newValue) {
+				// TODO Auto-generated method stub
+				
+			});
         
     }
 
@@ -61,6 +74,7 @@ public class PlanningDetailsItem extends AnchorPane {
     public final Planning getPlanning() {
         return this.planningProperty().getValue();
     }
+    
 
     // Index
     public final SimpleIntegerProperty indexProperty() {

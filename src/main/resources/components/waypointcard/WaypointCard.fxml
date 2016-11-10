@@ -2,5 +2,5 @@
 
 <?import javafx.scene.layout.AnchorPane?>
 <fx:root xmlns:fx="http://javafx.com/fxml/1" fx:id="root" prefHeight="50.0" prefWidth="200.0"
-         stylesheets="/components/waypointcard/WaypointCard.css" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.102-ea">
+         stylesheets="/components/waypointcard/WaypointCard.css" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.102-ea" onClick="#onClickCardAction">
 </fx:root>

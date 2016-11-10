@@ -6,12 +6,14 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
+import models.AbstractWaypoint;
 import models.CityMap;
 import models.DeliveryAddress;
 import models.DeliveryRequest;
 import models.Intersection;
 import models.Planning;
 import models.Warehouse;
+import services.map.WaypointPlanning;
 import components.mapcanvas.DeliverySelectionEvent;
 import components.mapcanvas.IntersectionSelectionEvent;
 
@@ -36,7 +38,6 @@ public class MapScreen extends AnchorPane {
     protected IntersectionCard tooltip;
     @FXML
     protected DeliveryAddressCard tooltipDelivery;
-    
     @FXML
     protected WarehouseCard tooltipwarehouse;
     @FXML
@@ -50,6 +51,7 @@ public class MapScreen extends AnchorPane {
     private SimpleObjectProperty<Intersection> activeIntersection;
     private SimpleObjectProperty<DeliveryAddress> activeDelivery;
     private SimpleObjectProperty<Warehouse> activeWarehouse;
+    private WaypointPlanning activeWaypoint;
     
 
     @SuppressWarnings("restriction")
@@ -261,30 +263,53 @@ public class MapScreen extends AnchorPane {
         setActiveWarehouse(event.getWarehouse());
     }
     
+    // waypoint 
+    /**
+     * @return The observable property for the waypoint containing the currently
+     * displayed item.
+     */
+    public final SimpleObjectProperty<AbstractWaypoint> waypointProperty() {
+        return this.waypoint;
+    }
+
+    public final void setWaypoint(AbstractWaypoint value) {
+        this.waypointProperty().setValue(value);
+    }
+
+    public final AbstractWaypoint getWaypoint() {
+        return this.waypointProperty().getValue();
+    }
+    
     /**
      * Find the optimal origin for the tooltip
      *
      * @return The tooltip
      */
     public WarehouseCard tooltipWarehouseOptimalPosition(WarehouseCard tooltipWarehouse, double x, double y){
-        double h = canvas.getHeight();
+        Point optimal = optimalPosition(tooltipWarehouse.getHeight(),tooltipWarehouse.getWidth(),x,y );
+    	tooltipWarehouse.setLayoutX(optimal.getX());
+    	tooltipWarehouse.setLayoutY(optimal.getY());
+        return tooltipWarehouse;
+    }
+    
+    public Point optimalPosition(double height, double width, double x, double y){
+    	double h = canvas.getHeight();
         double w = canvas.getWidth();
-        double htool = tooltipWarehouse.getHeight();
-        double wtool = tooltipWarehouse.getWidth();
-        if(x+wtool > w){
-        	tooltipWarehouse.setLayoutX(x-wtool-5);
+        if(x+width > w){
+        	x = x - width - 5;
         }
         else {
-        	tooltipWarehouse.setLayoutX(x+5);
+        	x = x + 5;
         }
-        if(y+htool > h){
-        	tooltipWarehouse.setLayoutY(y-htool-5);
+        if(y+height > h){
+        	y = y - height - 5;
         }
         else{
-        	tooltipWarehouse.setLayoutY(y+5);
+        	y = y + 5;
         }
-
-        return tooltipWarehouse;
+        Point position = new Point();
+        position.setLocation(x, y);
+        return position;
     }
 
 
@@ -294,23 +319,9 @@ public class MapScreen extends AnchorPane {
      * @return The best point
      */
     public IntersectionCard tooltipOptimalPosition(IntersectionCard tooltip, double x, double y){
-        double h = canvas.getHeight();
-        double w = canvas.getWidth();
-        double htool = tooltip.getHeight();
-        double wtool = tooltip.getWidth();
-        if(x+wtool > w){
-            tooltip.setLayoutX(x-wtool-5);
-        }
-        else {
-            tooltip.setLayoutX(x+5);
-        }
-        if(y+htool > h){
-            tooltip.setLayoutY(y-htool-5);
-        }
-        else{
-            tooltip.setLayoutY(y+5);
-        }
-
+    	Point optimal = optimalPosition(tooltip.getHeight(),tooltip.getWidth(),x,y );
+     	tooltip.setLayoutX(optimal.getX());
+     	tooltip.setLayoutY(optimal.getY());
         return tooltip;
     }
 
@@ -320,24 +331,10 @@ public class MapScreen extends AnchorPane {
      * @return The best point
      */
     public DeliveryAddressCard tooltipDeliveryOptimalPosition(DeliveryAddressCard tooltipDelivery, double x, double y){
-        double h = canvas.getHeight();
-        double w = canvas.getWidth();
-        double htool = tooltipDelivery.getHeight();
-        double wtool = tooltipDelivery.getWidth();
-        if(x+wtool > w){
-            tooltipDelivery.setLayoutX(x-wtool-5);
-        }
-        else {
-            tooltipDelivery.setLayoutX(x+5);
-        }
-        if(y+htool > h){
-            tooltipDelivery.setLayoutY(y-htool-5);
-        }
-        else{
-            tooltipDelivery.setLayoutY(y+5);
-        }
-
-        return tooltipDelivery;
+    	 Point optimal = optimalPosition(tooltipDelivery.getHeight(),tooltipDelivery.getWidth(),x,y );
+     	tooltipDelivery.setLayoutX(optimal.getX());
+     	tooltipDelivery.setLayoutY(optimal.getY());
+         return tooltipDelivery;
     }
 
     /**

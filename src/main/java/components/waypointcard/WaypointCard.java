@@ -3,6 +3,7 @@ package components.waypointcard;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -12,6 +13,8 @@ import models.DeliveryAddress;
 import models.Warehouse;
 
 import java.io.IOException;
+
+import components.events.SaveDeliveryAddress;
 
 /**
  * This component is a wrapper for a DeliveryAddressCard or WarehouseCard.
@@ -191,5 +194,10 @@ public class WaypointCard extends AnchorPane implements IWaypointCard<AbstractWa
         }
         newValue.clear();
         newValue.addAll(oldValue);
+    }
+    
+    public void onClickCardAction(ActionEvent actionEvent) {
+        System.out.println("Saving");
+        this.fireEvent(new SaveDeliveryAddress(current));
     }
 }
