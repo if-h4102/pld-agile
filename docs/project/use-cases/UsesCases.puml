@@ -6,7 +6,10 @@ rectangle "System" {
     usecase LoadCityMap
     usecase LoadDeliveryRequest
     usecase ComputePlanning
-    usecase ModifyDeliveryRequest
+    usecase AddDeliveryAddressInDeliveryRequest
+    usecase RemoveDeliveryAddressInDeliveryRequest
+    usecase UndoModificationOnDeliveryRequest
+    usecase RedoModificationOnDeliveryRequest
     usecase GenerateItineraryText
 }
 
@@ -19,7 +22,10 @@ left to right direction
 Client --> LoadCityMap
 Client --> LoadDeliveryRequest
 Client --> ComputePlanning
-Client --> ModifyDeliveryRequest
+Client --> AddDeliveryAddressInDeliveryRequest
+Client --> RemoveDeliveryAddressInDeliveryRequest
+Client --> RedoModificationOnDeliveryRequest
+Client --> UndoModificationOnDeliveryRequest
 Client --> GenerateItineraryText
 
 Deliver --> GenerateItineraryText

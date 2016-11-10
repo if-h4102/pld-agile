@@ -3,40 +3,60 @@ package components.planningdetails;
 import components.events.AddWaypointAction;
 import components.events.CancelAddWaypointAction;
 import components.events.SaveDeliveryAddress;
-import components.mapcanvas.DeliverySelectionEvent;
-import components.mapcanvas.IntersectionSelectionEvent;
-import components.mapcanvas.WarehouseSelectionEvent;
 import components.waypointcard.EditableDeliveryAddressCard;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
-import javafx.scene.input.MouseEvent;
 import models.*;
-import services.command.AddWaypointAfterCommand;
-import services.command.CommandManager;
-
 import org.jetbrains.annotations.NotNull;
-
-import javafx.event.EventHandler;
-import javafx.scene.input.MouseEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The AddingWaypointState state is used when the user is adding a new waypoint
+ * and is inputting the delivery duration and the time constraints (it is the
+ * state that comes after he choose an address with the map).
+ */
 public class AddingWaypointState extends PlanningDetailsState {
+    /**
+     * The index (order in the planning) where to insert the waypoint once
+     * it is created.
+     */
     private final int index;
+
+    /**
+     * The component used to input the information about the new waypoint.
+     * (It is a form.)
+     */
     private final EditableDeliveryAddressCard editableCard;
+
+    /**
+     * The address where the user wants to add the new waypoint.
+     */
     private final Intersection intersection;
 
-    public AddingWaypointState(PlanningDetails planningDetails, int index, Intersection intersection) {
+    /**
+     * @param planningDetails The component to attach to this state.
+     * @param index           The index (order in the planning) where to insert the waypoint once
+     *                        it is created.
+     * @param intersection    The address where the user wants to add the new waypoint.
+     */
+    public AddingWaypointState(@NotNull PlanningDetails planningDetails, int index, @NotNull Intersection intersection) {
         super(planningDetails);
         this.index = index;
         this.intersection = intersection;
         this.editableCard = new EditableDeliveryAddressCard();
     }
 
+    /**
+     * This method applies the view corresponding to the AddingWaypointState
+     * state.
+     * The "add" and "remove" butonns of the existing waypoints are disabled.
+     * The form is located at the position where the new waypoint would be once
+     * created.
+     */
     @Override
     public void refreshView() {
         super.refreshView();
@@ -61,7 +81,8 @@ public class AddingWaypointState extends PlanningDetailsState {
     }
 
     @Override
-    public IPlanningDetailsState enterState(IPlanningDetailsState previousState) {
+    @NotNull
+    public IPlanningDetailsState enterState(@NotNull IPlanningDetailsState previousState) {
         super.enterState(previousState);
         ObservableList<Node> nodes = this.planningDetails.planningDetailsVBox.getChildren();
         DeliveryAddress tmpDeliveryAddress = new DeliveryAddress(intersection, 0);
@@ -72,45 +93,34 @@ public class AddingWaypointState extends PlanningDetailsState {
         return this;
     }
 
-    @Override
-    public IPlanningDetailsState leaveState(IPlanningDetailsState nextState) {
-        return nextState;
-    }
-
+    /**
+     * Handle the "save" user action.
+     *
+     * It simply adds the newly created waypoint to the planning at the choosen
+     * index.
+     *
+     * @param event
+     * @return
+     */
     @Override
     @NotNull
     public IPlanningDetailsState onSaveNewWaypoint(@NotNull SaveDeliveryAddress event) {
-        System.out.println("Saving new address");
         DeliveryAddress deliveryAddress = event.getDeliveryAddress();
         Planning planning = this.planningDetails.getPlanning();
+        // Hack to add the waypoint in the main controller instead of here.
         event.setIndex(this.index);
 
         return new DefaultState(this.planningDetails);
     }
 
-    public IPlanningDetailsState onPlanningWaypointsChange(ListChangeListener.Change<? extends PlanningWaypoint> listChange) {
-        // Prevent refresh of nodes ?
-        return this;
-    }
-
-    @Override
-    public IPlanningDetailsState onAddWaypointAction(AddWaypointAction action) {
-        return this;
-    }
-
-    public IPlanningDetailsState onActiveWaypointChange(ObservableValue<? extends AbstractWaypoint> observable, AbstractWaypoint oldValue, AbstractWaypoint newValue) {
-        if (oldValue == newValue) {
-            return this;
-        }
-        if (oldValue != null) {
-            //oldValue.waypointsProperty().removeListener(this.planningDetails::onPlanningWaypointsChange);
-        }
-        if (newValue != null) {
-            //newValue.waypointsProperty().addListener(this.planningDetails::onPlanningWaypointsChange);
-        }
-        return this;
-    }
-
+    /**
+     * Restore the default state upon cancellation.
+     *
+     * There is no button in GUI to trigger this action currently.
+     *
+     * @param action The object representing the user action.
+     * @return A DefaultState state for the component.
+     */
     @Override
     @NotNull
     public IPlanningDetailsState onCancelAddWaypointAction(@NotNull CancelAddWaypointAction action) {
