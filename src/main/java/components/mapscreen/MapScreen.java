@@ -3,6 +3,7 @@ package components.mapscreen;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
@@ -13,6 +14,7 @@ import models.DeliveryRequest;
 import models.Intersection;
 import models.Planning;
 import models.Warehouse;
+import services.map.IMapService;
 import services.map.MapService;
 import components.mapcanvas.DeliverySelectionEvent;
 import components.mapcanvas.IntersectionSelectionEvent;
@@ -51,8 +53,7 @@ public class MapScreen extends AnchorPane {
     private SimpleObjectProperty<Intersection> activeIntersection;
     private SimpleObjectProperty<DeliveryAddress> activeDelivery;
     private SimpleObjectProperty<Warehouse> activeWarehouse;
-    private MapService activeWaypoint;
-
+    private final SimpleObjectProperty<IMapService> mapService = new SimpleObjectProperty<>(this, "mapService", null);
 
     @SuppressWarnings("restriction")
     public MapScreen() {
@@ -85,6 +86,7 @@ public class MapScreen extends AnchorPane {
         tooltipwarehouse.visibleProperty().bind(activeWarehouse.isNotNull());
         tooltipDelivery.visibleProperty().bind(activeDelivery.isNotNull());
         tooltip.visibleProperty().bind(activeIntersection.isNotNull());
+        this.mapServiceProperty().addListener(this::onMapServiceChange);
     }
 
     /**
@@ -263,21 +265,17 @@ public class MapScreen extends AnchorPane {
         setActiveWarehouse(event.getWarehouse());
     }
 
-    // waypoint
-    /**
-     * @return The observable property for the waypoint containing the currently
-     * displayed item.
-     */
-    public final SimpleObjectProperty<AbstractWaypoint> waypointProperty() {
-        return this.waypoint;
+    // mapService
+    public SimpleObjectProperty<IMapService> mapServiceProperty() {
+        return this.mapService;
     }
 
-    public final void setWaypoint(AbstractWaypoint value) {
-        this.waypointProperty().setValue(value);
+    public IMapService getMapService() {
+        return this.mapServiceProperty().getValue();
     }
 
-    public final AbstractWaypoint getWaypoint() {
-        return this.waypointProperty().getValue();
+    public void setMapService(IMapService value) {
+        this.mapServiceProperty().setValue(value);
     }
 
     /**
@@ -410,6 +408,22 @@ public class MapScreen extends AnchorPane {
 
     public final double getOffsetY() {
         return offsetY == null ? DEFAULT_OFFSET_Y : offsetY.getValue();
+    }
+
+    protected void onMapServiceChange(ObservableValue<? extends IMapService> observable, IMapService oldValue, IMapService newValue) {
+        if (oldValue == newValue) {
+            return;
+        }
+        if (oldValue != null) {
+            oldValue.activeWaypointProperty().removeListener(this::onActiveWaypointChange);
+        }
+        if (newValue != null) {
+            newValue.activeWaypointProperty().addListener(this::onActiveWaypointChange);
+        }
+    }
+
+    protected void onActiveWaypointChange(ObservableValue<? extends AbstractWaypoint> observable, AbstractWaypoint oldValue, AbstractWaypoint newValue) {
+
     }
 
     public void onIntersection() {

@@ -195,9 +195,4 @@ public class WaypointCard extends AnchorPane implements IWaypointCard<AbstractWa
         newValue.clear();
         newValue.addAll(oldValue);
     }
-    
-    public void onClickCardAction(ActionEvent actionEvent) {
-        System.out.println("Saving");
-        this.fireEvent(new SaveDeliveryAddress(current));
-    }
 }

@@ -2,12 +2,14 @@ package components.planningdetails;
 
 import components.events.AddWaypointAction;
 import components.events.RemoveWaypointAction;
+import components.events.SaveDeliveryAddress;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import models.AbstractWaypoint;
 import models.Planning;
@@ -125,5 +127,9 @@ public class PlanningDetailsItem extends AnchorPane {
 
     protected void onActiveWaypointChange(ObservableValue<? extends AbstractWaypoint> observable, AbstractWaypoint oldValue, AbstractWaypoint newValue) {
         System.out.println("Item: ActiveWaypoint change");
+    }
+
+    public void onWaypointCardClickedAction(MouseEvent event) {
+        System.out.println("Clicked on waypoint");
     }
 }

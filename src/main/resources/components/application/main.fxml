@@ -36,7 +36,9 @@
       <AnchorPane BorderPane.alignment="CENTER">
         <MapScreen cityMap="${controller.cityMap}"
                    deliveryRequest="${controller.deliveryRequest}"
-                   planning="${controller.planning}" AnchorPane.bottomAnchor="0"
+                   planning="${controller.planning}"
+                   mapService="${controller.mapService}"
+                   AnchorPane.bottomAnchor="0"
                    AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
                    AnchorPane.topAnchor="0"/>
         <!--<fx:include fx:id="mapView" source="MapScreen.fxml" />-->
@@ -75,7 +77,6 @@
                       </padding>
                       <PlanningDetails mapService="${controller.mapService}"
                                        planning="${controller.planning}"
-                                       activeWaypoint="${controller.activeWaypoint}"
                                        prefHeight="200.0" prefWidth="200.0"
                                        AnchorPane.bottomAnchor="0"
                                        AnchorPane.leftAnchor="0"

@@ -119,7 +119,6 @@ public class PlanningDetails extends ScrollPane {
         if (oldValue == newValue) {
             return;
         }
-        System.out.println("Service changed");
         if (oldValue != null) {
             oldValue.activeWaypointProperty().removeListener(this::onActiveWaypointChange);
         }

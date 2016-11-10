@@ -6,20 +6,15 @@ import com.google.java.contract.Requires;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
-import models.CityMap;
-import models.DeliveryAddress;
-import models.DeliveryRequest;
-import models.Intersection;
-import models.Planning;
-import models.Route;
-import models.StreetSection;
-import models.Warehouse;
+import models.*;
+import services.map.IMapService;
 import services.map.MapRenderer;
 
 import java.awt.Rectangle;
@@ -48,6 +43,7 @@ public class MapCanvas extends Canvas {
     private Iterable<DeliveryAddress> listDeliveryAddresses;
     private double calZoom;
     private final ListChangeListener<Route> planningChangeListener;
+    private final SimpleObjectProperty<IMapService> mapService = new SimpleObjectProperty<>(this, "mapService", null);
 
     @SuppressWarnings("restriction")
     public MapCanvas() {
@@ -62,6 +58,8 @@ public class MapCanvas extends Canvas {
         offsetYProperty().addListener(event -> draw());
         cityMapProperty().addListener(event -> draw());
         deliveryRequestProperty().addListener(event -> draw());
+        this.mapServiceProperty().addListener(this::onMapServiceChange);
+
         planningProperty().addListener((observableValue, oldPlanning, newPlanning) -> {
             if (oldPlanning != null) {
                 oldPlanning.routesProperty().removeListener(self.planningChangeListener);
@@ -358,6 +356,34 @@ public class MapCanvas extends Canvas {
 
     public final double getOffsetY() {
         return offsetY == null ? DEFAULT_OFFSET_Y : offsetY.getValue();
+    }
+
+    public SimpleObjectProperty<IMapService> mapServiceProperty() {
+        return this.mapService;
+    }
+
+    public IMapService getMapService() {
+        return this.mapServiceProperty().getValue();
+    }
+
+    public void setMapService(IMapService value) {
+        this.mapServiceProperty().setValue(value);
+    }
+
+    protected void onMapServiceChange(ObservableValue<? extends IMapService> observable, IMapService oldValue, IMapService newValue) {
+        if (oldValue == newValue) {
+            return;
+        }
+        if (oldValue != null) {
+            oldValue.activeWaypointProperty().removeListener(this::onActiveWaypointChange);
+        }
+        if (newValue != null) {
+            newValue.activeWaypointProperty().addListener(this::onActiveWaypointChange);
+        }
+    }
+
+    protected void onActiveWaypointChange(ObservableValue<? extends AbstractWaypoint> observable, AbstractWaypoint oldValue, AbstractWaypoint newValue) {
+
     }
 
     /*

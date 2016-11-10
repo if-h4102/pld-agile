@@ -19,7 +19,7 @@
              cityMap="${controller.cityMap}"
              deliveryRequest="${controller.deliveryRequest}"
              planning="${controller.planning}"
-
+             mapService="${controller.mapService}"
   />
   <IntersectionCard fx:id="tooltip" intersection="${controller.activeIntersection}"/>
   <DeliveryAddressCard fx:id="tooltipDelivery" waypoint="${controller.activeDelivery}"/>
