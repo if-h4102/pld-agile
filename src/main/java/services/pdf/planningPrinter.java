@@ -2,14 +2,16 @@ package services.pdf;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.CMYKColor;
-import models.*;
+import com.itextpdf.text.pdf.PdfWriter;
+import models.Planning;
+import models.Route;
+import models.StreetSection;
+import models.Warehouse;
+import services.tools.timeTools;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.List;
-
-import com.itextpdf.text.pdf.PdfWriter;
-import services.tools.timeTools;
 
 /**
  * Created by nicolas on 07/11/16.
@@ -23,65 +25,62 @@ public class planningPrinter {
     private static final float instructionLeftMargin = 20;
     private static final float instructionLeftMarginWOHour = 60;
 
-    public static void generatePdfFromPlanning(Planning planning, String pathOfWrotePdfFIle){
+    public static void generatePdfFromPlanning(Planning planning, String destinationFilePath) {
 
         Document document = new Document();
-        try
-        {
-            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(pathOfWrotePdfFIle));
+        try {
+            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(destinationFilePath));
             document.open();
-            Paragraph title = new Paragraph("Planning",titleFont);
+            Paragraph title = new Paragraph("Planning", titleFont);
             title.setAlignment(Element.ALIGN_CENTER);
             document.add(title);
 
-            Paragraph chapterTitle = new Paragraph("Path",chapterFont);
-            Chapter chapter = new Chapter(chapterTitle,1);
+            Paragraph chapterTitle = new Paragraph("Path", chapterFont);
+            Chapter chapter = new Chapter(chapterTitle, 1);
             chapter.setNumberDepth(0);
 
             Integer currentTime = planning.getWarehouse().getTimeStart();
-            for(Route route : planning.getRoutes()){
-                currentTime = printRoute(chapter,route,planning.getWaitingTimeAtWaypoint(route.getEndWaypoint()),currentTime);
+            for (Route route : planning.getRoutes()) {
+                currentTime = printRoute(chapter, route, planning.getWaitingTimeAtWaypoint(route.getEndWaypoint()), currentTime);
             }
 
             document.add(chapter);
 
             document.close();
             writer.close();
-        } catch (DocumentException e)
-        {
+        } catch (DocumentException e) {
             e.printStackTrace();
-        } catch (FileNotFoundException e)
-        {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
 
     /**
      * Print the route into the given chapter
-     * @param chapter the chapter where the route will be described
-     * @param route the route to describe
+     *
+     * @param chapter     the chapter where the route will be described
+     * @param route       the route to describe
      * @param waitingTime the waiting time before the delivery
      */
-    private static int printRoute(Chapter chapter, Route route, int waitingTime, Integer time){
+    private static int printRoute(Chapter chapter, Route route, int waitingTime, Integer time) {
         String titleText;
-        if(route.getStartWaypoint() instanceof Warehouse){
-            titleText = "From warehouse to delivery address "+route.getEndWaypoint().getId();
+        if (route.getStartWaypoint() instanceof Warehouse) {
+            titleText = "From warehouse to delivery address " + route.getEndWaypoint().getId();
+        } else if (route.getEndWaypoint() instanceof Warehouse) {
+            titleText = "From delivery address " + route.getStartWaypoint().getId() + " to warehouse";
+        } else {
+            titleText = "From delivery address " + route.getStartWaypoint().getId() + " to delivery address " + route.getEndWaypoint().getId();
         }
-        else if(route.getEndWaypoint() instanceof Warehouse){
-            titleText = "From delivery address "+route.getStartWaypoint().getId()+" to warehouse";
-        }
-        else{
-            titleText = "From delivery address "+route.getStartWaypoint().getId()+" to delivery address "+route.getEndWaypoint().getId();
-        }
-        Paragraph title = new Paragraph(titleText,sectionFont);
+        Paragraph title = new Paragraph(titleText, sectionFont);
         Section section = chapter.addSection(title);
         //add leaving instruction
         {
-            String instruction = "[" + timeTools.printTime(time) + "]";;
+            String instruction = "[" + timeTools.printTime(time) + "]";
+            ;
             if (route.getStartWaypoint() instanceof Warehouse) {
                 instruction += " leave the warehouse";
             } else {
-                instruction += " leave delivery address "+route.getStartWaypoint().getId();
+                instruction += " leave delivery address " + route.getStartWaypoint().getId();
             }
             Paragraph instructionParagraph = new Paragraph(instruction, instructionFont);
             instructionParagraph.setIndentationLeft(instructionLeftMargin);
@@ -89,24 +88,24 @@ public class planningPrinter {
         }
         //road instructions
         List<StreetSection> streets = route.getStreetSections();
-        for(int i=0 ; i<streets.size() ; i++){
+        for (int i = 0; i < streets.size(); i++) {
             StreetSection street = streets.get(i);
             String streetName = street.getStreetName();
             int durationValue = street.getDuration();
             int distanceValue = street.getLength();
-            while (i+1<streets.size() && streetName.equals(streets.get(i+1).getStreetName())){
+            while (i + 1 < streets.size() && streetName.equals(streets.get(i + 1).getStreetName())) {
                 i++;
                 street = streets.get(i);
                 durationValue += street.getDuration();
                 distanceValue += street.getLength();
             }
             String distance;
-            if(distanceValue > 10000){
-                distance = Math.round(distanceValue/1000.0)/10.0 + " km";
-            }else{
-                distance = Math.round(distanceValue/100)*10 + " m";
+            if (distanceValue > 10000) {
+                distance = Math.round(distanceValue / 1000.0) / 10.0 + " km";
+            } else {
+                distance = Math.round(distanceValue / 100) * 10 + " m";
             }
-            String instruction = "Follow road "+streetName+" for "+distance+" ("+durationValue/60+" min)";
+            String instruction = "Follow road " + streetName + " for " + distance + " (" + durationValue / 60 + " min)";
             Paragraph instructionParagraph = new Paragraph(instruction, instructionFont);
             instructionParagraph.setIndentationLeft(instructionLeftMarginWOHour);
             section.add(instructionParagraph);
@@ -114,10 +113,10 @@ public class planningPrinter {
             time += durationValue;
         }
         //waiting instruction
-        if(waitingTime>0){ //only display waiting if wait more than one minute
+        if (waitingTime > 0) { //only display waiting if wait more than one minute
             int openingTimeValue = route.getEndWaypoint().getTimeStart();
             String openingTime = timeTools.printTime(openingTimeValue);
-            String instruction = "[" + timeTools.printTime(time) + "] Wait until "+openingTime;
+            String instruction = "[" + timeTools.printTime(time) + "] Wait until " + openingTime;
             Paragraph instructionParagraph = new Paragraph(instruction, instructionFont);
             instructionParagraph.setIndentationLeft(instructionLeftMargin);
             section.add(instructionParagraph);
@@ -127,10 +126,9 @@ public class planningPrinter {
         //deliver instruction
         {
             String instruction = "[" + timeTools.printTime(time) + "]";
-            if(route.getEndWaypoint() instanceof Warehouse){
+            if (route.getEndWaypoint() instanceof Warehouse) {
                 instruction += " Enter back to the warehouse";
-            }
-            else {
+            } else {
                 instruction += " Deliver " + route.getEndWaypoint().getId() + " (" + route.getEndWaypoint().getDuration() / 60 + " min)";
                 time += route.getEndWaypoint().getDuration();
             }

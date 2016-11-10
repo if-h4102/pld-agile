@@ -15,6 +15,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import models.AbstractWaypoint;
 import models.Planning;
+import models.PlanningWaypoint;
 import models.Route;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,7 +41,7 @@ public class PlanningDetailsItem extends AnchorPane {
     @FXML
     protected Button removeButton;
 
-    private final SimpleObjectProperty<Route> item = new SimpleObjectProperty<>(this, "item", null);
+    private final SimpleObjectProperty<PlanningWaypoint> item = new SimpleObjectProperty<>(this, "item", null);
     private final SimpleObjectProperty<Planning> planning = new SimpleObjectProperty<>(this, "planning", null);
     private final SimpleIntegerProperty index = new SimpleIntegerProperty(this, "index", 0);
     private final SimpleBooleanProperty displayPathBefore = new SimpleBooleanProperty(this, "displayPathBefore", true);
@@ -82,15 +83,15 @@ public class PlanningDetailsItem extends AnchorPane {
     /**
      * @return The observable property for the route displayed by this item.
      */
-    public final SimpleObjectProperty<Route> itemProperty() {
+    public final SimpleObjectProperty<PlanningWaypoint> itemProperty() {
         return this.item;
     }
 
-    public final void setItem(Route value) {
+    public final void setItem(PlanningWaypoint value) {
         this.itemProperty().setValue(value);
     }
 
-    public final Route getItem() {
+    public final PlanningWaypoint getItem() {
         return this.itemProperty().getValue();
     }
 
@@ -218,11 +219,11 @@ public class PlanningDetailsItem extends AnchorPane {
     }
 
     public void onRemoveButtonAction(@NotNull ActionEvent actionEvent) {
-        Route item = this.getItem();
+        PlanningWaypoint item = this.getItem();
         if (item == null) {
             return;
         }
-        AbstractWaypoint startWaypoint = item.getStartWaypoint();
+        AbstractWaypoint startWaypoint = item.getTargetWaypoint();
         if (startWaypoint == null) {
             return;
         }

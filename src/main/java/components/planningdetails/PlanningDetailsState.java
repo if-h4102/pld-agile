@@ -8,8 +8,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import models.AbstractWaypoint;
 import models.Planning;
+import models.PlanningWaypoint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ public abstract class PlanningDetailsState implements IPlanningDetailsState {
         return this;
     }
 
-    public IPlanningDetailsState onPlanningWaypointsChange(ListChangeListener.Change<? extends AbstractWaypoint> listChange) {
+    public IPlanningDetailsState onPlanningWaypointsChange(ListChangeListener.Change<? extends PlanningWaypoint> listChange) {
         this.refreshView();
         return this;
     }
@@ -48,10 +48,10 @@ public abstract class PlanningDetailsState implements IPlanningDetailsState {
             return this;
         }
         if (oldValue != null) {
-            oldValue.waypointsProperty().removeListener(this.planningDetails::onPlanningWaypointsChange);
+            oldValue.planningWaypointsProperty().removeListener(this.planningDetails::onPlanningWaypointsChange);
         }
         if (newValue != null) {
-            newValue.waypointsProperty().addListener(this.planningDetails::onPlanningWaypointsChange);
+            newValue.planningWaypointsProperty().addListener(this.planningDetails::onPlanningWaypointsChange);
         }
         this.refreshView();
         return this;
@@ -70,7 +70,7 @@ public abstract class PlanningDetailsState implements IPlanningDetailsState {
     }
 
     public void refreshView() {
-        this.planningDetails.waypointsToPlanningDetails();
+        this.planningDetails.planningWaypointsToView();
         ObservableList<Node> nodes = this.planningDetails.planningDetailsVBox.getChildren();
         if (nodes.size() == 0) {
             return;
@@ -88,5 +88,6 @@ public abstract class PlanningDetailsState implements IPlanningDetailsState {
         itemNodes.get(0).setDisplayDataAfter(false);
         itemNodes.get(0).setDisplayRemoveButton(false);
         itemNodes.get(itemNodes.size() - 1).setDisplayPathAfter(false);
+        itemNodes.get(itemNodes.size() - 1).setDisplayRemoveButton(false);
     }
 }

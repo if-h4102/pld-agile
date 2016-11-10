@@ -40,7 +40,7 @@
         </graphic>
       </Button>
     </StackPane>
-    <WaypointCard waypoint="${controller.item.startWaypoint}">
+    <WaypointCard waypoint="${controller.item.targetWaypoint}">
       <cornerControls>
         <Button styleClass="flatButton" fx:id="removeButton"
                 graphicTextGap="2.0" mnemonicParsing="false"

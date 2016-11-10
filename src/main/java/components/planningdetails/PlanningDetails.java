@@ -17,6 +17,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import models.AbstractWaypoint;
 import models.Planning;
+import models.PlanningWaypoint;
 import models.Route;
 import org.jetbrains.annotations.NotNull;
 import services.map.IMapService;
@@ -93,7 +94,7 @@ public class PlanningDetails extends ScrollPane {
         this.changeState(this.getState().onPlanningChange(observable, oldValue, newValue));
     }
 
-    protected void onPlanningWaypointsChange(ListChangeListener.Change<? extends AbstractWaypoint> listChange) {
+    protected void onPlanningWaypointsChange(ListChangeListener.Change<? extends PlanningWaypoint> listChange) {
         this.changeState(this.getState().onPlanningWaypointsChange(listChange));
     }
 
@@ -125,23 +126,23 @@ public class PlanningDetails extends ScrollPane {
         nextState.enterState(currentState);
     }
 
-    protected void waypointsToPlanningDetails() {
+    protected void planningWaypointsToView() {
         final ObservableList<Node> itemNodes = this.planningDetailsVBox.getChildren();
         itemNodes.clear();
         final Planning planning = this.getPlanning();
         if (planning == null) {
             return;
         }
-        final ObservableList<Route> routes = planning.getRoutes();
-        if (routes == null) {
+        final ObservableList<PlanningWaypoint> planningWaypoints = planning.getPlanningWaypoints();
+        if (planningWaypoints == null) {
             return;
         }
 
         int index = 0;
-        for (Route item : routes) {
+        for (PlanningWaypoint planningWaypoint : planningWaypoints) {
             final PlanningDetailsItem node = new PlanningDetailsItem();
             node.setIndex(index++);
-            node.setItem(item);
+            node.setItem(planningWaypoint);
             node.setPlanning(planning);
             itemNodes.add(node);
         }

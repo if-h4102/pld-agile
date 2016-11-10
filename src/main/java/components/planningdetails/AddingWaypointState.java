@@ -1,6 +1,7 @@
 package components.planningdetails;
 
 import components.events.AddWaypointAction;
+import components.events.CancelAddWaypointAction;
 import components.events.SaveDeliveryAddress;
 import components.mapcanvas.DeliverySelectionEvent;
 import components.mapcanvas.IntersectionSelectionEvent;
@@ -60,30 +61,19 @@ public class AddingWaypointState extends PlanningDetailsState {
         return new DefaultState(this.planningDetails);
     }
 
-    public IPlanningDetailsState onPlanningWaypointsChange(ListChangeListener.Change<? extends AbstractWaypoint> listChange) {
+    public IPlanningDetailsState onPlanningWaypointsChange(ListChangeListener.Change<? extends PlanningWaypoint> listChange) {
         // Prevent refresh of nodes ?
-        return this;
-    }
-
-    public IPlanningDetailsState onAddWaypoint(AddWaypointAction action) {
-        return this;
-    }
-
-    public IPlanningDetailsState onPlanningChange(ObservableValue<? extends Planning> observable, Planning oldValue, Planning newValue) {
-        if (oldValue == newValue) {
-            return this;
-        }
-        if (oldValue != null) {
-            oldValue.waypointsProperty().removeListener(this.planningDetails::onPlanningWaypointsChange);
-        }
-        if (newValue != null) {
-            newValue.waypointsProperty().addListener(this.planningDetails::onPlanningWaypointsChange);
-        }
         return this;
     }
 
     @Override
     public IPlanningDetailsState onAddWaypointAction(AddWaypointAction action) {
         return this;
+    }
+
+    @Override
+    @NotNull
+    public IPlanningDetailsState onCancelAddWaypointAction(@NotNull CancelAddWaypointAction action) {
+        return new DefaultState(this.planningDetails);
     }
 }
