@@ -2,13 +2,12 @@ package components.timefield;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableBooleanValue;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import models.Planning;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -147,26 +146,41 @@ public class TimeField extends HBox {
         return this.minutes;
     }
 
+    /**
+     * @return The current number of minutes
+     */
     public final int getMinutes() {
         return this.minutesProperty().getValue();
     }
 
+    /**
+     * Set the current number of minutes
+     *
+     * @param value The new number of minutes
+     */
     public final void setMinutes(int value) {
         this.minutesProperty().setValue(value);
     }
 
     /**
-     *
      * @return The observable property for the seconds.
      */
     public final SimpleIntegerProperty secondsProperty() {
         return this.seconds;
     }
 
+    /**
+     * @return The current number of seconds
+     */
     public final int getSeconds() {
         return this.secondsProperty().getValue();
     }
 
+    /**
+     * Set the current number of seconds
+     *
+     * @param value The new number of seconds
+     */
     public final void setSeconds(int value) {
         this.secondsProperty().setValue(value);
     }
@@ -178,10 +192,19 @@ public class TimeField extends HBox {
         return this.hoursText;
     }
 
+    /**
+     * @return the current text in the hours TextField.
+     */
+    @NotNull
     public final String getHoursText() {
         return this.hoursTextProperty().getValue();
     }
 
+    /**
+     * Set the content of the hours TextField.
+     *
+     * @param value The new content of the hours TextField.
+     */
     public final void setHoursText(String value) {
         this.hoursTextProperty().setValue(value);
     }
@@ -193,10 +216,19 @@ public class TimeField extends HBox {
         return this.minutesText;
     }
 
+    /**
+     * @return the current text in the minutes TextField.
+     */
+    @NotNull
     public final String getMinutesText() {
         return this.minutesTextProperty().getValue();
     }
 
+    /**
+     * Set the content of the minutes TextField.
+     *
+     * @param value The new content of the minutes TextField.
+     */
     public final void setMinutesText(String value) {
         this.minutesTextProperty().setValue(value);
     }
@@ -208,14 +240,29 @@ public class TimeField extends HBox {
         return this.secondsText;
     }
 
+    /**
+     * @return the current text in the seconds TextField.
+     */
+    @NotNull
     public final String getSecondsText() {
         return this.secondsTextProperty().getValue();
     }
 
+    /**
+     * Set the content of the seconds TextField.
+     *
+     * @param value The new content of the seconds TextField.
+     */
     public final void setSecondsText(String value) {
         this.secondsTextProperty().setValue(value);
     }
 
+    /**
+     * Handle the change of the time by updating the hours, minutes and seconds.
+     *
+     * @param oldValue Previous value of time
+     * @param newValue New value of time
+     */
     protected void onTimeChange(int oldValue, int newValue) {
         if (newValue == oldValue) {
             return;
@@ -232,6 +279,13 @@ public class TimeField extends HBox {
         }
     }
 
+    /**
+     * Handle the change of the hours by updating the time and the text of
+     * the hours TextField
+     *
+     * @param oldValue Previous value of hours
+     * @param newValue New value of hours
+     */
     protected void onHoursChange(int oldValue, int newValue) {
         if (newValue == oldValue) {
             return;
@@ -246,6 +300,13 @@ public class TimeField extends HBox {
         }
     }
 
+    /**
+     * Handle the change of the minutes by updating the time and the text of
+     * the minutes TextField
+     *
+     * @param oldValue Previous value of minutes
+     * @param newValue New value of minutes
+     */
     protected void onMinutesChange(int oldValue, int newValue) {
         if (newValue == oldValue) {
             return;
@@ -260,6 +321,13 @@ public class TimeField extends HBox {
         }
     }
 
+    /**
+     * Handle the change of the seconds by updating the time and the text of
+     * the seconds TextField
+     *
+     * @param oldValue Previous value of seconds
+     * @param newValue New value of seconds
+     */
     protected void onSecondsChange(int oldValue, int newValue) {
         if (newValue == oldValue) {
             return;
@@ -274,6 +342,13 @@ public class TimeField extends HBox {
         }
     }
 
+    /**
+     * Handle the change of content of the hours TextField by updating
+     * the hours.
+     *
+     * @param oldValue Previous value of the content of the hours TextField
+     * @param newValue New value of the content of the hours TextField
+     */
     protected void onHoursTextChange(String oldValue, String newValue) {
         if (newValue.equals(oldValue)) {
             return;
@@ -287,6 +362,13 @@ public class TimeField extends HBox {
         this.setHours(hours);
     }
 
+    /**
+     * Handle the change of content of the minutes TextField by updating
+     * the minutes.
+     *
+     * @param oldValue Previous value of the content of the minutes TextField
+     * @param newValue New value of the content of the minutes TextField
+     */
     protected void onMinutesTextChange(String oldValue, String newValue) {
         if (newValue.equals(oldValue)) {
             return;
@@ -300,6 +382,13 @@ public class TimeField extends HBox {
         this.setMinutes(minutes);
     }
 
+    /**
+     * Handle the change of content of the seconds TextField by updating
+     * the seconds.
+     *
+     * @param oldValue Previous value of the content of the seconds TextField
+     * @param newValue New value of the content of the seconds TextField
+     */
     protected void onSecondsTextChange(String oldValue, String newValue) {
         if (newValue.equals(oldValue)) {
             return;
@@ -313,6 +402,14 @@ public class TimeField extends HBox {
         this.setSeconds(seconds);
     }
 
+    /**
+     * Synchronize the style of the component according to the "disable"
+     * attribute of the TimeField.
+     *
+     * @param observable The observable value of the disable attribute.
+     * @param oldValue Previous value of "disable"
+     * @param newValue New value of "disable"
+     */
     protected void onDisableChange(ObservableValue<? extends Boolean> observable, boolean oldValue, boolean newValue) {
         if (newValue) {
             this.getStyleClass().add("ReadOnly");
@@ -325,9 +422,24 @@ public class TimeField extends HBox {
      * Represents a parsed time.
      */
     public class TimeStructure {
+        /**
+         * Timestamp: seconds since midnight
+         */
         public final int time;
+
+        /**
+         * Hours since midnight
+         */
         public final int hours;
+
+        /**
+         * Minutes of the current hour
+         */
         public final int minutes;
+
+        /**
+         * Seconds of the current minute
+         */
         public final int seconds;
 
         TimeStructure(int hours, int minutes, int seconds) {
