@@ -71,6 +71,10 @@ public class SelectingWaypointState extends PlanningDetailsState {
                 System.err.println(node);
             }
         }
+        for (PlanningDetailsItem pdi : itemNodes) {
+            pdi.setDisplayAddButton(false);
+            pdi.setDisplayRemoveButton(false);
+        }
         itemNodes.get(this.index).setDisplayAddButton(false);
         itemNodes.get(this.index).setDisplayCancelAddButton(true);
         itemNodes.get(this.index).setDisplayDataBefore(false);
