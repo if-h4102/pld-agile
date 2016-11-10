@@ -20,6 +20,8 @@ import models.CityMap;
 import models.DeliveryRequest;
 import models.Intersection;
 import models.Planning;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import services.command.AddWaypointAfterCommand;
 import services.command.CommandManager;
 import services.command.RemoveWaypointAfterCommand;
@@ -34,7 +36,8 @@ import java.util.ResourceBundle;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * This class is the main controller of the application. It handles all events, and dispatch them to the right state.
+ * This class is the main controller of the application. It handles the global
+ * events according to its state.
  */
 public class MainController extends BorderPane {
 
@@ -105,39 +108,45 @@ public class MainController extends BorderPane {
 
     /**
      * Returns the root pane of the application.
-     * 
+     *
      * @return The root pane of the application.
      */
+    @NotNull
     protected Parent getRoot() {
         return this.root;
     }
 
     /**
      * Returns the parser uses to read xml file.
-     * 
+     *
      * @return The parser uses to read xml file.
      */
+    @NotNull
     protected Parser getParserService() {
         return this.parserService;
     }
 
-    // TODO to comment, no idea what this method does, but when it is suppressed the loaded of city map doesn't work anymore
+    /**
+     * @return The observable property for the currently loaded cityMap
+     */
+    @NotNull
     public SimpleObjectProperty<CityMap> cityMapProperty() {
         return this.cityMap;
     }
 
     /**
      * Returns the current loaded cityMap, or null if no cityMap has been loaded.
-     * 
+     *
      * @return The current loaded cityMap, or null if no cityMap has been loaded.
      */
+    @Nullable
     public CityMap getCityMap() {
         return cityMap.getValue();
     }
 
     /**
      * Set the cityMap to the provided value.
-     * 
+     *
      * @param cityMap
      *            The new value of the cityMap.
      */
@@ -145,23 +154,27 @@ public class MainController extends BorderPane {
         this.cityMap.setValue(cityMap);
     }
 
-    // TODO to comment, no idea what this method does, but when it is suppressed the computing of planning doesn't work anymore
+    /**
+     * @return The observable property for the currently loaded Planning
+     */
+    @NotNull
     public SimpleObjectProperty<Planning> planningProperty() {
         return this.planning;
     }
 
     /**
      * Returns the current planning, or null if no planning has been computed.
-     * 
+     *
      * @return The current planning, or null if no planning has been computed.
      */
+    @Nullable
     public Planning getPlanning() {
         return planningProperty().getValue();
     }
 
     /**
      * Set the planning to the provided value.
-     * 
+     *
      * @param planning
      *            The new value of the planning.
      */
@@ -191,7 +204,7 @@ public class MainController extends BorderPane {
 
     /**
      * Returns the current delivery request, or null if no delivery request has been loaded.
-     * 
+     *
      * @return The current delivery request, or null if no delivery request has been loaded.
      */
     public DeliveryRequest getDeliveryRequest() {
@@ -200,7 +213,7 @@ public class MainController extends BorderPane {
 
     /**
      * Set delivery request to the provided value.
-     * 
+     *
      * @param deliveryRequest
      *            The new value of delivery request.
      */
@@ -215,7 +228,7 @@ public class MainController extends BorderPane {
 
     /**
      * Returns a reference to this object.
-     * 
+     *
      * @return A reference to this object.
      */
     protected MainControllerState getState() {
@@ -224,7 +237,7 @@ public class MainController extends BorderPane {
 
     /**
      * Set the current state to the provided value.
-     * 
+     *
      * @param state
      *            The new state of the controller.
      */
@@ -232,28 +245,42 @@ public class MainController extends BorderPane {
         this.state.setValue(state);
     }
 
-    // MapService // TODO to comment, no idea what this method does
+    /**
+     * Returns the observable object for the MapService. This service is
+     * used to set the active waypoint (it's used between the PlanningDetails
+     * and the MapScreen).
+     *
+     * @return The observable object for the MapService to use.
+     */
+    @NotNull
     public SimpleObjectProperty<IMapService> mapServiceProperty() {
         return this.mapService;
     }
 
-    // TODO to comment, no idea what this method does
+    /**
+     * @return The current value of the MapService
+     */
+    @NotNull
     public IMapService getMapService() {
         return this.mapServiceProperty().getValue();
     }
 
-    // TODO to comment, no idea what this method does
-    public void setMapService(IMapService value) {
+    /**
+     * Sets a new value for the MapService.
+     *
+     * @param value The new value for the mapService.
+     */
+    protected void setMapService(@NotNull IMapService value) {
         this.mapServiceProperty().setValue(value);
     }
 
     /**
      * Change state to the provided state, and call the method enterState and leaveState if needed.
-     * 
+     *
      * @param nextState
      *            The next state of the controller.
      */
-    protected void applyState(MainControllerState nextState) {
+    protected void applyState(@NotNull MainControllerState nextState) {
         MainControllerState currentState = this.getState();
         if (currentState == nextState) {
             return;
@@ -265,11 +292,11 @@ public class MainController extends BorderPane {
 
     /**
      * Changes the text of the compute button to the provided value.
-     * 
+     *
      * @param text
      *            The new value of the text of the compute button.
      */
-    protected void setTextToComputePlanningButton(String text) {
+    protected void setTextToComputePlanningButton(@NotNull String text) {
         computePlanningButton.setText(text);
     }
 
@@ -296,13 +323,23 @@ public class MainController extends BorderPane {
         this.applyState(this.getState().onComputePlanningButtonAction());
     }
 
-    // TODO to comment, no idea what this method does
-    public void onPromptIntersection(CompletableFuture<Intersection> future) {
+    /**
+     * Called when a component requires the user to choose an intersection.
+     *
+     * @param future An empty completable future that will be resolved with
+     *               the value of intersection chosen by the user.
+     */
+    public void onPromptIntersection(@NotNull CompletableFuture<Intersection> future) {
         this.applyState(this.getState().onPromptIntersection(future));
     }
 
- // TODO to comment, no idea what this method does
-    public void onIntersectionSelection(IntersectionSelectionEvent event) {
+    /**
+     * Handles a click by the user on an intersection.
+     *
+     * @param event An object representing the event. It mainly contains the
+     *              selected intersection.
+     */
+    public void onIntersectionSelection(@NotNull IntersectionSelectionEvent event) {
         this.applyState(this.getState().onIntersectionSelection(event));
     }
 
