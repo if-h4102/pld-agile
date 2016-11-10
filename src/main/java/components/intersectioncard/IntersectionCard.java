@@ -22,7 +22,7 @@ public class IntersectionCard<E extends Intersection> extends AnchorPane {
     private SimpleObjectProperty<E> intersection;
 
     /** Constructor of the class intersectionCard.
-     * Loading the associate fxml file, which use the accessible intersection for the tooltip.
+     * Load the associate fxml file, which use the accessible intersection for the tooltip.
      * 
      */
     public IntersectionCard() {

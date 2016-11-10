@@ -28,6 +28,10 @@ public class WaypointCard extends AnchorPane implements IWaypointCard<AbstractWa
     @FXML
     protected AnchorPane root;
 
+    /** Constructor of the class WayPointCard.
+     * Load the associate fxml file.
+     * 
+     */
     public WaypointCard() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/components/waypointcard/WaypointCard.fxml"));
         fxmlLoader.setRoot(this);
@@ -150,6 +154,9 @@ public class WaypointCard extends AnchorPane implements IWaypointCard<AbstractWa
         this.cornerControlsProperty().setValue(content);
     }
 
+    /** Update the content of the WayPointCard according to the instance of the waypoint
+     * 
+     */
     protected void onWaypointChange() {
         AbstractWaypoint waypoint = getWaypoint();
         if (waypoint == null) {
@@ -176,6 +183,9 @@ public class WaypointCard extends AnchorPane implements IWaypointCard<AbstractWa
         this.setContent(newContent);
     }
 
+    /** Update the inforations displayed on the card.
+     * 
+     */
     protected void onContentChange() {
         root.getChildren().clear();
         WaypointCardBase<?> newContent = getContent();
