@@ -7,5 +7,5 @@
          type="ScrollPane"
          xmlns="http://javafx.com/javafx/8.0.102-ea"
          xmlns:fx="http://javafx.com/fxml/1">
-  <VBox fx:id="vBox"/>
+  <VBox fx:id="planningDetailsVBox"/>
 </fx:root>

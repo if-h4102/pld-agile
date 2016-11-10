@@ -35,16 +35,12 @@ public class AddingWaypointState extends PlanningDetailsState {
 
     @Override
     public IPlanningDetailsState enterState(IPlanningDetailsState previousState) {
-        this.planningDetails.waypointsToPlanningDetails();
-        ObservableList<Node> nodes = this.planningDetails.vBox.getChildren();
-
+        super.enterState(previousState);
+        ObservableList<Node> nodes = this.planningDetails.planningDetailsVBox.getChildren();
         DeliveryAddress tmpDeliveryAddress = new DeliveryAddress(intersection, 0);
         EditableDeliveryAddressCard editable = new EditableDeliveryAddressCard();
         editable.setWaypoint(tmpDeliveryAddress);
-        
-        
         nodes.add(this.index, editable);
-
         return this;
     }
 
@@ -61,13 +57,11 @@ public class AddingWaypointState extends PlanningDetailsState {
         Planning planning = this.planningDetails.getPlanning();
         event.setIndex(this.index);
 
-        this.planningDetails.waypointsToPlanningDetails();
-
         return new DefaultState(this.planningDetails);
     }
 
     public IPlanningDetailsState onPlanningWaypointsChange(ListChangeListener.Change<? extends AbstractWaypoint> listChange) {
-        this.planningDetails.waypointsToPlanningDetails();
+        // Prevent refresh of nodes ?
         return this;
     }
 

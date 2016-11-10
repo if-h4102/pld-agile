@@ -1,6 +1,8 @@
 package components.planningdetails;
 
 import components.events.AddWaypointAction;
+import components.events.CancelAddWaypointAction;
+import components.events.RemoveWaypointAction;
 import components.events.SaveDeliveryAddress;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
@@ -13,6 +15,8 @@ public interface IPlanningDetailsState {
     IPlanningDetailsState onPlanningWaypointsChange(ListChangeListener.Change<? extends AbstractWaypoint> listChange);
     IPlanningDetailsState onPlanningChange(ObservableValue<? extends Planning> observable, Planning oldValue, Planning newValue);
     IPlanningDetailsState onAddWaypointAction(AddWaypointAction action);
+    IPlanningDetailsState onRemoveWaypointAction(RemoveWaypointAction action);
+    IPlanningDetailsState onCancelAddWaypointAction(CancelAddWaypointAction action);
     IPlanningDetailsState onSaveNewWaypoint(SaveDeliveryAddress action);
     void refreshView();
 }

@@ -5,7 +5,7 @@
 <?import components.timefield.TimeField?>
 <fx:root xmlns:fx="http://javafx.com/fxml/1" fx:id="root" prefHeight="50.0" prefWidth="200.0"
          stylesheets="/components/waypointcard/WarehouseCard.css" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.102-ea">
-  <VBox AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+  <VBox styleClass="waypointCardVBox" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
     <Label text="${controller.name}"/>
     <GridPane AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
       <columnConstraints>
