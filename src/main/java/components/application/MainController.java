@@ -260,7 +260,6 @@ public class MainController extends BorderPane {
     /**
      * @return The current value of the MapService
      */
-    @NotNull
     public IMapService getMapService() {
         return this.mapServiceProperty().getValue();
     }

@@ -354,31 +354,40 @@ public class CityMap {
     public boolean equals(Object obj) {
         if (!(obj instanceof CityMap)) {
             return false;
-        } else if (this == obj)
+        } else if (this == obj) {
             return true;
+        }
         CityMap other = (CityMap) obj;
 
-        if (intersections.size() != other.intersections.size())
+        if (intersections.size() != other.intersections.size()) {
             return false;
+        }
+        
         for (Map.Entry<Integer, Intersection> entry : intersections.entrySet()) {
-            if (!entry.getValue().equals(other.intersections.get(entry.getKey())))
+            if (!entry.getValue().equals(other.intersections.get(entry.getKey()))) {
                 return false;
+            }
         }
 
-        if (streetSections.size() != other.streetSections.size())
+        if (streetSections.size() != other.streetSections.size()) {
             return false;
+        }
         for (Map.Entry<Integer, Map<Integer, StreetSection>> entrySubMap : streetSections.entrySet()) {
             Map<Integer, StreetSection> otherSubMap = other.streetSections.get(entrySubMap.getKey());
-            if (otherSubMap == null && entrySubMap.getValue() != null || otherSubMap != null && entrySubMap.getKey() == null)
-                return false;
-            if (otherSubMap == null)
+            if (otherSubMap == null && entrySubMap.getValue() != null || otherSubMap != null && entrySubMap.getKey() == null) {
+                return false; // one sub item is null and not the other => the two city map are different.
+            }
+            if (otherSubMap == null) {
                 continue; // The two sub item are null, so they are equals
-            if (otherSubMap.size() != entrySubMap.getValue().size())
+            }
+            if (otherSubMap.size() != entrySubMap.getValue().size()) {
                 return false;
+            }
 
             for (Map.Entry<Integer, StreetSection> entry : entrySubMap.getValue().entrySet()) {
-                if (!entry.getValue().equals(otherSubMap.get(entry.getKey())))
+                if (!entry.getValue().equals(otherSubMap.get(entry.getKey()))) {
                     return false;
+                }
             }
         }
         return true;
