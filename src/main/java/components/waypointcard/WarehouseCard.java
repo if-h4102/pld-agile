@@ -18,6 +18,10 @@ public class WarehouseCard extends WaypointCardBase<Warehouse> {
     private SimpleStringProperty coordinates;
     private SimpleStringProperty startTime;
 
+    /** Constructor of the class WarehouseCard.
+     * Load the associate fxml file.
+     * Add a listener to the coordinates of the event received.
+     */
     public WarehouseCard() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/components/waypointcard/WarehouseCard.fxml"));
         fxmlLoader.setRoot(this);
@@ -39,6 +43,10 @@ public class WarehouseCard extends WaypointCardBase<Warehouse> {
     }
 
     // Coordinates
+    /**Create the accessible coordinates for the card.
+     * 
+     * @return The coordinates property.
+     */
     public final SimpleStringProperty coordinatesProperty() {
         if (coordinates == null) {
             coordinates = new SimpleStringProperty(this, "coordinates");
@@ -46,6 +54,9 @@ public class WarehouseCard extends WaypointCardBase<Warehouse> {
         return coordinates;
     }
 
+    /* Update the coordinates of the card according to the warehouse position.
+     * 
+     */
     public void updateCoordinates() {
         final Warehouse waypoint = getWaypoint();
         if (waypoint == null) {
@@ -58,6 +69,9 @@ public class WarehouseCard extends WaypointCardBase<Warehouse> {
         setCoordinates("(" + intersection.getX() + "; " + intersection.getY() + ")");
     }
 
+    /**Return the name of the denomination waypoint.
+     * @return "Warehouse" if the card is not null 
+     */
     protected String computeName() {
         Warehouse waypoint = getWaypoint();
         if (waypoint == null) {
@@ -66,14 +80,25 @@ public class WarehouseCard extends WaypointCardBase<Warehouse> {
         return "Warehouse";
     }
 
+    /**
+     * @return The observable property for the current content (most specific card for the current waypoint).
+     */
     public ObservableList<Node> getCornerControls() {
         return cornerControls.getChildren();
     }
 
+    /** Get the coordinates of the card.
+     * 
+     * @return the coordinates of the Card
+     */
     public final String getCoordinates() {
         return coordinatesProperty().getValue();
     }
 
+    /** Set the coordinates to the new value.
+     * 
+     * @param value - The new coordinates
+     */
     public final void setCoordinates(String value) {
         coordinatesProperty().setValue(value);
     }

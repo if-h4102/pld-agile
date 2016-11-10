@@ -4,9 +4,16 @@ import javafx.event.Event;
 import javafx.event.EventType;
 
 public class CancelAddWaypointAction extends Event {
-	public static final EventType<CancelAddWaypointAction> TYPE = new EventType<>("CANCEL_ADD_WAYPOINT");
+    
+    /**
+     * Define the event type for the canceling of an add way point action.
+     */
+    public static final EventType<CancelAddWaypointAction> TYPE = new EventType<>("CANCEL_ADD_WAYPOINT");
 
-	public CancelAddWaypointAction() {
-		super(CancelAddWaypointAction.TYPE);
-	}
+    /**
+     * Construct a new event type.
+     */
+    public CancelAddWaypointAction() {
+	super(CancelAddWaypointAction.TYPE);
+    }
 }
