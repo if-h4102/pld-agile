@@ -184,7 +184,7 @@ public class PlanningDetails extends ScrollPane {
         int index = 0;
         for (PlanningWaypoint planningWaypoint : planningWaypoints) {
             final PlanningDetailsItem node = new PlanningDetailsItem();
-            node.setIndex(index++);
+            node.setIndex(1 + index++);
             node.setItem(planningWaypoint);
             node.setPlanning(planning);
             itemNodes.add(node);
