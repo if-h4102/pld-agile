@@ -28,9 +28,13 @@ public class CommandManager {
 
     /**
      * Execute the given command and store it for an eventual undo operation.
+     * If there was some undone actions, they all will be lost.
      * @param command the command to be executed.
      */
     public void execute(AbstractCommand command) {
+        if(!this.undone.isEmpty()) {
+          this.undone.clear();
+        }
         this.done.push(command).execute();
         this.undone.clear();
         updateUndoableRedoable();
