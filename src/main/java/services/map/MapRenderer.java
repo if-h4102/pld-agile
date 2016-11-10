@@ -8,31 +8,30 @@ import models.*;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * This service is used to render the values of the model on a canvas with
+ * a GraphicsContext.
+ */
 public class MapRenderer {
-    public static final int MARGIN_ERROR = 0;
+    /**
+     * Diameter of a simple intersection.
+     */
     public static final double INTERSECTION_SIZE = 10;
+
+    /**
+     * Diameter of a waypoint
+     */
     public static final double WAYPOINT_SIZE = 18;
 
-    private CityMap cityMap;
-    private DeliveryRequest deliveryRequest;
-    private Planning planning;
-
-    public static HashMap<StreetSection, Integer> getSectionMap(Iterable<Route> listRoutes) {
-        HashMap<StreetSection, Integer> sectionMap = new HashMap<StreetSection, Integer>();
-
-        for (Route route : listRoutes) {
-            List<StreetSection> streetSections = route.getStreetSections();
-            for (StreetSection section : streetSections) {
-                if (!sectionMap.containsKey(section)) {
-                    sectionMap.put(section, 1);
-                } else {
-                    sectionMap.put(section, sectionMap.get(section) + 1);
-                }
-            }
-        }
-        return sectionMap;
-    }
-
+    /**
+     * Returns the color to use to draw a streetsection dependending on the ratio
+     * of the position compared to the total.
+     * The goal is to circle other all the hues.
+     *
+     * @param step Current step.
+     * @param nbStep Total number of steps
+     * @return The color to use the for the street section
+     */
     public static Color getColor(double step, double nbStep) {
         double red = 0;
         double green = 0;
@@ -55,6 +54,12 @@ public class MapRenderer {
     public MapRenderer() {
     }
 
+    /**
+     * Draw the intersections and street sections of the city map
+     *
+     * @param gc Context to use to draw.
+     * @param cityMap The city map to draw.
+     */
     @Requires("cityMap != null")
     public void drawCityMap(GraphicsContext gc, CityMap cityMap) {
         gc.setFill(Color.BLACK);
@@ -73,6 +78,12 @@ public class MapRenderer {
         }
     }
 
+    /**
+     * Draw the warehouse and delivery addresses of the supplied delivery request.
+     *
+     * @param gc Context to use to draw.
+     * @param deliveryRequest The delivery request to draw.
+     */
     @Requires("deliveryRequest != null")
     public void drawDeliveryRequest(GraphicsContext gc, DeliveryRequest deliveryRequest) {
         for (DeliveryAddress deliveryAddress : deliveryRequest.getDeliveryAddresses()) {
@@ -93,10 +104,16 @@ public class MapRenderer {
         );
     }
 
+    /**
+     * Draw the routes of the planning, its waypoints (warehouse and delivery
+     * addresses) with their index.
+     *
+     * @param gc Context to use to draw.
+     * @param planning The planning to draw.
+     */
     @Requires("planning != null")
     public void drawPlanning(GraphicsContext gc, Planning planning) {
-        Color colorStart = Color.BLUE;
-        Color currentColor = colorStart;
+        Color currentColor = Color.BLUE;
 
         Iterable<Route> listRoutes = planning.getRoutes();
 
@@ -158,6 +175,13 @@ public class MapRenderer {
         }
     }
 
+    /**
+     * Draw the point of an arrow at two thirds of the provided street section.
+     *
+     * @param gc Context to use to draw.
+     * @param street Street section to use to draw the point of the arrow
+     * @param color Color to use to draw the point of the arrow.
+     */
     public void drawArrowBetweenStreetSection(GraphicsContext gc, StreetSection street, Color color) {
         double xStart = street.getStartIntersection().getX();
         double xEnd = street.getEndIntersection().getX();
@@ -182,6 +206,14 @@ public class MapRenderer {
         gc.strokeLine(xthird, ythird, xCross2, yCross2);
     }
 
+    /**
+     * Draw a waypoint on the map. Its color depends on its status.
+     * It is red if the time constraints are not met and green (delivery address)
+     * or blue (warehouse) otherwise.
+     *
+     * @param gc Context to use to draw.
+     * @param planningWaypoint The planning waypoint to draw.
+     */
     private void drawPlanningWaypoint(GraphicsContext gc, PlanningWaypoint planningWaypoint) {
         gc.setFill(Color.RED);
         if (planningWaypoint.getIsPossible()) {
