@@ -8,9 +8,10 @@ import services.tsp.BasicBoundTspSolver;
 import services.tsp.TspSolver;
 
 /**
- * This class represents the state of the application when the planning is computing.
+ * This class represents the state of the application when the planning is
+ * being computed.
  */
-public class ComputingPlanningState extends WaitOpenDeliveryRequestState implements TspCompletedListener{
+public class ComputingPlanningState extends WaitOpenDeliveryRequestState implements TspCompletedListener {
     private long beforeDijkstraTime;
     private long beforeTspTime;
     private long completionTime;
@@ -47,17 +48,17 @@ public class ComputingPlanningState extends WaitOpenDeliveryRequestState impleme
         mainController.setTextToComputePlanningButton("Computing");
     }
 
-    @Override
     /**
-     * When this method is called, the compute button has become "interrupt".
+     * When this method is called, the text of the compute button becomes
+     * "interrupt".
      */
+    @Override
     public MainControllerState onComputePlanningButtonAction() {
         if (tspSolver != null)
             tspSolver.stopComputing();
-        
+
         return new ReadyToComputeState(mainController);
     }
-
 
     @Override
     public void notifyOfTspComplete(Planning bestPlanning) {
