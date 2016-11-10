@@ -1,14 +1,13 @@
 package components.planningdetails;
 
-import components.events.AddWaypointAction;
 import components.events.CancelAddWaypointAction;
 import components.events.SaveDeliveryAddress;
 import components.waypointcard.EditableDeliveryAddressCard;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import models.*;
+import models.DeliveryAddress;
+import models.Intersection;
+import models.Planning;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -95,12 +94,12 @@ public class AddingWaypointState extends PlanningDetailsState {
 
     /**
      * Handle the "save" user action.
-     *
-     * It simply adds the newly created waypoint to the planning at the choosen
+     * <p>
+     * It simply adds the newly created waypoint to the planning at the chosen
      * index.
      *
-     * @param event
-     * @return
+     * @param event An object representing the saveDeliveryAddress user action.
+     * @return A instance of DefaultState for this component.
      */
     @Override
     @NotNull
@@ -115,7 +114,7 @@ public class AddingWaypointState extends PlanningDetailsState {
 
     /**
      * Restore the default state upon cancellation.
-     *
+     * <p>
      * There is no button in GUI to trigger this action currently.
      *
      * @param action The object representing the user action.

@@ -1,31 +1,22 @@
 package components.mapcanvas;
 
-import com.google.java.contract.Ensures;
-import com.google.java.contract.Requires;
-
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
+import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import models.*;
 import services.map.IMapService;
 import services.map.MapRenderer;
 
-import java.awt.Rectangle;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
- * 
  * The canvas in which all the map will be draw, the planning and the deliveries will also be show here.
- *
  */
 public class MapCanvas extends Canvas {
     private static final CityMap DEFAULT_CITY_MAP = null;
@@ -69,7 +60,7 @@ public class MapCanvas extends Canvas {
         this.mapServiceProperty().addListener(this::onMapServiceChange);
 
         /** Add a listener to the planning property to get any changes it might undergo.
-         * 
+         *
          */
         planningProperty().addListener((observableValue, oldPlanning, newPlanning) -> {
             if (oldPlanning != null) {
@@ -81,16 +72,16 @@ public class MapCanvas extends Canvas {
             self.draw();
         });
 
-        /**Add an event handler class to the canvas in order to 
+        /**Add an event handler class to the canvas in order to
          * @param mouseEvent
-         * @param 
+         * @param
          */
         this.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             /**The handle method of the handler. Triggers event according to the type of the place the mouse has clicked.
-             * 
-             * @param e - The mouseEvent we handle : we get his coordinates and determines whether it is or not an intersection, 
-             * a warehouse or a delivery address. We need first to transform its coordinates according to the current size of the map, 
+             *
+             * @param e - The mouseEvent we handle : we get his coordinates and determines whether it is or not an intersection,
+             * a warehouse or a delivery address. We need first to transform its coordinates according to the current size of the map,
              * the zoom factor and the translation she underwent.
              */
             public void handle(MouseEvent e) {
@@ -100,24 +91,24 @@ public class MapCanvas extends Canvas {
                 eventY /= calZoom;
                 eventX += DEFAULT_OFFSET_X;
                 eventY += DEFAULT_OFFSET_Y;
-                
+
                 //First check if it is the deliveryRequest has been loaded
-                if(getDeliveryRequest() != null){
-                	//First check if the location is the warehouse, if it is, make other tooltips disappear
-                	Warehouse warehouse = getDeliveryRequest().getWarehouse();
-                	if (eventX < warehouse.getX() + DEFAULT_DELIVERY_SIZE / 2 && eventX > warehouse.getX() - DEFAULT_DELIVERY_SIZE / 2
-                            && eventY < warehouse.getY() + DEFAULT_DELIVERY_SIZE / 2 && eventY > warehouse.getY() - DEFAULT_DELIVERY_SIZE / 2){
-                		WarehouseSelectionEvent warehouseEvent = new WarehouseSelectionEvent(warehouse, e.getX(), e.getY());
+                if (getDeliveryRequest() != null) {
+                    //First check if the location is the warehouse, if it is, make other tooltips disappear
+                    Warehouse warehouse = getDeliveryRequest().getWarehouse();
+                    if (eventX < warehouse.getX() + DEFAULT_DELIVERY_SIZE / 2 && eventX > warehouse.getX() - DEFAULT_DELIVERY_SIZE / 2
+                        && eventY < warehouse.getY() + DEFAULT_DELIVERY_SIZE / 2 && eventY > warehouse.getY() - DEFAULT_DELIVERY_SIZE / 2) {
+                        WarehouseSelectionEvent warehouseEvent = new WarehouseSelectionEvent(warehouse, e.getX(), e.getY());
                         fireEvent(warehouseEvent);
                         DeliverySelectionEvent nullDeliver = new DeliverySelectionEvent(null, 0, 0);
                         fireEvent(nullDeliver);
                         IntersectionSelectionEvent nullIntersect = new IntersectionSelectionEvent(null, 0, 0);
                         fireEvent(nullIntersect);
                         return;
-                	}
-                	//Then check if the location is a delivery Request, if it is, make other tooltips disappear
+                    }
+                    //Then check if the location is a delivery Request, if it is, make other tooltips disappear
                     listDeliveryAddresses = getDeliveryRequest().getDeliveryAddresses();
-                    for(DeliveryAddress delivery : listDeliveryAddresses){
+                    for (DeliveryAddress delivery : listDeliveryAddresses) {
                         if (eventX < delivery.getX() + DEFAULT_DELIVERY_SIZE / 2 && eventX > delivery.getX() - DEFAULT_DELIVERY_SIZE / 2
                             && eventY < delivery.getY() + DEFAULT_DELIVERY_SIZE / 2 && eventY > delivery.getY() - DEFAULT_DELIVERY_SIZE / 2) {
                             DeliverySelectionEvent deliver = new DeliverySelectionEvent(delivery, e.getX(), e.getY());
@@ -151,7 +142,7 @@ public class MapCanvas extends Canvas {
 
     @SuppressWarnings("restriction")
     /**Clear the zone where the map is drawn.
-     * 
+     *
      */
     private void clear() {
         double width = getWidth();
@@ -162,9 +153,9 @@ public class MapCanvas extends Canvas {
     }
 
     @SuppressWarnings("restriction")
-    /**Update the zoomfactor, the offset x and the offset y of the map, also resize the map in order 
+    /**Update the zoomfactor, the offset x and the offset y of the map, also resize the map in order
      * to fit it in the zone seen by the user.
-     * 
+     *
      */
     private void updateTransform() {
         double width = getWidth();
@@ -205,7 +196,7 @@ public class MapCanvas extends Canvas {
 
     @SuppressWarnings("restriction")
     /**Check if the deliveryRequest and the Planning are loaded and draw the in the canvas if so.
-     * 
+     *
      */
     private void draw() {
         clear();
@@ -227,7 +218,9 @@ public class MapCanvas extends Canvas {
         }
     }
 
-    /**return if the map is resizable or not.
+    /**
+     * return if the map is resizable or not.
+     *
      * @return isresizable a boolean (true if resizable and false if not).
      */
     @Override
@@ -235,8 +228,9 @@ public class MapCanvas extends Canvas {
         return true;
     }
 
-    /**Get the preferred width of the mapscreen.
-     * 
+    /**
+     * Get the preferred width of the mapscreen.
+     *
      * @return width
      */
     @Override
@@ -244,8 +238,9 @@ public class MapCanvas extends Canvas {
         return width;
     }
 
-    /**Get the preferred Height of the mapscreen.
-     * 
+    /**
+     * Get the preferred Height of the mapscreen.
+     *
      * @return height
      */
     @Override
@@ -254,9 +249,7 @@ public class MapCanvas extends Canvas {
     }
 
     /**
-     * The cityMap to display
-     *
-     * @return The cityMap property
+     * @return The observable property for the current city map
      */
     public final SimpleObjectProperty<CityMap> cityMapProperty() {
         if (cityMap == null) {
@@ -275,8 +268,7 @@ public class MapCanvas extends Canvas {
     }
 
     /**
-     * 
-     * @return
+     * @return The current cityMap to display
      */
     public final CityMap getCityMap() {
         return cityMap == null ? DEFAULT_CITY_MAP : cityMap.getValue();
@@ -297,14 +289,15 @@ public class MapCanvas extends Canvas {
     /**
      * Set the current value of the delivery request.
      *
-     * @param deliveryRequest - The new value of the delivery request. 
+     * @param deliveryRequest - The new value of the delivery request.
      */
     public final void setDeliveryRequest(DeliveryRequest deliveryRequest) {
         deliveryRequestProperty().setValue(deliveryRequest);
     }
 
-    /**Get the current deliveryRequest of the map. 
-     * 
+    /**
+     * Get the current deliveryRequest of the map.
+     *
      * @return deliveryRequest - The delivery request currently loaded in the map
      */
     public final DeliveryRequest getDeliveryRequest() {
@@ -312,7 +305,7 @@ public class MapCanvas extends Canvas {
     }
 
     /**
-     * Get the current planningProperty of the map. 
+     * Get the current planningProperty of the map.
      *
      * @return planningProperty - The planning property
      */
@@ -332,8 +325,9 @@ public class MapCanvas extends Canvas {
         planningProperty().bind(new SimpleObjectProperty<Planning>(value));
     }
 
-    /**Get the currentPlanning contained by the map.
-     * 
+    /**
+     * Get the currentPlanning contained by the map.
+     *
      * @return planning - The planning of the client's delivery.
      */
     public final Planning getPlanning() {
@@ -361,8 +355,9 @@ public class MapCanvas extends Canvas {
         zoomProperty().bind(new SimpleDoubleProperty(value));
     }
 
-    /**Return the zoom factor of the map.
-     * 
+    /**
+     * Return the zoom factor of the map.
+     *
      * @return Value of the zoom.
      */
     public final double getZoom() {
@@ -390,10 +385,11 @@ public class MapCanvas extends Canvas {
         offsetXProperty().setValue(offsetX);
     }
 
-    /**Return the offset x of the map
- 	* 
- 	* @return offsetX : the translation along the x-axis the map undergo on the screen.
- 	*/
+    /**
+     * Return the offset x of the map
+     *
+     * @return offsetX : the translation along the x-axis the map undergo on the screen.
+     */
     public final double getOffsetX() {
         return offsetX == null ? DEFAULT_OFFSET_X : offsetX.getValue();
     }
@@ -418,42 +414,47 @@ public class MapCanvas extends Canvas {
     public final void setOffsetY(double value) {
         offsetYProperty().setValue(value);
     }
-    
-    /**Return the offset x of the map
- 	* 
- 	* @return offset X
- 	*/
+
+    /**
+     * Return the offset x of the map
+     *
+     * @return offset X
+     */
     public final double getOffsetY() {
         return offsetY == null ? DEFAULT_OFFSET_Y : offsetY.getValue();
     }
-    
-    /**Return the property of the interface MapService
-     * 
+
+    /**
+     * Return the property of the interface MapService
+     *
      * @return offset Y
      */
     public SimpleObjectProperty<IMapService> mapServiceProperty() {
         return this.mapService;
     }
 
-    /** Return the interface of the serviceMap 
-     * 
-     * @return
+    /**
+     * Return the map service used to get the active waypoint.
+     *
+     * @return The current map service.
      */
     public IMapService getMapService() {
         return this.mapServiceProperty().getValue();
     }
 
-    /** Set the interface of the serviceMap
-     * 
+    /**
+     * Set the interface of the serviceMap
+     *
      * @param value the interface of the serviceMap
      */
     public void setMapService(IMapService value) {
         this.mapServiceProperty().setValue(value);
     }
-    
 
-    /** Receive the announce of the MapService changes and add a listener to the new value of the mapService Interface.
-     * 
+
+    /**
+     * Receive the announce of the MapService changes and add a listener to the new value of the mapService Interface.
+     *
      * @param observable
      * @param oldValue
      * @param newValue
@@ -469,41 +470,42 @@ public class MapCanvas extends Canvas {
             newValue.activeWaypointProperty().addListener(this::onActiveWaypointChange);
         }
     }
-    
-    /** Receive the announce of the MapService changes and add a listener to the new value of the active Waypoint.
-     * 
+
+    /**
+     * Receive the announce of the MapService changes and add a listener to the new value of the active Waypoint.
+     *
      * @param observable
      * @param oldValue
      * @param newValue
      */
     protected void onActiveWaypointChange(ObservableValue<? extends AbstractWaypoint> observable, AbstractWaypoint oldValue, AbstractWaypoint newValue) {
-    		double eventX = newValue.getX() - DEFAULT_OFFSET_X ;
-            double eventY = newValue.getY() - DEFAULT_OFFSET_Y ;
-            eventX *= calZoom;
-            eventY *= calZoom;
-    		if(getDeliveryRequest() != null){
-            	Warehouse warehouse = getDeliveryRequest().getWarehouse();
-            	if (warehouse.getId() == newValue.getId()){
-            		WarehouseSelectionEvent warehouseEvent = new WarehouseSelectionEvent(warehouse, eventX, eventY);
-                    fireEvent(warehouseEvent);
-                    DeliverySelectionEvent nullDeliver = new DeliverySelectionEvent(null, newValue.getX(), newValue.getY());
-                    fireEvent(nullDeliver);
+        double eventX = newValue.getX() - DEFAULT_OFFSET_X;
+        double eventY = newValue.getY() - DEFAULT_OFFSET_Y;
+        eventX *= calZoom;
+        eventY *= calZoom;
+        if (getDeliveryRequest() != null) {
+            Warehouse warehouse = getDeliveryRequest().getWarehouse();
+            if (warehouse.getId() == newValue.getId()) {
+                WarehouseSelectionEvent warehouseEvent = new WarehouseSelectionEvent(warehouse, eventX, eventY);
+                fireEvent(warehouseEvent);
+                DeliverySelectionEvent nullDeliver = new DeliverySelectionEvent(null, newValue.getX(), newValue.getY());
+                fireEvent(nullDeliver);
+                IntersectionSelectionEvent nullIntersect = new IntersectionSelectionEvent(null, newValue.getX(), newValue.getY());
+                fireEvent(nullIntersect);
+                return;
+            }
+            listDeliveryAddresses = getDeliveryRequest().getDeliveryAddresses();
+            for (DeliveryAddress delivery : listDeliveryAddresses) {
+                if (delivery.getId() == newValue.getId()) {
+                    DeliverySelectionEvent deliver = new DeliverySelectionEvent(delivery, eventX, eventY);
+                    fireEvent(deliver);
                     IntersectionSelectionEvent nullIntersect = new IntersectionSelectionEvent(null, newValue.getX(), newValue.getY());
                     fireEvent(nullIntersect);
+                    WarehouseSelectionEvent nullWarehouse = new WarehouseSelectionEvent(null, newValue.getX(), newValue.getY());
+                    fireEvent(nullWarehouse);
                     return;
-            	}
-                listDeliveryAddresses = getDeliveryRequest().getDeliveryAddresses();
-                for(DeliveryAddress delivery : listDeliveryAddresses){
-                    if (delivery.getId() == newValue.getId()) {
-                        DeliverySelectionEvent deliver = new DeliverySelectionEvent(delivery, eventX, eventY);
-                        fireEvent(deliver);
-                        IntersectionSelectionEvent nullIntersect = new IntersectionSelectionEvent(null, newValue.getX(), newValue.getY());
-                        fireEvent(nullIntersect);
-                        WarehouseSelectionEvent nullWarehouse = new WarehouseSelectionEvent(null, newValue.getX(), newValue.getY());
-                        fireEvent(nullWarehouse);
-                        return;
-                    }
                 }
             }
+        }
     }
 }

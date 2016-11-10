@@ -24,13 +24,13 @@ public class MapRenderer {
     public static final double WAYPOINT_SIZE = 18;
 
     /**
-     * Returns the color to use to draw a route dependending on the ratio
+     * Returns the color to use to draw a streetsection dependending on the ratio
      * of the position compared to the total.
      * The goal is to circle other all the hues.
      *
      * @param step Current step.
      * @param nbStep Total number of steps
-     * @return
+     * @return The color to use the for the street section
      */
     public static Color getColor(double step, double nbStep) {
         double red = 0;
