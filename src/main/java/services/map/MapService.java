@@ -20,11 +20,11 @@ public class MapService implements IMapService {
         return this.activeWaypoint;
     }
 
-    public final void setWaypoint(AbstractWaypoint value) {
+    public final void setActiveWaypoint(AbstractWaypoint value) {
         this.activeWaypointProperty().setValue(value);
     }
 
-    public final AbstractWaypoint getWaypoint() {
+    public final AbstractWaypoint getActiveWaypoint() {
         return this.activeWaypointProperty().getValue();
     }
 

@@ -10,6 +10,6 @@ import java.util.concurrent.CompletableFuture;
 public interface IMapService {
     CompletableFuture<Intersection> promptIntersection();
     SimpleObjectProperty<AbstractWaypoint> activeWaypointProperty();
-    void setWaypoint(AbstractWaypoint value);
-    AbstractWaypoint getWaypoint();
+    void setActiveWaypoint(AbstractWaypoint value);
+    AbstractWaypoint getActiveWaypoint();
 }

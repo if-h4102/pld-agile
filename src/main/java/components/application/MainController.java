@@ -13,10 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import models.CityMap;
-import models.DeliveryRequest;
-import models.Intersection;
-import models.Planning;
+import models.*;
 import services.command.CommandManager;
 import services.map.IMapService;
 import services.map.MapService;
@@ -56,7 +53,7 @@ public class MainController extends BorderPane {
 
     final private SimpleObjectProperty<IMapService> mapService = new SimpleObjectProperty<>(this, "mapService", null);
 
-    	public MainController() {
+    public MainController() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/components/application/main.fxml"));
         fxmlLoader.setResources(ResourceBundle.getBundle("locales.Locale", new Locale("en", "US")));
         fxmlLoader.setRoot(this);
@@ -119,7 +116,6 @@ public class MainController extends BorderPane {
     public void setPlanning(Planning planning) {
         planningProperty().setValue(planning);
     }
-
 
 
     // mapZoom
