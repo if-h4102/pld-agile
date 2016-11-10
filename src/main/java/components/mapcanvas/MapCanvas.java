@@ -20,6 +20,7 @@ import models.Planning;
 import models.Route;
 import models.StreetSection;
 import models.Warehouse;
+import services.map.MapRenderer;
 
 import java.awt.Rectangle;
 import java.util.HashMap;
@@ -85,8 +86,10 @@ public class MapCanvas extends Canvas {
                 	Warehouse warehouse = getDeliveryRequest().getWarehouse();
                 	if (eventX < warehouse.getX() + DEFAULT_DELIVERY_SIZE / 2 && eventX > warehouse.getX() - DEFAULT_DELIVERY_SIZE / 2
                             && eventY < warehouse.getY() + DEFAULT_DELIVERY_SIZE / 2 && eventY > warehouse.getY() - DEFAULT_DELIVERY_SIZE / 2){
-                		WarehouseSelectionEvent deliver = new WarehouseSelectionEvent(warehouse, e.getX(), e.getY());
-                        fireEvent(deliver);
+                		WarehouseSelectionEvent warehouseEvent = new WarehouseSelectionEvent(warehouse, e.getX(), e.getY());
+                        fireEvent(warehouseEvent);
+                        DeliverySelectionEvent nullDeliver = new DeliverySelectionEvent(null, e.getX(), e.getY());
+                        fireEvent(nullDeliver);
                         IntersectionSelectionEvent nullIntersect = new IntersectionSelectionEvent(null, e.getX(), e.getY());
                         fireEvent(nullIntersect);
                         return;
@@ -99,6 +102,8 @@ public class MapCanvas extends Canvas {
                             fireEvent(deliver);
                             IntersectionSelectionEvent nullIntersect = new IntersectionSelectionEvent(null, e.getX(), e.getY());
                             fireEvent(nullIntersect);
+                            WarehouseSelectionEvent nullWarehouse = new WarehouseSelectionEvent(null, e.getX(), e.getY());
+                            fireEvent(nullWarehouse);
                             return;
                         }
                     }
@@ -111,6 +116,8 @@ public class MapCanvas extends Canvas {
                         fireEvent(intersect);
                         DeliverySelectionEvent nullDeliver = new DeliverySelectionEvent(null, e.getX(), e.getY());
                         fireEvent(nullDeliver);
+                        WarehouseSelectionEvent nullWarehouse = new WarehouseSelectionEvent(null, e.getX(), e.getY());
+                        fireEvent(nullWarehouse);
                         return;
                     }
                 }
@@ -177,188 +184,16 @@ public class MapCanvas extends Canvas {
 
         updateTransform();
 
-        drawCityMap();
-        if (getDeliveryRequest() == null) {
-            return;
-        }
-        drawDeliveryRequest();
-        if (getPlanning() == null) {
-            return;
-        }
-        drawPlanning();
-    }
+        MapRenderer mapRenderer = new MapRenderer();
+        GraphicsContext gc = this.getGraphicsContext2D();
 
-
-    @SuppressWarnings("restriction")
-    @Requires("getCityMap() != null")
-    private void drawCityMap() {
-        GraphicsContext gc = getGraphicsContext2D();
-        CityMap map = getCityMap();
-        intersections = map.getIntersections();
-
-        List<StreetSection> streetSections = map.getStreetSections();
-        for (StreetSection section : streetSections) {
-            gc.setLineWidth(2);
-            gc.setStroke(Color.GREY);
-            gc.strokeLine(section.getStartIntersection().getX(), section.getStartIntersection().getY(),
-                section.getEndIntersection().getX(), section.getEndIntersection().getY());
-        }
-
-        for (Intersection inter : intersections) {
-            gc.fillOval(inter.getX() - DEFAULT_INTERSECTION_SIZE / 2, inter.getY() - DEFAULT_INTERSECTION_SIZE / 2,
-                DEFAULT_INTERSECTION_SIZE, DEFAULT_INTERSECTION_SIZE);
+        mapRenderer.drawCityMap(gc, this.getCityMap());
+        if (this.getPlanning() != null) {
+            mapRenderer.drawPlanning(gc, this.getPlanning());
+        } else if (this.getDeliveryRequest() != null) {
+            mapRenderer.drawDeliveryRequest(gc, this.getDeliveryRequest());
         }
     }
-
-    @SuppressWarnings("restriction")
-    @Requires("getDeliveryRequest() != null")
-    private void drawDeliveryRequest() {
-        GraphicsContext gc = getGraphicsContext2D();
-        DeliveryRequest deliveryRequest = getDeliveryRequest();
-
-        Iterable<DeliveryAddress> listDeliveryAddresses = deliveryRequest.getDeliveryAddresses();
-        Warehouse warehouse = deliveryRequest.getWarehouse();
-
-        for (DeliveryAddress delivery : listDeliveryAddresses) {
-            gc.setFill(Color.BLUE);
-            gc.fillOval(delivery.getIntersection().getX() - DEFAULT_DELIVERY_SIZE / 2, delivery.getIntersection().getY() - DEFAULT_DELIVERY_SIZE / 2,
-                DEFAULT_DELIVERY_SIZE, DEFAULT_DELIVERY_SIZE);
-        }
-        gc.setFill(Color.RED);
-        gc.fillOval(warehouse.getIntersection().getX() - DEFAULT_DELIVERY_SIZE / 2, warehouse.getIntersection().getY() - DEFAULT_DELIVERY_SIZE / 2,
-            DEFAULT_DELIVERY_SIZE, DEFAULT_DELIVERY_SIZE);
-        gc.setFill(Color.BLACK);
-    }
-
-    @SuppressWarnings("restriction")
-    @Requires("getPlanning() != null")
-    private void drawPlanning() {
-    	Color currentColor =  Color.BLACK;
-    	
-        GraphicsContext gc = getGraphicsContext2D();
-
-        Planning planning = getPlanning();
-
-        Iterable<Route> listRoutes = planning.getRoutes();
-        
-        //Map containing the number of each streetSection crossed
-        HashMap<StreetSection, Integer> sectionMap = getSectionMap(listRoutes); 
-        
-        //Route number
-        int number = 1;
-        //actual section
-        double countSections = 1;
-        //total number of sections
-        double totalSections = 0;
-        //Count the total numbers of section 
-        for (Route route : listRoutes) {
-            List<StreetSection> streetSections = route.getStreetSections();        
-               totalSections += streetSections.size();        
-        }
-        
-        //Stroke the line and the arrow
-        for (Route route : listRoutes) {
-            gc.setStroke(currentColor);
-            List<StreetSection> streetSections = route.getStreetSections();
-            
-            for (StreetSection section : streetSections) {
-            	gc.setLineWidth(4);
-            	currentColor = getColor(countSections++, totalSections);            
-                gc.setStroke(currentColor);
-            	int passings = sectionMap.get(section);
-            	if(passings > 1){
-            		gc.strokeLine(section.getStartIntersection().getX()-2*passings, section.getStartIntersection().getY()-2*passings,
-                            section.getEndIntersection().getX()-2*passings, section.getEndIntersection().getY()-2*passings);
-            		sectionMap.put(section,passings-1);
-            	}
-            	else{
-                gc.strokeLine(section.getStartIntersection().getX(), section.getStartIntersection().getY(),
-                    section.getEndIntersection().getX(), section.getEndIntersection().getY());    
-            	}
-            	drawArrowBetweenStreetSection(section, currentColor);
-            }
-        }
-        drawDeliveryRequest();
-        for(Route route : listRoutes){
-            gc.setLineWidth(3);
-            gc.setStroke(Color.BLACK);
-            gc.strokeText("" + number, route.getStartWaypoint().getIntersection().getX(), route.getStartWaypoint().getIntersection().getY());
-            gc.setStroke(Color.WHITE);
-            gc.setLineWidth(1);
-            gc.strokeText("" + number, route.getStartWaypoint().getIntersection().getX(), route.getStartWaypoint().getIntersection().getY());
-            number++;
-        }
-
-    }
-    
-    
-    public HashMap<StreetSection, Integer> getSectionMap(Iterable<Route> listRoutes){
-    	HashMap<StreetSection, Integer> sectionMap = new HashMap<StreetSection, Integer>();
-    	
-    	for (Route route : listRoutes) {
-            List<StreetSection> streetSections = route.getStreetSections();        
-            for (StreetSection section : streetSections) {
-                if(sectionMap.containsKey(section)==false){
-                	sectionMap.put(section, 1);
-                }
-                else{
-                	sectionMap.put(section, sectionMap.get(section)+1);
-                }
-            }
-        }
-    	return sectionMap;
-    }
-    
-    public Color getColor(double step, double nbStep){
-    	double red =0;
-    	double green = 0;
-    	double blue = 0;
-
-    	if(3*step < nbStep){
-    		red = 1-(3*step/nbStep);
-    		green = 3*step/nbStep;
-    	}
-    	else if(3*step < 2*nbStep){
-    		green = 1-(step/(2*nbStep/3));
-    		blue = step/(2*nbStep/3);
-    	}
-    	else{
-    		red = step/(nbStep);
-    		blue = 1-(step/(nbStep));
-    		
-    	}
-    	Color color =  new Color(red,green,blue,1);
-    	return color;
-    }
-    
-    
-    public void drawArrowBetweenStreetSection(StreetSection street, Color color){
-
-        double xStart = street.getStartIntersection().getX();
-        double xEnd = street.getEndIntersection().getX();
-        double yStart = street.getStartIntersection().getY();
-        double yEnd = street.getEndIntersection().getY();
-        
-        double alpha = Math.atan2(yStart-yEnd,xStart-xEnd);
-        
-        double xthird = (xStart + 2*xEnd)/3;
-        double ythird = (yStart + 2*yEnd)/3;
-        
-        double lengthCross = 10 ;
-        double xCross1 = xthird + lengthCross * Math.cos(alpha+Math.PI/6);
-        double yCross1 = ythird + lengthCross * Math.sin(alpha+Math.PI/6);
-        double xCross2 = xthird + lengthCross * Math.cos(alpha+11*Math.PI/6);
-        double yCross2 = ythird + lengthCross * Math.sin(alpha+11*Math.PI/6);
-        
-        GraphicsContext gc = getGraphicsContext2D();
-        gc.setStroke(color);
-        gc.setLineWidth(2);
-        gc.strokeLine(xthird, ythird, xCross1, yCross1);
-        gc.strokeLine(xthird, ythird, xCross2, yCross2);
-            
-        
-    }
-    
 
     @Override
     public boolean isResizable() {

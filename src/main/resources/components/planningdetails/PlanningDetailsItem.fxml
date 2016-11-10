@@ -1,38 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
-
 <?import components.waypointcard.WaypointCard?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
 <fx:root fx:id="root" prefHeight="50.0" prefWidth="200.0"
-         stylesheets="/components/planningdetails/PlanningDetailsItem.css" type="AnchorPane"
-         xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1">
+         stylesheets="/components/planningdetails/PlanningDetailsItem.css"
+         type="AnchorPane"
+         xmlns="http://javafx.com/javafx/8.0.112-ea"
+         xmlns:fx="http://javafx.com/fxml/1">
   <VBox AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0">
-    <WaypointCard waypoint="${controller.item.startWaypoint}" >
+    <StackPane fx:id="pathBefore" minHeight="8">
+      <AnchorPane StackPane.alignment="CENTER_LEFT">
+        <AnchorPane styleClass="pathLine" AnchorPane.topAnchor="0"
+                    AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="8"/>
+      </AnchorPane>
+      <VBox fx:id="dataBefore">
+        <AnchorPane fx:id="pathDuration">
+          <Label text="Travel: ...min"/>
+        </AnchorPane>
+        <AnchorPane fx:id="waitDuration">
+          <Label text="Wait: ...min"/>
+        </AnchorPane>
+      </VBox>
+      <Button styleClass="flatButton" fx:id="addButton" graphicTextGap="2.0"
+              mnemonicParsing="false"
+              onAction="#onAddButtonAction" StackPane.alignment="CENTER_RIGHT">
+        <graphic>
+          <FontIcon iconLiteral="gmi-add"/>
+        </graphic>
+      </Button>
+      <Button styleClass="flatButton" fx:id="cancelAddButton" visible="false"
+              managed="false"
+              graphicTextGap="2.0" mnemonicParsing="false"
+              onAction="#onCancelAddButtonAction"
+              StackPane.alignment="CENTER_RIGHT">
+        <graphic>
+          <FontIcon iconLiteral="gmi-cancel"/>
+        </graphic>
+      </Button>
+    </StackPane>
+    <WaypointCard waypoint="${controller.item.startWaypoint}">
       <cornerControls>
-        <Button fx:id="add" graphicTextGap="2.0" mnemonicParsing="false" onAction="#onAddButtonAction" AnchorPane.rightAnchor="32" AnchorPane.topAnchor="0">
+        <Button styleClass="flatButton" fx:id="removeButton"
+                graphicTextGap="2.0" mnemonicParsing="false"
+                onAction="#onRemoveButtonAction" AnchorPane.rightAnchor="0"
+                AnchorPane.topAnchor="0">
           <graphic>
-            <FontIcon iconLiteral="gmi-add" />
-          </graphic>
-        </Button>
-        <Button fx:id="remove" graphicTextGap="2.0" mnemonicParsing="false" onAction="#onRemoveButtonAction" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-          <graphic>
-            <FontIcon iconLiteral="gmi-clear" />
+            <FontIcon iconLiteral="gmi-clear"/>
           </graphic>
         </Button>
       </cornerControls>
     </WaypointCard>
-    <AnchorPane>
-      <Label text="Travel: 15min" />
-    </AnchorPane>
-    <AnchorPane>
-      <Label text="Wait: 10min" />
-    </AnchorPane>
+    <StackPane fx:id="pathAfter" minHeight="8">
+      <AnchorPane StackPane.alignment="CENTER_LEFT">
+        <AnchorPane styleClass="pathLine" AnchorPane.topAnchor="0"
+                    AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="8"/>
+      </AnchorPane>
+      <VBox fx:id="dataAfter">
+        <AnchorPane fx:id="deliveryDuration">
+          <Label text="Deliver: ...min"/>
+        </AnchorPane>
+      </VBox>
+    </StackPane>
   </VBox>
-
 </fx:root>
