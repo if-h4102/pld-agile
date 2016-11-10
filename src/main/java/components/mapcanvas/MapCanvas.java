@@ -451,12 +451,13 @@ public class MapCanvas extends Canvas {
         this.mapServiceProperty().setValue(value);
     }
     
-/** Receive the announce of the MapService changes and notify the event to the MapScreen
- * 
- * @param observable
- * @param oldValue
- * @param newValue
- */
+
+    /** Receive the announce of the MapService changes and add a listener to the new value of the mapService Interface.
+     * 
+     * @param observable
+     * @param oldValue
+     * @param newValue
+     */
     protected void onMapServiceChange(ObservableValue<? extends IMapService> observable, IMapService oldValue, IMapService newValue) {
         if (oldValue == newValue) {
             return;
@@ -469,9 +470,9 @@ public class MapCanvas extends Canvas {
         }
     }
     
-    /** Receive the announce of the Waypoint changes and notify the event to the MapScreen
+    /** Receive the announce of the MapService changes and add a listener to the new value of the active Waypoint.
      * 
-     * @param observable 
+     * @param observable
      * @param oldValue
      * @param newValue
      */
