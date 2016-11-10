@@ -54,18 +54,21 @@
         </graphic>
       </Button>
     </StackPane>
-    <WaypointCard waypoint="${controller.item.targetWaypoint}" onMouseClicked="#onWaypointCardClickedAction">
-      <cornerControls>
-        <Button styleClass="flatButton" fx:id="removeButton"
-                graphicTextGap="2.0" mnemonicParsing="false"
-                onAction="#onRemoveButtonAction" AnchorPane.rightAnchor="0"
-                AnchorPane.topAnchor="0">
-          <graphic>
-            <FontIcon iconLiteral="gmi-clear"/>
-          </graphic>
-        </Button>
-      </cornerControls>
-    </WaypointCard>
+    <StackPane>
+      <WaypointCard waypoint="${controller.item.targetWaypoint}" onMouseClicked="#onWaypointCardClickedAction">
+        <cornerControls>
+          <Button styleClass="flatButton" fx:id="removeButton"
+                  graphicTextGap="2.0" mnemonicParsing="false"
+                  onAction="#onRemoveButtonAction" AnchorPane.rightAnchor="0"
+                  AnchorPane.topAnchor="0">
+            <graphic>
+              <FontIcon iconLiteral="gmi-clear"/>
+            </graphic>
+          </Button>
+        </cornerControls>
+      </WaypointCard>
+      <Label text="${controller.index}" StackPane.alignment="TOP_LEFT" />
+    </StackPane>
     <StackPane fx:id="pathAfter" minHeight="8">
       <AnchorPane StackPane.alignment="CENTER_LEFT">
         <AnchorPane styleClass="pathLine" AnchorPane.topAnchor="0"

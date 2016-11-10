@@ -117,7 +117,9 @@ public class PlanningDetails extends ScrollPane {
     }
 
     protected void onPlanningChange(ObservableValue<? extends Planning> observable, Planning oldValue, Planning newValue) {
+        this.refreshView();
         this.changeState(this.getState().onPlanningChange(observable, oldValue, newValue));
+        this.refreshView();
     }
 
     protected void onMapServiceChange(ObservableValue<? extends IMapService> observable, IMapService oldValue, IMapService newValue) {
@@ -133,7 +135,6 @@ public class PlanningDetails extends ScrollPane {
     }
 
     protected void onActiveWaypointChange(ObservableValue<? extends AbstractWaypoint> observable, AbstractWaypoint oldValue, AbstractWaypoint newValue) {
-        System.out.println("ActiveWaypoint change");
         this.changeState(this.getState().onActiveWaypointChange(observable, oldValue, newValue));
     }
 
@@ -142,12 +143,10 @@ public class PlanningDetails extends ScrollPane {
     }
 
     public void onAddWaypointButtonAction(AddWaypointAction action) {
-        System.out.println("Adding");
         this.changeState(this.getState().onAddWaypointAction(action));
     }
 
     public void onCancelAddWaypointButtonAction(CancelAddWaypointAction action) {
-        System.out.println("Cancelling");
         this.changeState(this.getState().onCancelAddWaypointAction(action));
     }
 
@@ -184,9 +183,10 @@ public class PlanningDetails extends ScrollPane {
         int index = 0;
         for (PlanningWaypoint planningWaypoint : planningWaypoints) {
             final PlanningDetailsItem node = new PlanningDetailsItem();
-            node.setIndex(index++);
+            node.setIndex(1 + index++);
             node.setItem(planningWaypoint);
             node.setPlanning(planning);
+            node.setMapService(this.getMapService());
             itemNodes.add(node);
         }
     }
