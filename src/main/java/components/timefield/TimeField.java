@@ -12,18 +12,61 @@ import models.Planning;
 
 import java.io.IOException;
 
+/**
+ * The TimeField component is a small component able to display and edit
+ * a time of the form `HH:mm:ss`.
+ */
 public class TimeField extends HBox {
+    /**
+     * The absolute value of the time (in seconds, 0 is midnight).
+     */
     private final SimpleIntegerProperty time = new SimpleIntegerProperty(this, "time", 0);
+
+    /**
+     * The number of hours in the current time.
+     */
     private final SimpleIntegerProperty hours = new SimpleIntegerProperty(this, "hours", 0);
+
+    /**
+     * The number of minutes in the current time.
+     */
     private final SimpleIntegerProperty minutes = new SimpleIntegerProperty(this, "minutes", 0);
+
+    /**
+     * The number of seconds in the current time.
+     */
     private final SimpleIntegerProperty seconds = new SimpleIntegerProperty(this, "seconds", 0);
+
+    /**
+     * The string value in the TextField for hours.
+     */
     private final SimpleStringProperty hoursText = new SimpleStringProperty(this, "hoursText", "0");
+
+    /**
+     * The string value in the TextField for minutes.
+     */
     private final SimpleStringProperty minutesText = new SimpleStringProperty(this, "minutesText", "0");
+
+    /**
+     * The string value in the TextField for seconds.
+     */
     private final SimpleStringProperty secondsText = new SimpleStringProperty(this, "secondsText", "0");
+
+    /**
+     * Reference to the TextField for hours.
+     */
     @FXML
     protected TextField hoursField;
+
+    /**
+     * References to the TextField for minutes.
+     */
     @FXML
     protected TextField minutesField;
+
+    /**
+     * Reference to the TextField for seconds.
+     */
     @FXML
     protected TextField secondsField;
 
@@ -112,6 +155,10 @@ public class TimeField extends HBox {
         this.minutesProperty().setValue(value);
     }
 
+    /**
+     *
+     * @return The observable property for the seconds.
+     */
     public final SimpleIntegerProperty secondsProperty() {
         return this.seconds;
     }
@@ -124,6 +171,9 @@ public class TimeField extends HBox {
         this.secondsProperty().setValue(value);
     }
 
+    /**
+     * @return The observable property for the hours string.
+     */
     public final SimpleStringProperty hoursTextProperty() {
         return this.hoursText;
     }
@@ -136,6 +186,9 @@ public class TimeField extends HBox {
         this.hoursTextProperty().setValue(value);
     }
 
+    /**
+     * @return The observable property for the minutes string.
+     */
     public final SimpleStringProperty minutesTextProperty() {
         return this.minutesText;
     }
@@ -148,6 +201,9 @@ public class TimeField extends HBox {
         this.minutesTextProperty().setValue(value);
     }
 
+    /**
+     * @return The observable property for the seconds string.
+     */
     public final SimpleStringProperty secondsTextProperty() {
         return this.secondsText;
     }
@@ -265,10 +321,9 @@ public class TimeField extends HBox {
         }
     }
 
-    // TODO: onHoursTextChange
-    // TODO: onMinutesTextChange
-    // TODO: onSecondsTextChange
-
+    /**
+     * Represents a parsed time.
+     */
     public class TimeStructure {
         public final int time;
         public final int hours;
