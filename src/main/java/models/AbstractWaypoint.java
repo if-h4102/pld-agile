@@ -4,10 +4,27 @@ import com.google.java.contract.Requires;
 
 public abstract class AbstractWaypoint implements Comparable<AbstractWaypoint> {
 
+    /**
+     * The intersection on which is the current waypoint.
+     */
     final protected Intersection intersection;
+
+    /**
+     * The starting time on which the delivery man can pass.
+     */
     private int timeStart;
+
+    /**
+     * The ending time on which the delivery man can pass.
+     */
     private int timeEnd;
 
+    /**
+     * Initialize attributes of an abstract waypoint.
+     * @param intersection
+     * @param timeStart
+     * @param timeEnd
+     */
     public AbstractWaypoint(Intersection intersection, int timeStart, int timeEnd) {
         this.intersection = intersection;
         this.timeStart = timeStart;
