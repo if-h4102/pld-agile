@@ -199,10 +199,17 @@ public class TspSolver extends AbstractThreadedTspSolver {
      * The most basic bounding algorithm.
      *
      * @param lastSeenNode
+     *            the last explored node.
      * @param unseen
+     *            the collection in which you want to iterate.
      * @param costs
+     *            the cost of the path between each node.
+     * @param seenCost
+     *            the cost of all explored nodes.
      * @param deliveryDurations
+     *            the delivery duration of each node.
      * @return
+     *            a min bound of the left cost
      */
     @Override
     protected int bound(AbstractWaypoint lastSeenNode, ArrayList<AbstractWaypoint> unseen,
