@@ -383,7 +383,35 @@ public class MapCanvas extends Canvas {
     }
 
     protected void onActiveWaypointChange(ObservableValue<? extends AbstractWaypoint> observable, AbstractWaypoint oldValue, AbstractWaypoint newValue) {
-
+    		System.out.println("heya : "+newValue.getId());
+    		double eventX = newValue.getX() - DEFAULT_OFFSET_X ;
+            double eventY = newValue.getY() - DEFAULT_OFFSET_Y ;
+            eventX *= calZoom;
+            eventY *= calZoom;
+    		if(getDeliveryRequest() != null){
+            	Warehouse warehouse = getDeliveryRequest().getWarehouse();
+            	if (warehouse.getId() == newValue.getId()){
+            		WarehouseSelectionEvent warehouseEvent = new WarehouseSelectionEvent(warehouse, eventX, eventY);
+                    fireEvent(warehouseEvent);
+                    DeliverySelectionEvent nullDeliver = new DeliverySelectionEvent(null, newValue.getX(), newValue.getY());
+                    fireEvent(nullDeliver);
+                    IntersectionSelectionEvent nullIntersect = new IntersectionSelectionEvent(null, newValue.getX(), newValue.getY());
+                    fireEvent(nullIntersect);
+                    return;
+            	}
+                listDeliveryAddresses = getDeliveryRequest().getDeliveryAddresses();
+                for(DeliveryAddress delivery : listDeliveryAddresses){
+                    if (delivery.getId() == newValue.getId()) {
+                        DeliverySelectionEvent deliver = new DeliverySelectionEvent(delivery, eventX, eventY);
+                        fireEvent(deliver);
+                        IntersectionSelectionEvent nullIntersect = new IntersectionSelectionEvent(null, newValue.getX(), newValue.getY());
+                        fireEvent(nullIntersect);
+                        WarehouseSelectionEvent nullWarehouse = new WarehouseSelectionEvent(null, newValue.getX(), newValue.getY());
+                        fireEvent(nullWarehouse);
+                        return;
+                    }
+                }
+            }
     }
 
     /*

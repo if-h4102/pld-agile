@@ -24,6 +24,7 @@ import java.io.IOException;
 
 import components.waypointcard.DeliveryAddressCard;
 import components.waypointcard.WarehouseCard;
+import components.waypointcard.WaypointCard;
 import components.intersectioncard.IntersectionCard;
 import components.mapcanvas.MapCanvas;
 import components.mapcanvas.WarehouseSelectionEvent;
@@ -66,22 +67,20 @@ public class MapScreen extends AnchorPane {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
-
         canvas.addEventHandler(WarehouseSelectionEvent.WAREHOUSE_SELECTION, event -> {
-            System.out.println("handler intersection");
+            //System.out.println("handler intersection");
             updateWarehouseTooltip(event);
         });
 
         canvas.addEventHandler(IntersectionSelectionEvent.INTERSECTION_SELECTION, event -> {
-            System.out.println("handler intersection");
+            //System.out.println("handler intersection");
             updateIntersectionTooltip(event);
         });
 
         canvas.addEventHandler(DeliverySelectionEvent.DELIVERY_SELECTION, event -> {
-            System.out.println("handler delivery address");
+            //System.out.println("handler delivery address");
             updateDeliveryTooltip(event);
         });
-
 
         tooltipwarehouse.visibleProperty().bind(activeWarehouse.isNotNull());
         tooltipDelivery.visibleProperty().bind(activeDelivery.isNotNull());
@@ -322,6 +321,18 @@ public class MapScreen extends AnchorPane {
      	tooltip.setLayoutY(optimal.getY());
         return tooltip;
     }
+    
+    /**
+     * Find the optimal origin for the tooltip
+     *
+     * @return The best point
+     */
+    public WaypointCard tooltipWaypointOptimalPosition(WaypointCard tooltipp, double x, double y){
+    	Point optimal = optimalPosition(tooltipp.getHeight(),tooltipp.getWidth(),x,y );
+     	tooltipp.setLayoutX(optimal.getX());
+     	tooltipp.setLayoutY(optimal.getY());
+        return tooltipp;
+    }
 
     /**
      * Find the optimal origin for the tooltip
@@ -423,7 +434,15 @@ public class MapScreen extends AnchorPane {
     }
 
     protected void onActiveWaypointChange(ObservableValue<? extends AbstractWaypoint> observable, AbstractWaypoint oldValue, AbstractWaypoint newValue) {
-
+    		updateWaypointTooltip(newValue);
+    }
+    
+    /**
+     * Update the position of the warehouse tooltip
+     *
+     */
+    public void updateWaypointTooltip(AbstractWaypoint point) {
+        
     }
 
     public void onIntersection() {
