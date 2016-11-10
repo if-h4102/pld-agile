@@ -7,6 +7,9 @@ import java.io.File;
 import java.io.IOException;
 import components.exceptionwindow.ExceptionWindow;
 
+/**
+ * This class represents the state when no city map has been loaded by the user.
+ */
 public class WaitOpenCityMapState extends MainControllerState {
 
     public WaitOpenCityMapState(MainController mController) {
