@@ -442,8 +442,8 @@ public class MapScreen extends AnchorPane {
      *
      * @param offsetX : the translation along the x-axis the map undergo on the screen.
      */
-    public final void setOffsetX(double value) {
-        offsetXProperty().setValue(value);
+    public final void setOffsetX(double offsetX) {
+        offsetXProperty().setValue(offsetX);
     }
 
     /**Return the offset x of the map
