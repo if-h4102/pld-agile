@@ -1,6 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class-diagram version="1.1.11" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
-  associations="true" dependencies="false" nesting-relationships="true">  
+  associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+  <package id="1" language="java" name="services.command" project="pld-agile" 
+    file="/pld-agile/src/main/java/services/command" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="41" width="108" x="648" y="37"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="2" language="java" name="services.map" project="pld-agile" file="/pld-agile/src/main/java/services/map" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="41" width="83" x="287" y="37"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="3" language="java" name="services.pdf" project="pld-agile" file="/pld-agile/src/main/java/services/pdf" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="41" width="79" x="41" y="37"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="4" language="java" name="services.tools" project="pld-agile" 
+    file="/pld-agile/src/main/java/services/tools" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="41" width="87" x="160" y="37"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="5" language="java" name="services.tsp" project="pld-agile" file="/pld-agile/src/main/java/services/tsp" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="41" width="78" x="530" y="37"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="6" language="java" name="services.xml" project="pld-agile" file="/pld-agile/src/main/java/services/xml" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="41" width="80" x="410" y="37"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <dependency id="7">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <dependency id="8">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="false" static="true"/>    

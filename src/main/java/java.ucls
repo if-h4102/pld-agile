@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class-diagram version="1.1.11" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
-  associations="true" dependencies="false" nesting-relationships="true">  
+  associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+  <package id="1" language="java" name="components" project="pld-agile" file="/pld-agile/src/main/java/components" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="41" width="80" x="230" y="197"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="2" language="java" name="main" project="pld-agile" file="/pld-agile/src/main/java/main" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="41" width="77" x="350" y="197"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="3" language="java" name="models" project="pld-agile" file="/pld-agile/src/main/java/models" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="41" width="77" x="467" y="197"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="4" language="java" name="services" project="pld-agile" file="/pld-agile/src/main/java/services" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="41" width="77" x="584" y="197"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="false" static="true"/>    
