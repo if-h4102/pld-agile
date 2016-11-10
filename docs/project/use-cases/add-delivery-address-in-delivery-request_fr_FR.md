@@ -3,8 +3,8 @@
 ### Préconditions
 
 - Un plan est chargé
-- Une demande de livraison est chargé
-- Une tournée a été calculé
+- Une demande de livraison est chargée
+- Une tournée a été calculée
 
 ### Scenario
 
