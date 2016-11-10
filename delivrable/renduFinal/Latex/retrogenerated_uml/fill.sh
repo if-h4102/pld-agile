@@ -11,7 +11,7 @@ for uml in $umls; do
 	
 	echo "\begin{figure}[h!]
     		\begin{center}
-      			\includegraphics[width=\linewidth]{retrogenerated_uml/${uml##*/}}
+      			\includegraphics[width=\linewidth,height=.7\paperheight,keepaspectratio]{retrogenerated_uml/${uml##*/}}
       			\caption{Diagramme de classe du package ${uml##*/}}
     		\end{center}
   	\end{figure}">>$latexFile
