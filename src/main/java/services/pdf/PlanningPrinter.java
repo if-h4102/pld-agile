@@ -13,7 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.List;
 
-public class planningPrinter {
+public class PlanningPrinter {
 
     private static final Font titleFont = FontFactory.getFont(FontFactory.COURIER, 30, Font.BOLD, new CMYKColor(255, 255, 255, 0));
     private static final Font chapterFont = FontFactory.getFont(FontFactory.COURIER, 23, Font.BOLD, new CMYKColor(255, 255, 255, 0));
