@@ -80,13 +80,12 @@ public class CityMap {
     /**
      * Find the shortest paths between the start way point and each end way points
      * given as parameters.
-     * @param startWayPoint The start point from which the shortest paths begin.
-     * @param endWatPoints The end points on which the shortest paths end.
+     * @param startWaypoint The start point from which the shortest paths begin.
+     * @param endWaypoints The end points on which the shortest paths end.
      * return A list of Route each composed of a list of street sections
      * which correspond to the shortests path between the start and each end points
      * given as parameters.
      */
-    // TODO Complexity to improve by using a min-heap for the greys intersections
     @Requires({"startWaypoint != null", "endWaypoints != null",
         "intersections.containsValue(startWaypoint.getIntersection())"})
     protected List<Route> shortestPath(AbstractWaypoint startWaypoint, List<AbstractWaypoint> endWaypoints) {
