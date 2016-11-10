@@ -18,26 +18,45 @@ import javafx.scene.layout.VBox;
 import models.AbstractWaypoint;
 import models.Planning;
 import models.PlanningWaypoint;
-import models.Route;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import services.map.IMapService;
 
 import java.io.IOException;
 
+/**
+ * The PlanningDetails component is able to to display and edit a planning.
+ */
 public class PlanningDetails extends ScrollPane {
+    /**
+     * A reference to the node containing the PlanningDetailsItems.
+     */
     @FXML
     protected VBox planningDetailsVBox;
+
+    /**
+     * Current planning
+     */
     private final SimpleObjectProperty<Planning> planning = new SimpleObjectProperty<>(this, "planning", null);
+
+    /**
+     * Current map service.
+     * This service is used to ask for an address input and to select
+     * an active Waypoing (this service is injected both here and to the MapScreen
+     * component).
+     */
     private final SimpleObjectProperty<IMapService> mapService = new SimpleObjectProperty<>(this, "mapService", null);
+
+    /**
+     * Current state.
+     */
     private final ReadOnlyObjectWrapper<IPlanningDetailsState> state = new ReadOnlyObjectWrapper<>(this, "state", new DefaultState(this));
 
     public PlanningDetails() {
         super();
-
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/components/planningdetails/PlanningDetails.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
-
         try {
             fxmlLoader.load();
         } catch (IOException exception) {
@@ -53,37 +72,63 @@ public class PlanningDetails extends ScrollPane {
         this.addEventHandler(SaveDeliveryAddress.TYPE, this::onSaveNewWaypoint);
     }
 
-    //Planning
+    /**
+     * @return The observable object for the planning.
+     */
     public final SimpleObjectProperty<Planning> planningProperty() {
         return this.planning;
     }
 
+    /**
+     * @param value The new value of the current Planning.
+     */
     public final void setPlanning(Planning value) {
         this.planningProperty().setValue(value);
     }
 
-    public final Planning getPlanning() {
+    /**
+     * @return The value of the current Planning
+     */
+    public final
+    @Nullable
+    Planning getPlanning() {
         return this.planningProperty().getValue();
     }
 
-
+    /**
+     * @return An observable wrapper for
+     */
     public SimpleObjectProperty<IMapService> mapServiceProperty() {
         return this.mapService;
     }
 
-    public IMapService getMapService() {
+    /**
+     * @return the value of the current map service
+     */
+    public
+    @Nullable
+    IMapService getMapService() {
         return this.mapServiceProperty().getValue();
     }
 
-    public void setMapService(IMapService value) {
+    /**
+     * @param value The new value of the map service.
+     */
+    public void setMapService(@NotNull IMapService value) {
         this.mapServiceProperty().setValue(value);
     }
 
+    /**
+     * @return Observable wrapper for the sate property.
+     */
     @NotNull
     public ReadOnlyObjectProperty<IPlanningDetailsState> stateProperty() {
         return this.state.getReadOnlyProperty();
     }
 
+    /**
+     * @return The value of state.
+     */
     @NotNull
     public IPlanningDetailsState getState() {
         return this.state.getValue();
@@ -117,7 +162,9 @@ public class PlanningDetails extends ScrollPane {
     }
 
     protected void onPlanningChange(ObservableValue<? extends Planning> observable, Planning oldValue, Planning newValue) {
+        this.refreshView();
         this.changeState(this.getState().onPlanningChange(observable, oldValue, newValue));
+        this.refreshView();
     }
 
     protected void onMapServiceChange(ObservableValue<? extends IMapService> observable, IMapService oldValue, IMapService newValue) {
@@ -133,7 +180,6 @@ public class PlanningDetails extends ScrollPane {
     }
 
     protected void onActiveWaypointChange(ObservableValue<? extends AbstractWaypoint> observable, AbstractWaypoint oldValue, AbstractWaypoint newValue) {
-        System.out.println("ActiveWaypoint change");
         this.changeState(this.getState().onActiveWaypointChange(observable, oldValue, newValue));
     }
 
@@ -142,12 +188,10 @@ public class PlanningDetails extends ScrollPane {
     }
 
     public void onAddWaypointButtonAction(AddWaypointAction action) {
-        System.out.println("Adding");
         this.changeState(this.getState().onAddWaypointAction(action));
     }
 
     public void onCancelAddWaypointButtonAction(CancelAddWaypointAction action) {
-        System.out.println("Cancelling");
         this.changeState(this.getState().onCancelAddWaypointAction(action));
     }
 
@@ -184,9 +228,10 @@ public class PlanningDetails extends ScrollPane {
         int index = 0;
         for (PlanningWaypoint planningWaypoint : planningWaypoints) {
             final PlanningDetailsItem node = new PlanningDetailsItem();
-            node.setIndex(index++);
+            node.setIndex(1 + index++);
             node.setItem(planningWaypoint);
             node.setPlanning(planning);
+            node.setMapService(this.getMapService());
             itemNodes.add(node);
         }
     }

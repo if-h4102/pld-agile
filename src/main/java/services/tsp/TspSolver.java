@@ -32,8 +32,7 @@ public class TspSolver extends AbstractThreadedTspSolver {
     }
 
     /**
-     * Solve the last set DeliveryGraph the best result can be get using getBestPlanning(), during compute time it return the best found so
-     * far once compute finished it's the best the algo can found.
+     * Execute doRun() method and then notify the listeners that the planning is updated
      */
     @Override
     public void run() {
@@ -44,6 +43,10 @@ public class TspSolver extends AbstractThreadedTspSolver {
         }
     }
 
+    /**
+     * Solve the last set DeliveryGraph the best result can be get using getBestPlanning(), during compute time it return the best found so
+     * far once compute finished it's the best the algo can found.
+     */
     private void doRun() {
         if (graph == null) {
             System.err.println("Please set a deliveryGraph before trying to solve TSP");
@@ -196,10 +199,17 @@ public class TspSolver extends AbstractThreadedTspSolver {
      * The most basic bounding algorithm.
      *
      * @param lastSeenNode
+     *            the last explored node.
      * @param unseen
+     *            the collection in which you want to iterate.
      * @param costs
+     *            the cost of the path between each node.
+     * @param seenCost
+     *            the cost of all explored nodes.
      * @param deliveryDurations
+     *            the delivery duration of each node.
      * @return
+     *            a min bound of the left cost
      */
     @Override
     protected int bound(AbstractWaypoint lastSeenNode, ArrayList<AbstractWaypoint> unseen,
@@ -208,20 +218,23 @@ public class TspSolver extends AbstractThreadedTspSolver {
     }
 
     /**
-     * Return a very basic iterator on the given collection.
+     * Return an iterator on the given collection.
      *
      * @param lastSeenNode
+     *            the last explored node.
      * @param unseen
      *            the collection in which you want to iterate.
      * @param costs
-     * @param deliveryDurations
+     *            the cost of the path between each node.
+     * @param seenCost
+     *            the cost of all explored nodes.
      * @return
+     *            a optimised for the tsp waypoint iterator
      */
     @Override
     protected Iterator<AbstractWaypoint> iterator(AbstractWaypoint lastSeenNode, ArrayList<AbstractWaypoint> unseen,
             Map<AbstractWaypoint, Map<AbstractWaypoint, Integer>> costs, Map<AbstractWaypoint, Integer> deliveryDurations, int seenCost) {
-        // NOTE: for the moment, this just returns a basic iterator,
-        // which won't look for the best node to return.
+
         return new WaypointIterator(unseen, costs.get(lastSeenNode));
     }
 

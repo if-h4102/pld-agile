@@ -1,5 +1,8 @@
 package services.xml.exception;
 
+/**
+ * This class described a generic exception thrown during the parsing of xml files.
+ */
 public abstract class ParserException extends Exception {
 
     private static final long serialVersionUID = 1893611693296088818L;

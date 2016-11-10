@@ -8,7 +8,7 @@ public class BasicTspSolver extends AbstractThreadedTspSolver {
     protected Warehouse startPoint;
 
     /**
-     * Branch and bound const (lossy branch cutting)
+     * Branch and bound const (lossy branch cutting) Disabled
      */
     private final int MIN_EXPLORATION_WIDTH = 3; //min number of route tried from a given point
     private final int EXPLORATION_WIDTH_DIVISOR = 1; //divisor of the total number of accessible points
@@ -72,7 +72,8 @@ public class BasicTspSolver extends AbstractThreadedTspSolver {
     }
 
     /**
-     * Basic branch an bound algorithm
+     * Branch an bound algorithm.
+     * Handle waiting and add malus if the explored point can't be passed on the current time
      *
      * @param lastSeenNode
      *            the last explored node.
@@ -146,10 +147,17 @@ public class BasicTspSolver extends AbstractThreadedTspSolver {
      * The most basic bounding algorithm.
      *
      * @param lastSeenNode
+     *            the last explored node.
      * @param unseen
+     *            the collection in which you want to iterate.
      * @param costs
+     *            the cost of the path between each node.
+     * @param seenCost
+     *            the cost of all explored nodes.
      * @param deliveryDurations
+     *            the delivery duration of each node.
      * @return
+     *            a min bound of the left cost
      */
     @Override
     protected int bound(AbstractWaypoint lastSeenNode, ArrayList<AbstractWaypoint> unseen,
@@ -160,22 +168,25 @@ public class BasicTspSolver extends AbstractThreadedTspSolver {
     }
 
     /**
-     * Return a very basic iterator on the given collection.
+     * Return an iterator on the given collection.
      *
      * @param lastSeenNode
+     *            the last explored node.
      * @param unseen
      *            the collection in which you want to iterate.
      * @param costs
-     * @param deliveryDurations
+     *            the cost of the path between each node.
+     * @param seenCost
+     *            the cost of all explored nodes.
      * @return
+     *            a optimised for the tsp waypoint iterator
      */
     @Override
     protected Iterator<AbstractWaypoint> iterator(AbstractWaypoint lastSeenNode, ArrayList<AbstractWaypoint> unseen,
                                                   Map<AbstractWaypoint, Map<AbstractWaypoint, Integer>> costs,
                                                   Map<AbstractWaypoint, Integer> deliveryDurations,
                                                   int seenCost) {
-        // NOTE: for the moment, this just returns a basic iterator,
-        // which won't look for the best node to return.
+
         return new WaypointIterator(unseen, costs.get(lastSeenNode));
     }
 }

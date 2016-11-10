@@ -256,7 +256,7 @@ public class PlanningDetailsItem extends AnchorPane {
     }
 
     public void onAddButtonAction(@NotNull ActionEvent actionEvent) {
-        fireEvent(new AddWaypointAction(this.getIndex()));
+        fireEvent(new AddWaypointAction(this.getIndex() - 1));
     }
 
     public void onCancelAddButtonAction(@NotNull ActionEvent actionEvent) {
@@ -291,10 +291,8 @@ public class PlanningDetailsItem extends AnchorPane {
     protected void onActiveWaypointChange(ObservableValue<? extends AbstractWaypoint> observable, AbstractWaypoint oldValue, AbstractWaypoint newValue) {
         System.out.println("Item: ActiveWaypoint change"+newValue.getId());
     }
-    
+
     public void onWaypointCardClickedAction(MouseEvent event){
     	this.getMapService().setActiveWaypoint(this.getItem().getTargetWaypoint());
     }
-
- 
 }

@@ -11,40 +11,91 @@ import javafx.scene.Node;
 import models.AbstractWaypoint;
 import models.Planning;
 import models.PlanningWaypoint;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class acts as a basis to build the states of the planning details.
+ * It implements most of the IPlanningDetailsState interface.
+ */
 public abstract class PlanningDetailsState implements IPlanningDetailsState {
+    /**
+     * A reference to the component controlled by this state object.
+     */
+    @NotNull
     protected final PlanningDetails planningDetails;
 
-    public PlanningDetailsState(PlanningDetails planningDetails) {
+    /**
+     * Creates a new PlanningDetailsState and binds it to the component to control.
+     *
+     * @param planningDetails The planning managed by this state object.
+     */
+    public PlanningDetailsState(@NotNull PlanningDetails planningDetails) {
         this.planningDetails = planningDetails;
     }
 
-    public IPlanningDetailsState enterState(IPlanningDetailsState previousState) {
+    /**
+     * This default method simply refreshes the view when entering to this
+     * state.
+     *
+     * @param previousState A reference to the previous state of the component.
+     * @return This state.
+     */
+    @NotNull
+    public IPlanningDetailsState enterState(@NotNull IPlanningDetailsState previousState) {
         this.refreshView();
         return this;
     }
 
-    public IPlanningDetailsState leaveState(IPlanningDetailsState nextState) {
+    /**
+     * This basic implementation does nothing, extend it to perform special
+     * actions when leaving this state.
+     *
+     * @param nextState A reference to the planned next state of the component.
+     * @return The provided next state.
+     */
+    @NotNull
+    public IPlanningDetailsState leaveState(@NotNull IPlanningDetailsState nextState) {
         return nextState;
     }
 
-    public IPlanningDetailsState onSaveNewWaypoint(SaveDeliveryAddress action) {
+    @NotNull
+    public IPlanningDetailsState onSaveNewWaypoint(@NotNull SaveDeliveryAddress action) {
         return this;
     }
 
-    public IPlanningDetailsState onAddWaypoint(AddWaypointAction action) {
+    @NotNull
+    public IPlanningDetailsState onAddWaypoint(@NotNull AddWaypointAction action) {
         return this;
     }
 
-    public IPlanningDetailsState onPlanningWaypointsChange(ListChangeListener.Change<? extends PlanningWaypoint> listChange) {
+    /**
+     * This basic implementation simply refreshes the view when list of
+     * PlanningWaypoint's changes.
+     *
+     * @param listChange An object representing the changes that occured in the list.
+     * @return This state
+     */
+    @NotNull
+    public IPlanningDetailsState onPlanningWaypointsChange(@NotNull ListChangeListener.Change<? extends PlanningWaypoint> listChange) {
         this.refreshView();
         return this;
     }
 
-    public IPlanningDetailsState onPlanningChange(ObservableValue<? extends Planning> observable, Planning oldValue, Planning newValue) {
+    /**
+     *  This method refreshes the view and resets the current state of the list by
+     *  returning a new DefaultState.
+     *
+     * @param observable The observable value wrapping the Planning object.
+     * @param oldValue   The old value of the Planning object.
+     * @param newValue   The new value of the Planning object.
+     * @return A new DefaultState
+     */
+    @NotNull
+    public IPlanningDetailsState onPlanningChange(@NotNull ObservableValue<? extends Planning> observable, @Nullable Planning oldValue, @Nullable Planning newValue) {
         if (oldValue == newValue) {
             return this;
         }
@@ -55,20 +106,10 @@ public abstract class PlanningDetailsState implements IPlanningDetailsState {
             newValue.planningWaypointsProperty().addListener(this.planningDetails::onPlanningWaypointsChange);
         }
         this.refreshView();
-        return this;
+        return new DefaultState(this.planningDetails);
     }
 
     public IPlanningDetailsState onActiveWaypointChange(ObservableValue<? extends AbstractWaypoint> observable, AbstractWaypoint oldValue, AbstractWaypoint newValue) {
-        if (oldValue == newValue) {
-            return this;
-        }
-        if (oldValue != null) {
-            //oldValue.removeListener(this.::onPlanningWaypointsChange);
-        }
-        if (newValue != null) {
-            //newValue.waypointsProperty().addListener(this.planningDetails::onPlanningWaypointsChange);
-        	//newValue.
-        }
         return this;
     }
 
@@ -84,6 +125,13 @@ public abstract class PlanningDetailsState implements IPlanningDetailsState {
         return this;
     }
 
+    /**
+     * Refreshes the view. It creates a PlanningDetailsItem components for each
+     * PlanningWaypoint and attaches it to its value. They are created in the
+     * order of the planning.
+     * It also ensures that the warehouse is not removable and it hides the
+     * parts of the "path" outside of the start and end.
+     */
     public void refreshView() {
         this.planningDetails.planningWaypointsToView();
         ObservableList<Node> nodes = this.planningDetails.planningDetailsVBox.getChildren();
