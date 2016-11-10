@@ -8,26 +8,27 @@ import java.util.Map;
 public class DeliveryGraph {
 
     /**
-     * The matrix representing the complete graph.
+     * The city map on which is based the current delivery graph.
      */
     private final CityMap cityMap;
+
+    /**
+     * The matrix representing the complete graph.
+     */
     private Map<AbstractWaypoint, Map<AbstractWaypoint, Route>> routes;
 
     /**
-     * Construct a complete graph
-     *
+     * Instantiate a delivery graph based on the given complete graph.
      * @param cityMap The map of the city containing the intersections of the way-points of this delivery graph.
      * @param routes  A matrix representing the complete graph
      */
     public DeliveryGraph(CityMap cityMap, Map<AbstractWaypoint, Map<AbstractWaypoint, Route>> routes) {
         this.cityMap = cityMap;
-        // TODO: compute matrix here ?
         this.routes = routes;
     }
 
     /**
      * Get the number of nodes in the current graph.
-     *
      * @return the total number of nodes.
      */
     public int size() {
@@ -36,7 +37,6 @@ public class DeliveryGraph {
 
     /**
      * Get all IDs of the graph's nodes.
-     *
      * @return an array filled with the IDs of each graph's node.
      */
     public ArrayList<AbstractWaypoint> getNodes() {
@@ -48,6 +48,7 @@ public class DeliveryGraph {
     }
 
     /**
+     * Get each node's delivery duration.
      * @return the map of the delivery duration for each node.
      */
     public Map<AbstractWaypoint, Integer> getDeliveryDurations() {
@@ -59,6 +60,7 @@ public class DeliveryGraph {
     }
 
     /**
+     * Get an iterator on the current delivery graph.
      * @return an iterator on the graph.
      */
     public Iterator<Map.Entry<AbstractWaypoint, Map<AbstractWaypoint, Route>>> iterator() {
@@ -66,11 +68,10 @@ public class DeliveryGraph {
     }
 
     /**
-     * TODO: description
-     *
-     * @param start
-     * @param end
-     * @return
+     * Get the route between the two given waypoints, if it exists.
+     * @param start the starting waypoint.
+     * @param end the ending waypoint.
+     * @return the route between the two waypoints if it exists, or null otherwise.
      */
     public Route getRoute(AbstractWaypoint start, AbstractWaypoint end) {
         try {
@@ -81,6 +82,7 @@ public class DeliveryGraph {
     }
 
     /**
+     * Get the city map on which is based teh current delivery graph.s
      * @return Map of the city containing the intersections of the way-points of this delivery graph.
      */
     public CityMap getCityMap() {
