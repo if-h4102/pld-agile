@@ -186,6 +186,7 @@ public class PlanningDetails extends ScrollPane {
             node.setIndex(1 + index++);
             node.setItem(planningWaypoint);
             node.setPlanning(planning);
+            node.setMapService(this.getMapService());
             itemNodes.add(node);
         }
     }
