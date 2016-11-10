@@ -1,5 +1,6 @@
 package components.informationarea;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextField;
@@ -9,10 +10,12 @@ import javafx.scene.layout.BorderPane;
 import java.io.IOException;
 
 public class InformationArea extends AnchorPane {
-    private static final String DEFAULT_TEXT = "Click somewhere !";
+    private static final String DEFAULT_TEXT = "-";
 
     @FXML
     private TextField informationField;
+
+    private SimpleStringProperty info = new SimpleStringProperty(this, "info", DEFAULT_TEXT);
 
     /**
      * Create an Information area object using the associated .fxml file.
@@ -35,6 +38,14 @@ public class InformationArea extends AnchorPane {
      */
     public void setInformation(String information) {
         this.informationField.setText(information);
+    }
+
+    public SimpleStringProperty infoProperty() {
+        return this.info;
+    }
+
+    public String getInfo() {
+        return this.infoProperty().getValue();
     }
 }
 
