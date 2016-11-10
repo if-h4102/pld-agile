@@ -27,7 +27,7 @@ import services.command.CommandManager;
 import services.command.RemoveWaypointAfterCommand;
 import services.map.IMapService;
 import services.map.MapService;
-import services.pdf.planningPrinter;
+import services.pdf.PlanningPrinter;
 import services.xml.Parser;
 import java.io.File;
 import java.io.IOException;
@@ -366,7 +366,7 @@ public class MainController extends BorderPane {
         fileChooser.setInitialFileName("Planning.pdf");
         File file = fileChooser.showSaveDialog(new Stage());
         if (file != null) {
-            planningPrinter.generatePdfFromPlanning(this.planning.getValue(), file.getPath());
+            PlanningPrinter.generatePdfFromPlanning(this.planning.getValue(), file.getPath());
         }
     }
 
