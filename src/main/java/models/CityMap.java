@@ -382,7 +382,6 @@ public class CityMap {
                     return false;
             }
         }
-
         return true;
     }
 }
