@@ -29,6 +29,11 @@ import components.intersectioncard.IntersectionCard;
 import components.mapcanvas.MapCanvas;
 import components.mapcanvas.WarehouseSelectionEvent;
 
+/**
+ * This class wraps the canvas and the tooltips and show the dynamic view of the cityMap (intersection when click on it, 
+ * delivery address when click on it, warehouse when click on it)
+ *
+ */
 public class MapScreen extends AnchorPane {
     private static final CityMap DEFAULT_CITY_MAP = null;
     private static final DeliveryRequest DEFAULT_DELIVERY_REQUEST = null;
@@ -57,7 +62,14 @@ public class MapScreen extends AnchorPane {
     private final SimpleObjectProperty<IMapService> mapService = new SimpleObjectProperty<>(this, "mapService", null);
 
     @SuppressWarnings("restriction")
+    /**Constructor of the class MapScreen, load the associate fxml file and add the handlers 
+     * to the different types of event that can be triggered by the canvas. Also bind the tooltip to the 
+     * Single Objects property active[warehouse/delivery/intersection] in order to hide them when launching 
+     * the MapScreeen for the first time
+     * 
+     */
     public MapScreen() {
+    	//load the fxml associate files
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/components/mapscreen/MapScreen.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -67,21 +79,22 @@ public class MapScreen extends AnchorPane {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
+        //Add handler to WarehouseSelectionEvent
         canvas.addEventHandler(WarehouseSelectionEvent.WAREHOUSE_SELECTION, event -> {
-            //System.out.println("handler intersection");
             updateWarehouseTooltip(event);
         });
-
+        
+        //Add handler to IntersectionSelectionEvent
         canvas.addEventHandler(IntersectionSelectionEvent.INTERSECTION_SELECTION, event -> {
-            //System.out.println("handler intersection");
             updateIntersectionTooltip(event);
         });
-
+        
+        //Add handler to DeliverySelectionEvent
         canvas.addEventHandler(DeliverySelectionEvent.DELIVERY_SELECTION, event -> {
-            //System.out.println("handler delivery address");
             updateDeliveryTooltip(event);
         });
 
+        //bind the properties to the corresponding tooltips.
         tooltipwarehouse.visibleProperty().bind(activeWarehouse.isNotNull());
         tooltipDelivery.visibleProperty().bind(activeDelivery.isNotNull());
         tooltip.visibleProperty().bind(activeIntersection.isNotNull());
@@ -89,7 +102,7 @@ public class MapScreen extends AnchorPane {
     }
 
     /**
-     * The cityMap to display
+     * Create the accessible cityMap for the mapScreen
      *
      * @return The cityMap property
      */
@@ -101,22 +114,26 @@ public class MapScreen extends AnchorPane {
     }
 
     /**
-     * Set the city map
+     * Set the city map to a new value
      *
-     * @param value
+     * @param value - The new cityMap to display
      */
     public final void setCityMap(CityMap value) {
         cityMapProperty().setValue(value);
     }
 
+    /**Get the value of the current CityMap
+     * 
+     * @return cityMap - The current cityMap
+     */
     public final CityMap getCityMap() {
         return cityMap == null ? DEFAULT_CITY_MAP : cityMap.getValue();
     }
 
     /**
-     * The deliveryRequest with waypoints to display
+     * Create the accessible DeliveryRequest for the mapScreen
      *
-     * @return The cityMap property
+     * @return The deliveryrequest property	
      */
     public final SimpleObjectProperty<DeliveryRequest> deliveryRequestProperty() {
         if (deliveryRequest == null) {
@@ -126,20 +143,24 @@ public class MapScreen extends AnchorPane {
     }
 
     /**
-     * Set the delivery request
+     * Set the delivery request to a new value.
      *
-     * @param value
+     * @param value - The new delivery request
      */
     public final void setDeliveryRequest(DeliveryRequest value) {
         deliveryRequestProperty().setValue(value);
     }
 
+    /** Get the value of the current delivery Request .
+     * 
+     * @return deliveryrequest - The delivery request
+     */
     public final DeliveryRequest getDeliveryRequest() {
         return deliveryRequest == null ? DEFAULT_DELIVERY_REQUEST : deliveryRequest.getValue();
     }
 
     /**
-     * The cityMap to display
+     * Create the accessible Planning for the mapScreen.
      *
      * @return The planning property
      */
@@ -151,22 +172,26 @@ public class MapScreen extends AnchorPane {
     }
 
     /**
-     * Set the planning
+     * Set the planning to a new value.
      *
-     * @param value
+     * @param value - The newvalue of the planning.
      */
     public final void setPlanning(Planning value) {
         planningProperty().setValue(value);
     }
 
+    /** Get the value of the current planning. 
+     * 
+     * @return planning - The planning.
+     */
     public final Planning getPlanning() {
         return planning == null ? DEFAULT_PLANNING : planning.getValue();
     }
 
     /**
-     * The active interserction
+     * Create the accessible active interserctionfor the mapScreen
      *      *
-     * @return The cityMap property
+     * @return The intersection property
      */
     public final SimpleObjectProperty<Intersection> activeIntersectionProperty() {
         if (activeIntersection == null) {
@@ -176,21 +201,25 @@ public class MapScreen extends AnchorPane {
     }
 
     /**
-     * Set the active intersection
+     * Set the accessible intersection to a new value.
      *
-     * @param value
+     * @param value - The newvalue of the intersection.
      */
     public final void setActiveIntersection(Intersection value) {
         activeIntersectionProperty().setValue(value);
     }
 
+    /** Get the value of the current active intersection.. 
+     * 
+     * @return intersection - The active intersection.
+     */
     public final Intersection getActiveIntersection() {
         return activeIntersection == null ? null : activeIntersectionProperty().getValue();
     }
 
     /**
-     * Update the position of the tooltip when clicked on intersection
-     *
+     * Update the position of the Intersection tooltip when clicked on intersection.
+     * If the event contains a intersection which is null, make the tooltip disappear.
      */
     public void updateIntersectionTooltip (IntersectionSelectionEvent event) {
         tooltip = tooltipOptimalPosition(tooltip, event.getX(),event.getY());
@@ -198,9 +227,9 @@ public class MapScreen extends AnchorPane {
     }
 
     /**
-     * The active delivery address
+     * Create the accessible active Delivery address for the mapScreen.
      *      *
-     * @return The cityMap property
+     * @return The Delivery address property.
      */
     public final SimpleObjectProperty<DeliveryAddress> activeDeliveryProperty() {
         if (activeDelivery == null) {
@@ -210,20 +239,26 @@ public class MapScreen extends AnchorPane {
     }
 
     /**
-     * set the active delivery address
+     * Set the accessible delivery address to a new value.
      *
-     * @param value
+     * @param value - The newvalue of the accessible delivery address.
      */
     public final void setActiveDelivery(DeliveryAddress value) {
         activeDeliveryProperty().setValue(value);
     }
 
+    /**
+     * Get the value of the current active delivery address.
+     *
+     * @return value - The accessible delivery address.
+     */
     public final DeliveryAddress getActiveDelivery() {
         return activeDelivery == null ? null : activeDeliveryProperty().getValue();
     }
+    
     /**
-     * Update the position of the delivery tooltip
-     *
+     * Update the position of the Delivery tooltip when clicked on a delivery address.
+     * If the event contains a delivery which is null, make the tooltip disappear.
      */
     public void updateDeliveryTooltip (DeliverySelectionEvent event) {
         tooltipDelivery = tooltipDeliveryOptimalPosition(tooltipDelivery, event.getX(),event.getY());
@@ -231,9 +266,9 @@ public class MapScreen extends AnchorPane {
     }
 
     /**
-     * The active delivery address
+     * Create the accessible active Warehouse for the mapScreen.
      *      *
-     * @return The cityMap property
+     * @return The Warehouse property.
      */
     public final SimpleObjectProperty<Warehouse> activeWarehouseProperty() {
         if (activeWarehouse == null) {
@@ -243,21 +278,26 @@ public class MapScreen extends AnchorPane {
     }
 
     /**
-     * set the active warehouse
+     * Set the accessible warehouse to a new value.
      *
-     * @param value
+     * @param value - The newvalue of the accessible delivery address.
      */
     public final void setActiveWarehouse(Warehouse value) {
         activeWarehouseProperty().setValue(value);
     }
 
+    /**
+     * Get the value of the current active warehouse.
+     *
+     * @return value - The accessible warehouse.
+     */
     public final Warehouse getActiveWarehouse() {
         return activeWarehouse == null ? null : activeWarehouseProperty().getValue();
     }
 
     /**
-     * Update the position of the warehouse tooltip
-     *
+     * Update the position of the Warehouse tooltip when clicked on the warehouse.
+     * If the event contains a warehouse which is null, make the tooltip disappear.
      */
     public void updateWarehouseTooltip (WarehouseSelectionEvent event) {
         tooltipwarehouse = tooltipWarehouseOptimalPosition(tooltipwarehouse, event.getX(),event.getY());
@@ -265,20 +305,34 @@ public class MapScreen extends AnchorPane {
     }
 
     // mapService
+    /**Create the accessible MapService interface for the mapScreen.
+     * 
+     * @return mapServiceProperty
+     */
     public SimpleObjectProperty<IMapService> mapServiceProperty() {
         return this.mapService;
     }
 
+    /**
+     * Get the value of the mapServiceInterface.
+     *
+     * @return value - The Interface of the map service.
+     */
     public IMapService getMapService() {
         return this.mapServiceProperty().getValue();
     }
 
+    /**
+     * Set the value of the mapServiceInterface.
+     * 
+     * @param value - The new Interface of the map service.
+     */
     public void setMapService(IMapService value) {
         this.mapServiceProperty().setValue(value);
     }
 
     /**
-     * Find the optimal origin for the tooltip
+     * Find the optimal origin for the warehouse tooltip in order to display him in the canvas zone.
      *
      * @return The tooltip
      */
@@ -289,6 +343,14 @@ public class MapScreen extends AnchorPane {
         return tooltipWarehouse;
     }
 
+    /**Find the optimal positionof the tooltip according to the borders of the canvas zone.
+     * 
+     * @param height - The height of the tooltip
+     * @param width - The widthof the tooltip
+     * @param x - the position along the X axis of the event (either can be the deliveryAddress/Warehouse x coordinate or the MouseEvent x coordinate)
+     * @param y - the position along the Y axis of the event (either can be the deliveryAddress/Warehouse y coordinate or the MouseEvent y coordinate)
+     * @return the optimal position to display the tooltip
+     */
     public Point optimalPosition(double height, double width, double x, double y){
     	double h = canvas.getHeight();
         double w = canvas.getWidth();
@@ -311,9 +373,9 @@ public class MapScreen extends AnchorPane {
 
 
     /**
-     * Find the optimal origin for the tooltip
+     * Find the optimal origin for the Intersection tooltip in order to display him in the canvas zone
      *
-     * @return The best point
+     * @return The tooltip
      */
     public IntersectionCard tooltipOptimalPosition(IntersectionCard tooltip, double x, double y){
     	Point optimal = optimalPosition(tooltip.getHeight(),tooltip.getWidth(),x,y );
@@ -321,23 +383,11 @@ public class MapScreen extends AnchorPane {
      	tooltip.setLayoutY(optimal.getY());
         return tooltip;
     }
-    
-    /**
-     * Find the optimal origin for the tooltip
-     *
-     * @return The best point
-     */
-    public WaypointCard tooltipWaypointOptimalPosition(WaypointCard tooltipp, double x, double y){
-    	Point optimal = optimalPosition(tooltipp.getHeight(),tooltipp.getWidth(),x,y );
-     	tooltipp.setLayoutX(optimal.getX());
-     	tooltipp.setLayoutY(optimal.getY());
-        return tooltipp;
-    }
 
     /**
-     * Find the optimal origin for the tooltip
+     * Find the optimal origin for the deliveryaddress tooltip in order to display him in the canvas zone
      *
-     * @return The best point
+     * @return The tooltip
      */
     public DeliveryAddressCard tooltipDeliveryOptimalPosition(DeliveryAddressCard tooltipDelivery, double x, double y){
     	 Point optimal = optimalPosition(tooltipDelivery.getHeight(),tooltipDelivery.getWidth(),x,y );
@@ -349,7 +399,7 @@ public class MapScreen extends AnchorPane {
     /**
      * The zoom factor to use.
      *
-     * @return The zoom property
+     * @return zoomProperty - The zoom property
      */
     public final DoubleProperty zoomProperty() {
         if (zoom == null) {
@@ -361,20 +411,24 @@ public class MapScreen extends AnchorPane {
     /**
      * Set the zoom factor of the map
      *
-     * @param value
+     * @param value the value of the zoom.
      */
     public final void setZoom(double value) {
         zoomProperty().setValue(value);
     }
 
+    /**Return the zoom factor of the map.
+     * 
+     * @return Value of the zoom.
+     */
     public final double getZoom() {
         return zoom == null ? DEFAULT_ZOOM : zoom.getValue();
     }
 
     /**
-     * The offsetX of the map
+     * Return the offsetX property of the map.
      *
-     * @return offsetX property
+     * @return offsetXProperty which enable dynamic modifications.
      */
     public final DoubleProperty offsetXProperty() {
         if (offsetX == null) {
@@ -386,12 +440,16 @@ public class MapScreen extends AnchorPane {
     /**
      * Set the offset x of the map
      *
-     * @param value offsetX value
+     * @param offsetX : the translation along the x-axis the map undergo on the screen.
      */
     public final void setOffsetX(double value) {
         offsetXProperty().setValue(value);
     }
 
+    /**Return the offset x of the map
+ 	* 
+ 	* @return offsetX : the translation along the x-axis the map undergo on the screen.
+ 	*/
     public final double getOffsetX() {
         return offsetX == null ? DEFAULT_OFFSET_X : offsetX.getValue();
     }
@@ -399,7 +457,7 @@ public class MapScreen extends AnchorPane {
     /**
      * The offset y of the map
      *
-     * @return offsetY property
+     * @return offsetY : the translation along the x-axis the map undergo on the screen.
      */
     public final DoubleProperty offsetYProperty() {
         if (offsetY == null) {
@@ -417,10 +475,20 @@ public class MapScreen extends AnchorPane {
         offsetYProperty().setValue(value);
     }
 
+    /**Return the offset x of the map
+ 	* 
+ 	* @return offset X
+ 	*/
     public final double getOffsetY() {
         return offsetY == null ? DEFAULT_OFFSET_Y : offsetY.getValue();
     }
 
+    /** Receive the announce of the MapService changes and add a listener to the new value of the mapService Interface.
+     * 
+     * @param observable
+     * @param oldValue
+     * @param newValue
+     */
     protected void onMapServiceChange(ObservableValue<? extends IMapService> observable, IMapService oldValue, IMapService newValue) {
         if (oldValue == newValue) {
             return;
@@ -433,19 +501,15 @@ public class MapScreen extends AnchorPane {
         }
     }
 
-    protected void onActiveWaypointChange(ObservableValue<? extends AbstractWaypoint> observable, AbstractWaypoint oldValue, AbstractWaypoint newValue) {
-    		updateWaypointTooltip(newValue);
-    }
-    
-    /**
-     * Update the position of the warehouse tooltip
-     *
+    /** Receive the announce of the MapService changes and add a listener to the new value of the active Waypoint.
+     * 
+     * @param observable
+     * @param oldValue
+     * @param newValue
      */
-    public void updateWaypointTooltip(AbstractWaypoint point) {
-        
+    protected void onActiveWaypointChange(ObservableValue<? extends AbstractWaypoint> observable, AbstractWaypoint oldValue, AbstractWaypoint newValue) {
+    		
     }
 
-    public void onIntersection() {
-        //this.getChildren().add()
-    }
+
 }
