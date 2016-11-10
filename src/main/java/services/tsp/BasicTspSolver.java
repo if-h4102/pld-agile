@@ -156,7 +156,6 @@ public class BasicTspSolver extends AbstractTspSolver {
                         Map<AbstractWaypoint, Map<AbstractWaypoint, Integer>> costs,
                         Map<AbstractWaypoint, Integer> deliveryDurations,
                         int seenCost) {
-        // TODO: improve that, or is this enough for this solver ?
         return 0; // The most basic bound
     }
 

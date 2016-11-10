@@ -6,10 +6,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.TransformationList;
-
 import java.util.*;
 
 public class Planning {
+
     /**
      * The city-map containing the intersections of the waypoints used by the planning.
      */
@@ -32,12 +32,13 @@ public class Planning {
     /**
      * Construct a new Planning based on the given sorted list of waypoints.
      *
-     * @param waypoints a sorted list of waypoints.
+     * @param waypoints
+     *            a sorted list of waypoints.
      */
     public Planning(CityMap cityMap, Collection<AbstractWaypoint> waypoints, Map<AbstractWaypoint, Integer> waitingTimes, int fullTime) {
         this.cityMap.setValue(cityMap);
         this.waypoints.setValue(FXCollections.observableArrayList(waypoints));
-        this.waypointWaitingTime = waitingTimes; // TODO: clone ?
+        this.waypointWaitingTime = waitingTimes;
         this.fullTime = fullTime;
         this.updateRoutes();
     }
@@ -57,21 +58,22 @@ public class Planning {
      */
     // The full time is now a parameter of planning, so the penalty are in it
     public int getFullTime() {
-//        int fullTime = 0;
-//        for (Route r : this.routes) {
-//            fullTime += r.getDuration();
-//            fullTime += r.getStartWaypoint().getDuration();
-//        }
-//        for (int waitingTime : waypointWaitingTime.values()) {
-//            fullTime += waitingTime;
-//        }
+        // int fullTime = 0;
+        // for (Route r : this.routes) {
+        // fullTime += r.getDuration();
+        // fullTime += r.getStartWaypoint().getDuration();
+        // }
+        // for (int waitingTime : waypointWaitingTime.values()) {
+        // fullTime += waitingTime;
+        // }
         return fullTime;
     }
 
     /**
      * Get the time that the delivery man must wait at the given waypoint
      *
-     * @param waypoint The wait point where the delivery man will wait
+     * @param waypoint
+     *            The wait point where the delivery man will wait
      * @return The waiting time of the delivery man
      */
     public int getWaitingTimeAtWaypoint(AbstractWaypoint waypoint) {
@@ -117,10 +119,10 @@ public class Planning {
     }
 
     /**
-     * Add a waypoint to the current planning,
-     * and update the current routes consequently.
+     * Add a waypoint to the current planning, and update the current routes consequently.
      *
-     * @param point the waypoint to add to the current planning.
+     * @param point
+     *            the waypoint to add to the current planning.
      * @return the updated current planning.
      */
     public Planning addWaypoint(AbstractWaypoint point) {
@@ -131,8 +133,7 @@ public class Planning {
         int index = 0;
         for (Route r : this.routes) {
             int time = this.getCityMap().shortestPath(r.getStartWaypoint(), Collections.singletonList(point)).get(0).getDuration()
-                + this.getCityMap().shortestPath(point, Collections.singletonList(r.getEndWaypoint())).get(0).getDuration();
-            // TODO: style guide ?
+                    + this.getCityMap().shortestPath(point, Collections.singletonList(r.getEndWaypoint())).get(0).getDuration();
             if (time < bestTime) {
                 bestTime = time;
                 bestPosition = index;
@@ -152,30 +153,30 @@ public class Planning {
     }
 
     /**
-     * Add a waypoint to the current planning after the given waypoint,
-     * and update the current routes consequently.
+     * Add a waypoint to the current planning after the given waypoint, and update the current routes consequently.
      *
-     * @param waypoint The waypoint to add to the current planning.
-     * @param index    The index where to add the waypoint. The current waypoint
-     *                 at this index and the following waypoints will be moved
-     *                 by one.
+     * @param waypoint
+     *            The waypoint to add to the current planning.
+     * @param index
+     *            The index where to add the waypoint. The current waypoint at this index and the following waypoints will be moved by one.
      * @return the updated current planning.
      */
-    @Requires({"!this.waypoints.contains(waypoint)"})
+    @Requires({ "!this.waypoints.contains(waypoint)" })
     public void addWaypoint(AbstractWaypoint waypoint, int index) {
         this.waypoints.add(index, waypoint);
         this.updateRoutes();
     }
 
     /**
-     * Add a waypoint to the current planning after the given waypoint,
-     * and update the current routes consequently.
+     * Add a waypoint to the current planning after the given waypoint, and update the current routes consequently.
      *
-     * @param waypoint      the waypoint to add to the current planning.
-     * @param afterWaypoint the waypoint after which the new waypoint must be added.
+     * @param waypoint
+     *            the waypoint to add to the current planning.
+     * @param afterWaypoint
+     *            the waypoint after which the new waypoint must be added.
      * @return the updated current planning.
      */
-    @Requires({"!this.waypoints.contains(waypoint)", "this.waypoints.contains(afterWaypoint)"})
+    @Requires({ "!this.waypoints.contains(waypoint)", "this.waypoints.contains(afterWaypoint)" })
     public void addWaypoint(AbstractWaypoint waypoint, AbstractWaypoint afterWaypoint) {
         int index = this.waypoints.indexOf(afterWaypoint) + 1;
         this.addWaypoint(waypoint, index);
@@ -183,42 +184,43 @@ public class Planning {
     }
 
     /**
-     * Remove a waypoint to the current planning, and update the current routes consequently. Please not that the removed waypoint can't
-     * be the first warehouse.
+     * Remove a waypoint to the current planning, and update the current routes consequently. Please not that the removed waypoint can't be
+     * the first warehouse.
      *
-     * @param waypoint The waypoint to remove from the current planning.
+     * @param waypoint
+     *            The waypoint to remove from the current planning.
      */
-    @Requires({"this.waypoints.contains(waypoint)", "!waypoint.equals(this.waypoints.get(0))"})
+    @Requires({ "this.waypoints.contains(waypoint)", "!waypoint.equals(this.waypoints.get(0))" })
     public void removeWaypoint(AbstractWaypoint waypoint) {
         int index = this.waypoints.indexOf(waypoint);
         this.waypoints.remove(index);
         this.routes.remove(index);
         this.routes.remove(index - 1);
-        this.routes.add(index - 1, this.getCityMap().shortestPath(this.getWaypoint(index-1), this.getWaypoint(index)));
+        this.routes.add(index - 1, this.getCityMap().shortestPath(this.getWaypoint(index - 1), this.getWaypoint(index)));
         this.waypoints.remove(waypoint);
         // this.updateRoutes();
     }
 
     public AbstractWaypoint getWaypoint(int index) {
-        int size = this.waypoints.size();  // TODO: require(size > 0)
-        return this.waypoints.get(index % size);
+        int size = waypoints.size();
+        return waypoints.get(index % size);
     }
 
     protected List<Route> computeRoutes() {
         List<Route> result = new LinkedList<>();
-        for (int i = 0; i < this.waypoints.size(); i++) {
+        for (int i = 0; i < waypoints.size(); i++) {
             AbstractWaypoint startWaypoint = this.getWaypoint(i);
             AbstractWaypoint endWaypoint = this.getWaypoint(i + 1);
-            result.add(this.getCityMap().shortestPath(startWaypoint, endWaypoint));
+            result.add(getCityMap().shortestPath(startWaypoint, endWaypoint));
         }
         return result;
     }
 
     protected void updateRoutes() {
-        this.routes.setValue(FXCollections.observableArrayList(this.computeRoutes()));
+        this.routes.setValue(FXCollections.observableArrayList(computeRoutes()));
     }
 
-    public Warehouse getWarehouse(){
+    public Warehouse getWarehouse() {
         return (Warehouse) waypoints.get(0);
     }
 }
