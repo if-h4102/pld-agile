@@ -4,7 +4,7 @@
   router="FAN">  
   <class id="1" language="java" name="components.planningdetails.DefaultState" project="pld-agile" 
     file="/pld-agile/src/main/java/components/planningdetails/DefaultState.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="577" y="-115"/>    
+    <position height="-1" width="-1" x="578" y="-125"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="false" static="true"/>      
@@ -71,7 +71,7 @@
     </display>  
   </class>  
   <generalization id="8">    
-    <end type="SOURCE" refId="6"/>    
+    <end type="SOURCE" refId="1"/>    
     <end type="TARGET" refId="7"/>  
   </generalization>  
   <realization id="9">    
@@ -91,11 +91,11 @@
     <display labels="true" multiplicity="true"/>  
   </association>  
   <generalization id="13">    
-    <end type="SOURCE" refId="1"/>    
+    <end type="SOURCE" refId="3"/>    
     <end type="TARGET" refId="7"/>  
   </generalization>  
   <generalization id="14">    
-    <end type="SOURCE" refId="3"/>    
+    <end type="SOURCE" refId="6"/>    
     <end type="TARGET" refId="7"/>  
   </generalization>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 

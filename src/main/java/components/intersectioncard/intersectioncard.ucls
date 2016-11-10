@@ -5,7 +5,7 @@
   <class id="1" language="java" name="components.intersectioncard.IntersectionCard" project="pld-agile" 
     file="/pld-agile/src/main/java/components/intersectioncard/IntersectionCard.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="179" width="192" x="172" y="122"/>    
+    <position height="-1" width="-1" x="315" y="197"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="false" static="true"/>      

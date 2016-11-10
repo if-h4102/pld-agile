@@ -4,7 +4,7 @@
   router="FAN">  
   <package id="1" language="java" name="services.command" project="pld-agile" 
     file="/pld-agile/src/main/java/services/command" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="41" width="108" x="648" y="37"/>    
+    <position height="-1" width="-1" x="692" y="57"/>    
     <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
   </package>  
   <package id="2" language="java" name="services.map" project="pld-agile" file="/pld-agile/src/main/java/services/map" 
