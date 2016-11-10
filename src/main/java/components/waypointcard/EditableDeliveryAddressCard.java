@@ -21,8 +21,9 @@ import models.Intersection;
 import java.io.IOException;
 
 /**
- * This component is a wrapper for an editable delivery address, it is show in the Planning Details Pane at the right of the canvas
- * It appears when the user click the button + on the pane
+ * The EditableDeliveryAddressCard represents the form to enter a new
+ * waypoint.
+ * It is used in the planning details when a user adds a waypoint
  */
 public class EditableDeliveryAddressCard extends WaypointCardBase<DeliveryAddress> {
     @FXML
@@ -48,7 +49,7 @@ public class EditableDeliveryAddressCard extends WaypointCardBase<DeliveryAddres
      * Load the fxml file.
      * Bind the properties to the fxml objects associated.
      * Add a listener to the Waypoint they are showing.
-     * 
+     *
      */
     public EditableDeliveryAddressCard() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/components/waypointcard/EditableDeliveryAddressCard.fxml"));
@@ -75,31 +76,31 @@ public class EditableDeliveryAddressCard extends WaypointCardBase<DeliveryAddres
         waypointProperty().addListener((observable, oldValue, newValue) -> this.onWaypointChange(oldValue, newValue));
     }
 
-    /** Create the accessible coordinates for the card
-     * 
+    /** Create the accessible coordinates for the waypoint
+     *
      * @return the coordinates property
      */
     public final SimpleStringProperty coordinatesProperty() {
         return coordinates;
     }
-    /**Get the coordinates of the card.
-     * 
+    /**Get the coordinates of the waypoint.
+     *
      * @return The card coordinates.
      */
     public final String getCoordinates() {
         return coordinatesProperty().getValue();
     }
 
-    /**Set the coordinates of the card
-     * 
+    /**Set the coordinates of the waypoint
+     *
      * @param value - The new coordinates.
      */
     public final void setCoordinates(String value) {
         coordinatesProperty().setValue(value);
     }
 
-    /**Create an accessible boolean to the time constraints. 
-     * 
+    /**Create an accessible boolean to the time constraints.
+     *
      * @return The time constraints property.
      */
     public final SimpleBooleanProperty hasTimeContraintsProperty() {
@@ -107,7 +108,7 @@ public class EditableDeliveryAddressCard extends WaypointCardBase<DeliveryAddres
     }
 
     /**Enable to know if the Waypoint has timeConstraints or not
-     * 
+     *
      * @return true if it has timeCostraints, false otherwise.
      */
     public final boolean getHasTimeConstraints() {
@@ -115,7 +116,7 @@ public class EditableDeliveryAddressCard extends WaypointCardBase<DeliveryAddres
     }
 
     /**Set the timeConstraints true or false
-     * 
+     *
      * @param value - True if it has timeCostraints, false otherwise.
      */
     public final void setHasTimeContraints(boolean value) {
@@ -123,7 +124,7 @@ public class EditableDeliveryAddressCard extends WaypointCardBase<DeliveryAddres
     }
 
     /**Create the accessible deliverDuration for the card.
-     * 
+     *
      * @return the deliver duration property
      */
     public final SimpleIntegerProperty deliveryDurationProperty() {
@@ -131,7 +132,7 @@ public class EditableDeliveryAddressCard extends WaypointCardBase<DeliveryAddres
     }
 
     /**Get the delivery duration of the waypoint.
-     * 
+     *
      * @return delivery duration
      */
     public final Integer getDeliveryDuration() {
@@ -139,7 +140,7 @@ public class EditableDeliveryAddressCard extends WaypointCardBase<DeliveryAddres
     }
 
     /**Set the delivery duration of the waypoint
-     * 
+     *
      * @param value - The new delivery duration
      */
     public final void setDeliveryDuration(Integer value) {
@@ -147,7 +148,7 @@ public class EditableDeliveryAddressCard extends WaypointCardBase<DeliveryAddres
     }
 
     /** Create the accessible startTime for the card.
-     * 
+     *
      * @return startTimeProperty
      */
     public final SimpleIntegerProperty startTimeProperty() {
@@ -155,7 +156,7 @@ public class EditableDeliveryAddressCard extends WaypointCardBase<DeliveryAddres
     }
 
     /**Get the time when the delivery can start on the waypoint.
-     * 
+     *
      * @return time start
      */
     public final int getStartTime() {
@@ -163,7 +164,7 @@ public class EditableDeliveryAddressCard extends WaypointCardBase<DeliveryAddres
     }
 
     /**Set the time when the delivery can start on the waypoint.
-     * 
+     *
      * @param value - The starting time
      */
     public final void setStartTime(int value) {
@@ -171,7 +172,7 @@ public class EditableDeliveryAddressCard extends WaypointCardBase<DeliveryAddres
     }
 
     /** Create the accessible endTime for the card.
-     * 
+     *
      * @return endTimeProperty
      */
     public final SimpleIntegerProperty endTimeProperty() {
@@ -179,7 +180,7 @@ public class EditableDeliveryAddressCard extends WaypointCardBase<DeliveryAddres
     }
 
     /**Get the time when the delivery can end on the waypoint.
-     * 
+     *
      * @return time end
      */
     public final int getEndTime() {
@@ -187,7 +188,7 @@ public class EditableDeliveryAddressCard extends WaypointCardBase<DeliveryAddres
     }
 
     /**Set the time when the delivery can end on the waypoint.
-     * 
+     *
      * @param value - The ending time
      */
     public final void setEndTime(int value) {
@@ -217,8 +218,8 @@ public class EditableDeliveryAddressCard extends WaypointCardBase<DeliveryAddres
     }
 
     /**Return the name of the denomination waypoint.
-     * @return "" if the card'waypoint is null, 
-     * "DeliveryAddress" if the card'waypoint is not null 
+     * @return "" if the card'waypoint is null,
+     * "DeliveryAddress" if the card'waypoint is not null
      * or "DeliveryAddress + waypoint.id" if the intersection is not ull
      */
     protected String computeName() {
@@ -234,7 +235,7 @@ public class EditableDeliveryAddressCard extends WaypointCardBase<DeliveryAddres
     }
 
     /** Update the coordinates of the card according to the new delivery address.
-     * 
+     *
      * @param oldValue
      * @param newValue - The new delivery address
      */
@@ -246,9 +247,9 @@ public class EditableDeliveryAddressCard extends WaypointCardBase<DeliveryAddres
         this.setName(this.computeName());
     }
 
-    /** Return a new Delivery address to add to the deliveryrequest 
+    /** Return a new Delivery address to add to the deliveryrequest
      * if it is well created (possible delivery duration, endTime < stratTime, coherence between duration, end and starttimr)
-     * 
+     *
      * @return the new delivery address
      * @throws Exception
      */
@@ -280,7 +281,7 @@ public class EditableDeliveryAddressCard extends WaypointCardBase<DeliveryAddres
     }
 
     /**Fire an Event to notify a new delivery address has been created and set the delivery address as the current waypoint.
-     * 
+     *
      * @param actionEvent - click on save
      */
     public void onSaveButtonAction(ActionEvent actionEvent) {
