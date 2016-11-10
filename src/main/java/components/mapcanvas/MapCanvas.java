@@ -12,14 +12,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
-import models.CityMap;
-import models.DeliveryAddress;
-import models.DeliveryRequest;
-import models.Intersection;
-import models.Planning;
-import models.Route;
-import models.StreetSection;
-import models.Warehouse;
+import models.*;
 import services.map.MapRenderer;
 
 import java.awt.Rectangle;
@@ -47,7 +40,7 @@ public class MapCanvas extends Canvas {
     private List<Intersection> intersections;
     private Iterable<DeliveryAddress> listDeliveryAddresses;
     private double calZoom;
-    private final ListChangeListener<Route> planningChangeListener;
+    private final ListChangeListener<PlanningWaypoint> planningChangeListener;
 
     @SuppressWarnings("restriction")
     public MapCanvas() {
@@ -64,10 +57,10 @@ public class MapCanvas extends Canvas {
         deliveryRequestProperty().addListener(event -> draw());
         planningProperty().addListener((observableValue, oldPlanning, newPlanning) -> {
             if (oldPlanning != null) {
-                oldPlanning.routesProperty().removeListener(self.planningChangeListener);
+                oldPlanning.planningWaypointsProperty().removeListener(self.planningChangeListener);
             }
             if (newPlanning != null) {
-                newPlanning.routesProperty().addListener(self.planningChangeListener);
+                newPlanning.planningWaypointsProperty().addListener(self.planningChangeListener);
             }
             self.draw();
         });

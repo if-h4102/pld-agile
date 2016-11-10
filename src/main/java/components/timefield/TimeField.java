@@ -2,10 +2,13 @@ package components.timefield;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableBooleanValue;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import models.Planning;
 
 import java.io.IOException;
 
@@ -49,6 +52,7 @@ public class TimeField extends HBox {
         this.hoursTextProperty().addListener((observable, oldValue, newValue) -> this.onHoursTextChange(oldValue, newValue));
         this.minutesTextProperty().addListener((observable, oldValue, newValue) -> this.onMinutesTextChange(oldValue, newValue));
         this.secondsTextProperty().addListener((observable, oldValue, newValue) -> this.onSecondsTextChange(oldValue, newValue));
+        this.disableProperty().addListener(this::onDisableChange);
     }
 
     /**
@@ -251,6 +255,14 @@ public class TimeField extends HBox {
             seconds = 0;
         }
         this.setSeconds(seconds);
+    }
+
+    protected void onDisableChange(ObservableValue<? extends Boolean> observable, boolean oldValue, boolean newValue) {
+        if (newValue) {
+            this.getStyleClass().add("ReadOnly");
+        } else {
+            this.getStyleClass().remove("ReadOnly");
+        }
     }
 
     // TODO: onHoursTextChange

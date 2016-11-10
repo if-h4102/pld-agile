@@ -33,3 +33,7 @@
 #pathBefore {
     -fx-padding: 0 8px 0 0;
 }
+
+.invalid EditableDeliveryAddressCard, .invalid WarehouseCard, .invalid WaypointCard, .invalid DeliveryAddressCard  {
+    -fx-background-color: #ffb8af;
+}

@@ -76,9 +76,21 @@ public class MapRenderer {
     @Requires("deliveryRequest != null")
     public void drawDeliveryRequest(GraphicsContext gc, DeliveryRequest deliveryRequest) {
         for (DeliveryAddress deliveryAddress : deliveryRequest.getDeliveryAddresses()) {
-            this.drawWaypoint(gc, deliveryAddress);
+            gc.setFill(Color.GREEN);
+            gc.fillOval(
+                deliveryAddress.getIntersection().getX() - WAYPOINT_SIZE / 2,
+                deliveryAddress.getIntersection().getY() - WAYPOINT_SIZE / 2,
+                WAYPOINT_SIZE,
+                WAYPOINT_SIZE
+            );
         }
-        this.drawWaypoint(gc, deliveryRequest.getWarehouse());
+        gc.setFill(Color.BLUE);
+        gc.fillOval(
+            deliveryRequest.getWarehouse().getIntersection().getX() - WAYPOINT_SIZE / 2,
+            deliveryRequest.getWarehouse().getIntersection().getY() - WAYPOINT_SIZE / 2,
+            WAYPOINT_SIZE,
+            WAYPOINT_SIZE
+        );
     }
 
     @Requires("planning != null")
@@ -129,8 +141,8 @@ public class MapRenderer {
         }
 
         // Draw the active waypoints (above the roads):
-        for (AbstractWaypoint waypoint : planning.getWaypoints()) {
-            this.drawWaypoint(gc, waypoint);
+        for (PlanningWaypoint planningWaypoint : planning.getPlanningWaypoints()) {
+            this.drawPlanningWaypoint(gc, planningWaypoint);
         }
 
         // Draw order of delivery
@@ -170,34 +182,21 @@ public class MapRenderer {
         gc.strokeLine(xthird, ythird, xCross2, yCross2);
     }
 
-    private void drawWaypoint(GraphicsContext gc, DeliveryAddress deliveryAddress) {
-        gc.setFill(Color.BLUE);
-        gc.fillOval(
-            deliveryAddress.getIntersection().getX() - WAYPOINT_SIZE / 2,
-            deliveryAddress.getIntersection().getY() - WAYPOINT_SIZE / 2,
-            WAYPOINT_SIZE,
-            WAYPOINT_SIZE
-        );
-    }
-
-    private void drawWaypoint(GraphicsContext gc, Warehouse warehouse) {
+    private void drawPlanningWaypoint(GraphicsContext gc, PlanningWaypoint planningWaypoint) {
         gc.setFill(Color.RED);
+        if (planningWaypoint.getIsPossible()) {
+            if (planningWaypoint.getTargetWaypoint() instanceof DeliveryAddress) {
+                gc.setFill(Color.GREEN);
+            } else {
+                gc.setFill(Color.BLUE);
+            }
+        }
+
         gc.fillOval(
-            warehouse.getIntersection().getX() - WAYPOINT_SIZE / 2,
-            warehouse.getIntersection().getY() - WAYPOINT_SIZE / 2,
+            planningWaypoint.getTargetWaypoint().getIntersection().getX() - WAYPOINT_SIZE / 2,
+            planningWaypoint.getTargetWaypoint().getIntersection().getY() - WAYPOINT_SIZE / 2,
             WAYPOINT_SIZE,
             WAYPOINT_SIZE
         );
-    }
-
-    private void drawWaypoint(GraphicsContext gc, AbstractWaypoint waypoint) {
-        if (waypoint instanceof DeliveryAddress) {
-            this.drawWaypoint(gc, (DeliveryAddress) waypoint);
-        } else if (waypoint instanceof Warehouse) {
-            this.drawWaypoint(gc, (Warehouse) waypoint);
-        } else {
-            System.err.println("Trying to draw unknown waypoint:");
-            System.err.println(waypoint);
-        }
     }
 }

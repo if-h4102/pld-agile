@@ -29,6 +29,12 @@
             <Label text="Wait for the opening"/>
           </HBox>
         </AnchorPane>
+        <AnchorPane fx:id="unloadTime">
+          <HBox>
+            <TimeField time="${controller.item.startUnloadingTime}" disable="true" />
+            <Label text="Load/unload"/>
+          </HBox>
+        </AnchorPane>
       </VBox>
       <Button styleClass="flatButton" fx:id="addButton" graphicTextGap="2.0"
               mnemonicParsing="false"
@@ -65,12 +71,6 @@
                     AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="8"/>
       </AnchorPane>
       <VBox fx:id="dataAfter">
-        <AnchorPane fx:id="unloadTime">
-          <HBox>
-            <TimeField time="${controller.item.startUnloadingTime}" disable="true" />
-            <Label text="Load/unload"/>
-          </HBox>
-        </AnchorPane>
       </VBox>
     </StackPane>
   </VBox>
