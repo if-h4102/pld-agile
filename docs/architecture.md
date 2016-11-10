@@ -74,6 +74,10 @@ un pattern state. Nous l'avons utilisé deux fois dans notre application:
 pour les détails du planning (affichage, attente d'ajout, formulaire d'ajout)
 et pour la racine (cf diagramme d'état-transition UML).
 
+De plus, pour gérer efficacement les undo/redo des modifications apportées par
+l'utilisateur sur la tournée calculée, nous utilisons le design pattern 
+commande.
+
 Certains composants réutilises des services pour faire des tâches spécifiques.
 On les as isolé dans des packages séparés (résolution du tsp, rendu du PDF du
 planning, parser).
