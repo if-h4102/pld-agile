@@ -9,11 +9,21 @@ public class BasicBoundTspSolver extends TspSolver{
     /**
      * Bound using the sum of min cost per unseen node (including warehouse) plus the cost of the node. Complexity: O(n²) with n the number
      * of unseen node.
+     * Min cost is defined as average of the two min cost (with only one cost per linked node, i.e. the to min cost can't
+     * link the two same points, as we know that the next node can't be the same the previous)
+     * A one day malus is added by point that cannot be reached on time.
+     *
      *
      * @param lastSeenNode
+     *            the last explored node.
      * @param unseen
+     *            all nodes not explored yet.
+     * @param seenCost
+     *            the cost of all explored nodes.
      * @param costs
+     *            the cost of the path between each node.
      * @param deliveryDurations
+     *            the delivery duration of each node.
      * @return a min bound of the cost to see each unseen node
      */
     @Override
