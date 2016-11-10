@@ -66,7 +66,7 @@ public class BasicBoundTspSolverTest {
 
         DeliveryGraph deliveryGraph = cityMap.computeDeliveryGraph(deliveryRequest);
 
-        AbstractTspSolver solver = new BasicBoundTspSolver();
+        AbstractThreadedTspSolver solver = new BasicBoundTspSolver();
         return solver.solve(deliveryGraph);
     }
 

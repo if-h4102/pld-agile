@@ -1,6 +1,7 @@
 package components.planningdetails;
 
 import components.events.AddWaypointAction;
+import components.events.CancelAddWaypointAction;
 import components.events.SaveDeliveryAddress;
 import components.mapcanvas.DeliverySelectionEvent;
 import components.mapcanvas.IntersectionSelectionEvent;
@@ -13,6 +14,9 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import models.*;
+import services.command.AddWaypointAfterCommand;
+import services.command.CommandManager;
+
 import org.jetbrains.annotations.NotNull;
 
 import javafx.event.EventHandler;
@@ -32,16 +36,13 @@ public class AddingWaypointState extends PlanningDetailsState {
 
     @Override
     public IPlanningDetailsState enterState(IPlanningDetailsState previousState) {
-        this.planningDetails.waypointsToPlanningDetails();
-        ObservableList<Node> nodes = this.planningDetails.vBox.getChildren();
-
+        super.enterState(previousState);
+        ObservableList<Node> nodes = this.planningDetails.planningDetailsVBox.getChildren();
         DeliveryAddress tmpDeliveryAddress = new DeliveryAddress(intersection, 0);
         EditableDeliveryAddressCard editable = new EditableDeliveryAddressCard();
         editable.setWaypoint(tmpDeliveryAddress);
 
-
         nodes.add(this.index, editable);
-
         return this;
     }
 
@@ -56,32 +57,18 @@ public class AddingWaypointState extends PlanningDetailsState {
         System.out.println("Saving new address");
         DeliveryAddress deliveryAddress = event.getDeliveryAddress();
         Planning planning = this.planningDetails.getPlanning();
-        planning.addWaypoint(deliveryAddress, this.index);
-
-        this.planningDetails.waypointsToPlanningDetails();
+        event.setIndex(this.index);
 
         return new DefaultState(this.planningDetails);
     }
 
-    public IPlanningDetailsState onPlanningWaypointsChange(ListChangeListener.Change<? extends AbstractWaypoint> listChange) {
-        this.planningDetails.waypointsToPlanningDetails();
+    public IPlanningDetailsState onPlanningWaypointsChange(ListChangeListener.Change<? extends PlanningWaypoint> listChange) {
+        // Prevent refresh of nodes ?
         return this;
     }
 
-    public IPlanningDetailsState onAddWaypoint(AddWaypointAction action) {
-        return this;
-    }
-
-    public IPlanningDetailsState onPlanningChange(ObservableValue<? extends Planning> observable, Planning oldValue, Planning newValue) {
-        if (oldValue == newValue) {
-            return this;
-        }
-        if (oldValue != null) {
-            oldValue.waypointsProperty().removeListener(this.planningDetails::onPlanningWaypointsChange);
-        }
-        if (newValue != null) {
-            newValue.waypointsProperty().addListener(this.planningDetails::onPlanningWaypointsChange);
-        }
+    @Override
+    public IPlanningDetailsState onAddWaypointAction(AddWaypointAction action) {
         return this;
     }
 
@@ -99,7 +86,8 @@ public class AddingWaypointState extends PlanningDetailsState {
     }
 
     @Override
-    public IPlanningDetailsState onAddWaypointAction(AddWaypointAction action) {
-        return this;
+    @NotNull
+    public IPlanningDetailsState onCancelAddWaypointAction(@NotNull CancelAddWaypointAction action) {
+        return new DefaultState(this.planningDetails);
     }
 }

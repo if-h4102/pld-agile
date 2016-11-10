@@ -28,10 +28,16 @@ public class CommandManager {
 
     /**
      * Execute the given command and store it for an eventual undo operation.
+     * If there was some undone actions, they all will be lost.
      * @param command the command to be executed.
      */
     public void execute(AbstractCommand command) {
+        if(!this.undone.isEmpty()) {
+          this.undone.clear();
+        }
         this.done.push(command).execute();
+        this.undone.clear();
+        updateUndoableRedoable();
         // TODO: add mechanism to tell if the command was successful or not ?
     }
 
@@ -44,6 +50,7 @@ public class CommandManager {
             return false;
         }
         this.undone.push(this.done.pop().getReversed()).execute();
+        updateUndoableRedoable();
         return true;
     }
 
@@ -56,7 +63,21 @@ public class CommandManager {
             return false;
         }
         this.done.push(this.undone.pop().getReversed()).execute();
+        updateUndoableRedoable();
         return true;
+    }
+    
+    private void updateUndoableRedoable() {
+        if (this.undoable.getValue() == false && !this.done.isEmpty()) {
+            this.undoable.setValue(true);
+        } else if (this.undoable.getValue() == true && this.done.isEmpty()) {
+            this.undoable.setValue(false);
+        }
+        if (this.redoable.getValue() == false && !this.undone.isEmpty()) {
+            this.redoable.setValue(true);
+        } else if (this.redoable.getValue() == true && this.undone.isEmpty()) {
+            this.redoable.setValue(false);
+        }
     }
 
     public SimpleBooleanProperty undoableProperty() {
@@ -70,7 +91,24 @@ public class CommandManager {
     public void setUndoable(boolean value) {
         undoableProperty().setValue(value);
     }
+    
+    public SimpleBooleanProperty redoableProperty() {
+        return this.redoable;
+    }
 
+    public boolean getRedoable() {
+        return redoableProperty().getValue();
+    }
+
+    public void setRedoable(boolean value) {
+        redoableProperty().setValue(value);
+    }
+
+    public SimpleBooleanProperty isUndoable() {
+        this.undoable.setValue(!this.done.isEmpty());
+        return this.undoable;
+    }
+    
     public SimpleBooleanProperty isRedoable() {
         this.redoable.setValue(!this.undone.isEmpty());
         return this.redoable;

@@ -16,6 +16,7 @@ public class WaitOpenDeliveryRequestState extends WaitOpenCityMapState {
     @Override
     public void enterState() {
         mainController.setDeliveryRequest(null); // Reset any previous delivery request
+        mainController.setPlanning(null);
     }
 
     @Override
@@ -39,6 +40,7 @@ public class WaitOpenDeliveryRequestState extends WaitOpenCityMapState {
             currentDeliveryRequest = mainController.getParserService().getDeliveryRequest(deliveryRequestFile, mainController.getCityMap());
         } catch (IOException | ParserException e) {
             new ExceptionWindow(e.getMessage());
+            return this; // Cancel the operation
         }
 
         mainController.setDeliveryRequest(currentDeliveryRequest);

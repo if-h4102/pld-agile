@@ -1,0 +1,15 @@
+.pathLine {
+    -fx-border-style: solid;
+    -fx-border-width: 2px;
+    -fx-border-color: #0036d2;
+}
+
+#dataBefore {
+    /* top, right, bottom, left */
+    -fx-padding: 0 0 5px 15px;
+}
+
+#dataAfter {
+    /*top, right, bottom, left*/
+    -fx-padding: 5px 0 0 15px;
+}

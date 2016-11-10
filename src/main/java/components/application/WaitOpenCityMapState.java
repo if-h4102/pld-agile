@@ -15,7 +15,7 @@ public class WaitOpenCityMapState extends MainControllerState {
 
     @Override
     public void enterState() {
-
+        mainController.setPlanning(null);
     }
 
     @Override
@@ -39,6 +39,7 @@ public class WaitOpenCityMapState extends MainControllerState {
             currentCityMap = mainController.getParserService().getCityMap(cityMapFile);
         } catch (IOException | ParserException e) {
             new ExceptionWindow(e.getMessage());
+            return this; // Cancel the operation
         }
 
         mainController.setCityMap(currentCityMap);

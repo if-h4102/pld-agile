@@ -1,6 +1,8 @@
 package components.application;
 
+import javafx.application.Platform;
 import components.events.RemoveWaypointAction;
+import components.events.SaveDeliveryAddress;
 import components.mapcanvas.IntersectionSelectionEvent;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -14,7 +16,16 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import models.*;
+import models.AbstractWaypoint;
+import models.CityMap;
+import models.DeliveryAddress;
+import models.DeliveryRequest;
+import models.Intersection;
+import models.Planning;
+import services.command.AddWaypointAfterCommand;
 import services.command.CommandManager;
+import services.command.RemoveWaypointAfterCommand;
+import services.command.RemoveWaypointCommand;
 import services.map.IMapService;
 import services.map.MapService;
 import services.pdf.planningPrinter;
@@ -69,11 +80,22 @@ public class MainController extends BorderPane {
         this.openDeliveryRequestButton.disableProperty().bind(this.cityMap.isNull());
         this.computePlanningButton.setDisable(true);
         this.undoButton.disableProperty().bind(this.commandManager.undoableProperty().not());
-        this.redoButton.disableProperty().bind(this.commandManager.isRedoable().not());
+        this.redoButton.disableProperty().bind(this.commandManager.redoableProperty().not());
         this.generateRoadmapButton.disableProperty().bind(this.planning.isNull());
 
+        
+        this.root.addEventHandler(SaveDeliveryAddress.TYPE, event-> {
+           AbstractWaypoint abstractWaypoint = event.getDeliveryAddress();
+           int index = event.getIndex();
+           AddWaypointAfterCommand addWaypointAfterCommand = new AddWaypointAfterCommand(abstractWaypoint,index,this.planning.getValue(),this.cityMap.getValue());
+           this.commandManager.execute(addWaypointAfterCommand);
+           modifyComputePlanningButtonDisabledProperty(true);
+        });
+        
         this.root.addEventHandler(RemoveWaypointAction.TYPE, removeWaypointAction -> {
-            getPlanning().removeWaypoint(removeWaypointAction.getWaypoint());
+            AbstractWaypoint abstractWaypoint = removeWaypointAction.getWaypoint();
+            RemoveWaypointAfterCommand removeWaypointAfterCommand = new RemoveWaypointAfterCommand(abstractWaypoint,this.planning.getValue(),this.cityMap.getValue());
+            this.commandManager.execute(removeWaypointAfterCommand);
             modifyComputePlanningButtonDisabledProperty(true);
         });
 
@@ -114,7 +136,8 @@ public class MainController extends BorderPane {
     }
 
     public void setPlanning(Planning planning) {
-        planningProperty().setValue(planning);
+        //planningProperty().setValue(planning);
+        Platform.runLater(() -> this.planning.setValue(planning));
     }
 
 

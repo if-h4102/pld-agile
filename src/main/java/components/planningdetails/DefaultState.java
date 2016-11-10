@@ -10,10 +10,6 @@ public class DefaultState extends PlanningDetailsState {
         super(planningDetails);
     }
 
-    protected IPlanningDetailsState onSaveDeliveryAddress() {
-        return this;
-    }
-
     public IPlanningDetailsState onAddWaypointAction(AddWaypointAction action) {
         return new SelectingWaypointState(this.planningDetails, action.getIndex());
     }

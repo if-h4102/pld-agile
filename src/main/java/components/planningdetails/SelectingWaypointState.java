@@ -1,14 +1,16 @@
 package components.planningdetails;
 
 import components.events.AddWaypointAction;
-import components.events.SaveDeliveryAddress;
-import javafx.beans.value.ObservableValue;
+import components.events.CancelAddWaypointAction;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import models.*;
 import org.jetbrains.annotations.NotNull;
 import services.map.IMapService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SelectingWaypointState extends PlanningDetailsState {
     private final int index;
@@ -19,6 +21,8 @@ public class SelectingWaypointState extends PlanningDetailsState {
     }
 
     public IPlanningDetailsState enterState(IPlanningDetailsState previousState) {
+        super.enterState(previousState);
+
         IMapService mapService = this.planningDetails.getMapService();
         if (mapService == null) {
             System.err.println("Missing map service");
@@ -34,7 +38,7 @@ public class SelectingWaypointState extends PlanningDetailsState {
 
     @Override
     @NotNull
-    public IPlanningDetailsState onPlanningWaypointsChange(ListChangeListener.Change<? extends AbstractWaypoint> listChange) {
+    public IPlanningDetailsState onPlanningWaypointsChange(ListChangeListener.Change<? extends PlanningWaypoint> listChange) {
         // Prevent
         return this;
     }
@@ -47,7 +51,28 @@ public class SelectingWaypointState extends PlanningDetailsState {
 
     @Override
     @NotNull
-    public IPlanningDetailsState onAddWaypointAction(AddWaypointAction action) {
-        return this;
+    public IPlanningDetailsState onCancelAddWaypointAction(@NotNull CancelAddWaypointAction action) {
+        return new DefaultState(this.planningDetails);
+    }
+
+    @Override
+    public void refreshView() {
+        super.refreshView();
+        ObservableList<Node> nodes = this.planningDetails.planningDetailsVBox.getChildren();
+        if (nodes.size() == 0) {
+            return;
+        }
+        List<PlanningDetailsItem> itemNodes = new ArrayList<>();
+        for (Node node : nodes) {
+            if (node instanceof PlanningDetailsItem) {
+                itemNodes.add((PlanningDetailsItem) node);
+            } else {
+                System.err.println("Unexpected node");
+                System.err.println(node);
+            }
+        }
+        itemNodes.get(this.index).setDisplayAddButton(false);
+        itemNodes.get(this.index).setDisplayCancelAddButton(true);
+        itemNodes.get(this.index).setDisplayDataBefore(false);
     }
 }
