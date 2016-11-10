@@ -4,16 +4,31 @@ import javafx.event.Event;
 import javafx.event.EventType;
 
 public class SelectIntersectionAction extends Event {
-	public static final EventType<SelectIntersectionAction> TYPE = new EventType<>("SELECT_INTERSECTION_ACTION");
+    
+    /**
+     * Define the event type for the selection of an intersection.
+     */
+    public static final EventType<SelectIntersectionAction> TYPE = new EventType<>("SELECT_INTERSECTION_ACTION");
 
+    /** 
+     * The index of the selected intersection.
+     */
     private final int index;
 
-	public SelectIntersectionAction(int index) {
-		super(SelectIntersectionAction.TYPE);
+    /**
+     * Construct a new event type and define the index of the selected intersection.
+     * @param index The index of the selected intersection.
+     */
+    public SelectIntersectionAction(int index) {
+	super(SelectIntersectionAction.TYPE);
         this.index = index;
-	}
+    }
 
-	public int getIndex() {
+    /**
+     * Return the index of the selected intersection.
+     * @return Return the index of the selected intersection.
+     */
+    public int getIndex() {
         return this.index;
     }
 }

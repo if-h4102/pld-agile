@@ -13,6 +13,9 @@ import models.Intersection;
 
 import java.io.IOException;
 
+/**
+ * This component is a wrapper for a delivery address, it is show in the Planning Details Pane at the right of the canvas
+ */
 public class DeliveryAddressCard extends WaypointCardBase<DeliveryAddress> {
     @FXML
     protected HBox cornerControls;
@@ -25,6 +28,12 @@ public class DeliveryAddressCard extends WaypointCardBase<DeliveryAddress> {
     private SimpleStringProperty timeStart;
     private SimpleStringProperty timeEnd;
 
+    /**Constructor of the delivery address card.
+     * Load the associate fxml file.
+     * Bind the properties corresponding to the fxml objects cornerControls and timeconstraints.
+     * Add a listener to the change of the Waypoint the card contains.
+     * 
+     */
     public DeliveryAddressCard() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/components/waypointcard/DeliveryAddressCard.fxml"));
         fxmlLoader.setRoot(this);
@@ -46,6 +55,10 @@ public class DeliveryAddressCard extends WaypointCardBase<DeliveryAddress> {
     }
 
     // Coordinates
+    /** Create the accessible coordinates for the card
+     * 
+     * @return the coordinates property
+     */
     public final SimpleStringProperty coordinatesProperty() {
         if (coordinates == null) {
             coordinates = new SimpleStringProperty(this, "coordinates");
@@ -53,6 +66,9 @@ public class DeliveryAddressCard extends WaypointCardBase<DeliveryAddress> {
         return coordinates;
     }
 
+    /**
+     * Update the coordinates of the according to the waypoint the card contains.
+     */
     public void updateCoordinates() {
         final DeliveryAddress waypoint = getWaypoint();
         if (waypoint == null) {
@@ -65,6 +81,11 @@ public class DeliveryAddressCard extends WaypointCardBase<DeliveryAddress> {
         setCoordinates("(" + intersection.getX() + "; " + intersection.getY() + ")");
     }
 
+    /**Return the name of the denomination waypoint.
+     * @return "" if the card'waypoint is null, 
+     * "DeliveryAddress" if the card'waypoint is not null 
+     * or "DeliveryAddress + waypoint.id" if the intersection is not ull
+     */
     protected String computeName() {
         DeliveryAddress waypoint = getWaypoint();
         if (waypoint == null) {
@@ -77,30 +98,58 @@ public class DeliveryAddressCard extends WaypointCardBase<DeliveryAddress> {
         return "DeliveryAddress #" + intersection.getId();
     }
 
+    /**Create an accessible boolean to the time constraints. 
+     * 
+     * @return The time constraints property.
+     */
     public final SimpleBooleanProperty hasTimeContraintsProperty() {
         return this.hasTimeContraints;
     }
 
+    /**Enable to know if the Waypoint has timeConstraints or not
+     * 
+     * @return true if it has timeCostraints, false otherwise.
+     */
     public final boolean getHasTimeConstraints() {
         return this.hasTimeContraintsProperty().getValue();
     }
 
+    /**Set the timeConstraints true or false
+     * 
+     * @param value - True if it has timeCostraints, false otherwise.
+     */
     public final void setHasTimeContraints(boolean value) {
         this.hasTimeContraintsProperty().setValue(value);
     }
 
+    /**
+     * @return The observable property for the current content (most specific card for the current waypoint).
+     */
     public ObservableList<Node> getCornerControls() {
         return cornerControls.getChildren();
     }
 
+    /**Get the coordinates of the card.
+     * 
+     * @return The card coordinates.
+     */
     public final String getCoordinates() {
         return coordinatesProperty().getValue();
     }
 
+    /**Set the coordinates of the card
+     * 
+     * @param value - The new coordinates.
+     */
     public final void setCoordinates(String value) {
         coordinatesProperty().setValue(value);
     }
 
+    /** Update the coordinates of the card according to the new delivery address.
+     * 
+     * @param oldValue
+     * @param newValue - The new delivery address
+     */
     protected void onWaypointChange(DeliveryAddress oldValue, DeliveryAddress newValue) {
         if (oldValue == newValue) {
             return;
