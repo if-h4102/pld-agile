@@ -55,7 +55,7 @@ parent identique.
 
 La communication entre composants se fait de 3 manière:
 - Un noeud parent peut fournir des données à un noeud enfant (cas classique
-  pour l'affichage de données: le parent un objet complexe et il passe un
+  pour l'affichage de données: le parent est un objet complexe et il passe un
   des attributs à un composant dédié à son affiche (ex: horaires))
 - Un noeud enfant peut émettre un événement pour notifier ses ancêtres.
   On l'utilise quand un événement est créée en profondeur mais il faut un
@@ -76,6 +76,6 @@ et pour la racine (cf diagramme d'état-transition UML).
 
 Certains composants réutilises des services pour faire des tâches spécifiques.
 On les as isolé dans des packages séparés (résolution du tsp, rendu du PDF du
-planning).
+planning, parser).
 
 
