@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.11" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+  <class id="1" language="java" name="services.xml.exception.ParserBoundedNodesNumberException" project="pld-agile" 
+    file="/pld-agile/src/main/java/services/xml/exception/ParserBoundedNodesNumberException.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="143" width="277" x="1533" y="316"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="false" static="true"/>      
+      <operations public="true" package="true" protected="true" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="services.xml.exception.ParserMissingAttributeException" project="pld-agile" 
+    file="/pld-agile/src/main/java/services/xml/exception/ParserMissingAttributeException.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="107" width="201" x="231" y="133"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="false" static="true"/>      
+      <operations public="true" package="true" protected="true" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="services.xml.exception.ParserTimeConstraintsException" project="pld-agile" 
+    file="/pld-agile/src/main/java/services/xml/exception/ParserTimeConstraintsException.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="107" width="203" x="472" y="133"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="false" static="true"/>      
+      <operations public="true" package="true" protected="true" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="services.xml.exception.ParserNodesNumberException" project="pld-agile" 
+    file="/pld-agile/src/main/java/services/xml/exception/ParserNodesNumberException.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="143" width="228" x="1691" y="133"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="false" static="true"/>      
+      <operations public="true" package="true" protected="true" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="services.xml.exception.ParserTimeSyntaxException" project="pld-agile" 
+    file="/pld-agile/src/main/java/services/xml/exception/ParserTimeSyntaxException.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="107" width="187" x="1959" y="133"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="false" static="true"/>      
+      <operations public="true" package="true" protected="true" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="services.xml.exception.ParserIntegerValueException" project="pld-agile" 
+    file="/pld-agile/src/main/java/services/xml/exception/ParserIntegerValueException.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="125" width="198" x="715" y="133"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="false" static="true"/>      
+      <operations public="true" package="true" protected="true" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" name="services.xml.exception.ParserMalformedXmlException" project="pld-agile" 
+    file="/pld-agile/src/main/java/services/xml/exception/ParserMalformedXmlException.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="107" width="197" x="2186" y="133"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="false" static="true"/>      
+      <operations public="true" package="true" protected="true" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="services.xml.exception.ParserException" project="pld-agile" 
+    file="/pld-agile/src/main/java/services/xml/exception/ParserException.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="107" width="146" x="1378" y="-161"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="false" static="true"/>      
+      <operations public="true" package="true" protected="true" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="services.xml.exception.ParserSemanticException" project="pld-agile" 
+    file="/pld-agile/src/main/java/services/xml/exception/ParserSemanticException.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="107" width="178" x="953" y="-14"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="false" static="true"/>      
+      <operations public="true" package="true" protected="true" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="10" language="java" name="services.xml.exception.ParserShouldBeIntegerValueException" project="pld-agile" 
+    file="/pld-agile/src/main/java/services/xml/exception/ParserShouldBeIntegerValueException.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="107" width="220" x="953" y="133"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="false" static="true"/>      
+      <operations public="true" package="true" protected="true" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="11" language="java" name="services.xml.exception.ParserDuplicateObjectException" project="pld-agile" 
+    file="/pld-agile/src/main/java/services/xml/exception/ParserDuplicateObjectException.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="125" width="224" x="1213" y="133"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="false" static="true"/>      
+      <operations public="true" package="true" protected="true" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="12" language="java" name="services.xml.exception.ParserSyntaxException" project="pld-agile" 
+    file="/pld-agile/src/main/java/services/xml/exception/ParserSyntaxException.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="107" width="169" x="1803" y="-14"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="false" static="true"/>      
+      <operations public="true" package="true" protected="true" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="13" language="java" name="services.xml.exception.ParserInvalidIdException" project="pld-agile" 
+    file="/pld-agile/src/main/java/services/xml/exception/ParserInvalidIdException.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="107" width="174" x="1477" y="133"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="false" static="true"/>      
+      <operations public="true" package="true" protected="true" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="14" language="java" name="services.xml.exception.ParserLowerBoundedNodesNumberException" 
+    project="pld-agile" 
+    file="/pld-agile/src/main/java/services/xml/exception/ParserLowerBoundedNodesNumberException.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="125" width="288" x="1850" y="316"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="false" static="true"/>      
+      <operations public="true" package="true" protected="true" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <generalization id="15">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="9"/>  
+  </generalization>  
+  <generalization id="16">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="9"/>  
+  </generalization>  
+  <generalization id="17">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="9"/>  
+  </generalization>  
+  <generalization id="18">    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <generalization id="19">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="12"/>  
+  </generalization>  
+  <generalization id="20">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <generalization id="21">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="9"/>  
+  </generalization>  
+  <generalization id="22">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="9"/>  
+  </generalization>  
+  <generalization id="23">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="12"/>  
+  </generalization>  
+  <generalization id="24">    
+    <end type="SOURCE" refId="11"/>    
+    <end type="TARGET" refId="9"/>  
+  </generalization>  
+  <generalization id="25">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="12"/>  
+  </generalization>  
+  <generalization id="26">    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="8"/>  
+  </generalization>  
+  <generalization id="27">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="8"/>  
+  </generalization>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="false" static="true"/>    
+    <operations public="true" package="true" protected="true" private="false" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
