@@ -55,20 +55,10 @@ public abstract class PlanningDetailsState implements IPlanningDetailsState {
             newValue.planningWaypointsProperty().addListener(this.planningDetails::onPlanningWaypointsChange);
         }
         this.refreshView();
-        return this;
+        return new DefaultState(this.planningDetails);
     }
 
     public IPlanningDetailsState onActiveWaypointChange(ObservableValue<? extends AbstractWaypoint> observable, AbstractWaypoint oldValue, AbstractWaypoint newValue) {
-        if (oldValue == newValue) {
-            return this;
-        }
-        if (oldValue != null) {
-            //oldValue.removeListener(this.::onPlanningWaypointsChange);
-        }
-        if (newValue != null) {
-            //newValue.waypointsProperty().addListener(this.planningDetails::onPlanningWaypointsChange);
-        	//newValue.
-        }
         return this;
     }
 
