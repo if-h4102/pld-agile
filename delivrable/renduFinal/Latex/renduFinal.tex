@@ -1,0 +1,96 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[top=3cm, bottom=3cm, left=3cm, right=3cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[francais]{babel}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{eurosym}
+\usepackage{hyperref}
+\usepackage{csvsimple}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{placeins}
+
+\begin{document}
+
+\begin{titlepage}
+  \input{titlepage.tex}
+\end{titlepage}
+\tableofcontents
+\pagebreak
+
+\listoffigures
+\pagebreak
+
+
+\section{Retour sur le PLD Agile}
+\subsection{Organisation des séances}
+\paragraph{}
+Nous avons trouvé dommages que les séances s’enchaînent à deux par semaines, car cela nous laisser peu de temps pour travailler entre chaque séance. De plus, le PLD Mars était effectué sur la même période de temps, les deux PLD combiné représentait une charge de travail importante. 
+
+\subsection{Présentation du sujet}
+\paragraph{}
+Le sujet était intéressant dans le fait qu’il était très complet. En effet, les projets de 3IF ne traitaient la plupart du temps que d’un seul point (algorithmie, IHM, stockage de données…), alors que le PLD, en traitant de tous ces points, permettait d’aborder chacun de ces problèmes, mais aussi les difficultés qu’ils pouvaient y avoir à relier ces parties.
+
+\subsection{Organisation de l’agilité}
+\paragraph{}
+J’ai eu l’impression que l’organisation au sein de l’équipe se faisait en très grande partie lors des séances. C’est-à-dire qu’on avançait chacun de son côté chez nous, et le cours nous servait de recentrage. 
+
+\FloatBarrier
+\section{Description textuelle des cas d’utilisation}
+  \input{project/use-cases/add-delivery-address-in-delivery-request_fr_FR.tex}
+  \input{project/use-cases/remove-delivery-address-in-delivery-request_fr_FR.tex}
+  \input{project/use-cases/undo-modification-on-delivery-request_fr_FR.tex} 
+  \input{project/use-cases/redo-modification-on-delivery-request_fr_FR.tex} 
+  \input{project/use-cases/generate-itinerary-text_fr_FR.tex} 
+
+  
+%mettre à jour avec les donnée rétro générer  
+\FloatBarrier
+\input{retrogenerated_uml/uml.tex}
+
+\FloatBarrier
+\input{docs/architecture.tex}
+
+
+\FloatBarrier
+\section{Couverture de tests}
+\subsection{Réalisation des tests}
+\paragraph{}
+Nous avons utilisé Junit pour les tests unitaires afin de vérifier le bon fonctionnement du parser, de l’algorithme de Dijkstra ainsi que de l’algorithme du TSP.
+
+\subsection{Tests de non régression}
+\paragraph{}
+L’intégration de Travis Cl sur Slack que nous utilisons comme outil de communication nous a permis d’observer les résultats de l’ensemble des tests unitaires à chaque push sur le répertoire git et ainsi de contrôler la non régression du code.
+
+\subsection{Couverture de code}
+\paragraph{}
+La couverture de code réalise avec EclEmma indique un résultat de 43 \%. Cela s’explique par la part importante de code lié à l’IHM qui, elle, n’a pas été testé. 
+
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[width=\linewidth,height=.7\paperheight,keepaspectratio]{couverture.png}
+    \caption{Couverture des tests}
+    \label{fig:}
+  \end{center}
+\end{figure}
+
+
+
+%mettre à jour les planning des différentes itérations
+\FloatBarrier
+\section{Planning effectif de la première itération}
+  \input{charges/charges_it1.tex}
+  
+\FloatBarrier
+\section{Planning effectif de la deuxième itération}
+  \input{charges/charges_it2.tex}
+  
+\FloatBarrier
+\section{Planning effectif de la troisième itération}
+  \input{charges/charges_it3.tex}
+
+\end{document}

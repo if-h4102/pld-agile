@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class-diagram version="1.1.11" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
-  associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+<class-diagram version="1.1.11" icons="true" automaticImage="PNG" always-add-relationships="false" 
+  generalizations="true" realizations="true" associations="true" dependencies="false" nesting-relationships="true" 
+  router="FAN">  
   <package id="1" language="java" name="components.application" project="pld-agile" 
     file="/pld-agile/src/main/java/components/application" binary="false" corner="BOTTOM_RIGHT">    
     <position height="46" width="134" x="310" y="297"/>    
@@ -18,7 +19,7 @@
   </package>  
   <package id="4" language="java" name="components.events" project="pld-agile" 
     file="/pld-agile/src/main/java/components/events" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="389" y="201"/>    
+    <position height="-1" width="-1" x="412" y="201"/>    
     <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
   </package>  
   <package id="5" language="java" name="components.exceptionwindow" project="pld-agile" 
@@ -62,52 +63,52 @@
     <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
   </package>  
   <dependency id="13">    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="12"/>  
-  </dependency>  
-  <dependency id="14">    
     <end type="SOURCE" refId="1"/>    
     <end type="TARGET" refId="5"/>  
   </dependency>  
-  <dependency id="15">    
+  <dependency id="14">    
     <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="4"/>  
+    <end type="TARGET" refId="8"/>  
+  </dependency>  
+  <dependency id="15">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="7"/>  
   </dependency>  
   <dependency id="16">    
     <end type="SOURCE" refId="9"/>    
-    <end type="TARGET" refId="8"/>  
-  </dependency>  
-  <dependency id="17">    
-    <end type="SOURCE" refId="12"/>    
-    <end type="TARGET" refId="11"/>  
-  </dependency>  
-  <dependency id="18">    
-    <end type="SOURCE" refId="3"/>    
-    <end type="TARGET" refId="12"/>  
-  </dependency>  
-  <dependency id="19">    
-    <end type="SOURCE" refId="9"/>    
     <end type="TARGET" refId="7"/>  
   </dependency>  
-  <dependency id="20">    
-    <end type="SOURCE" refId="9"/>    
-    <end type="TARGET" refId="12"/>  
+  <dependency id="17">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="4"/>  
   </dependency>  
-  <dependency id="21">    
+  <dependency id="18">    
     <bendpoint x="405" y="123"/>    
     <end type="SOURCE" refId="10"/>    
     <end type="TARGET" refId="4"/>  
   </dependency>  
+  <dependency id="19">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="12"/>  
+  </dependency>  
+  <dependency id="20">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="12"/>  
+  </dependency>  
+  <dependency id="21">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="12"/>  
+  </dependency>  
   <dependency id="22">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="7"/>  
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="11"/>  
   </dependency>  
   <dependency id="23">    
     <end type="SOURCE" refId="12"/>    
     <end type="TARGET" refId="4"/>  
   </dependency>  
   <dependency id="24">    
-    <end type="SOURCE" refId="1"/>    
+    <end type="SOURCE" refId="9"/>    
     <end type="TARGET" refId="8"/>  
   </dependency>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 

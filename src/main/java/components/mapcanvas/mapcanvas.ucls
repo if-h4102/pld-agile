@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class-diagram version="1.1.11" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
-  associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+<class-diagram version="1.1.11" icons="true" automaticImage="PNG" always-add-relationships="false" 
+  generalizations="true" realizations="true" associations="true" dependencies="false" nesting-relationships="true" 
+  router="FAN">  
   <class id="1" language="java" name="components.mapcanvas.MapCanvas" project="pld-agile" 
     file="/pld-agile/src/main/java/components/mapcanvas/MapCanvas.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="339" y="236"/>    
@@ -33,7 +34,7 @@
   <class id="4" language="java" name="components.mapcanvas.DeliverySelectionEvent" project="pld-agile" 
     file="/pld-agile/src/main/java/components/mapcanvas/DeliverySelectionEvent.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="728" y="238"/>    
+    <position height="-1" width="-1" x="725" y="237"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="false" static="true"/>      
