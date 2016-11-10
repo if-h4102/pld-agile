@@ -22,6 +22,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 
+ * The canvas in which all the map will be draw, the planning and the deliveries will also be show here.
+ *
+ */
 public class MapCanvas extends Canvas {
     private static final CityMap DEFAULT_CITY_MAP = null;
     private static final DeliveryRequest DEFAULT_DELIVERY_REQUEST = null;
@@ -45,12 +50,15 @@ public class MapCanvas extends Canvas {
     private final SimpleObjectProperty<IMapService> mapService = new SimpleObjectProperty<>(this, "mapService", null);
     private final ListChangeListener<PlanningWaypoint> planningChangeListener;
 
+    /**
+     * Constructor of the map canvas, the zone in which the map will be drawn.
+     */
     @SuppressWarnings("restriction")
     public MapCanvas() {
         final MapCanvas self = this;
 
+        //Accord eachproperty to the appropriate listener : the draw function of the map.
         this.planningChangeListener = change -> self.draw();
-
         widthProperty().addListener(event -> draw());
         heightProperty().addListener(event -> draw());
         zoomProperty().addListener(event -> draw());
@@ -60,6 +68,9 @@ public class MapCanvas extends Canvas {
         deliveryRequestProperty().addListener(event -> draw());
         this.mapServiceProperty().addListener(this::onMapServiceChange);
 
+        /** Add a listener to the planning property to get any changes it might undergo.
+         * 
+         */
         planningProperty().addListener((observableValue, oldPlanning, newPlanning) -> {
             if (oldPlanning != null) {
                 oldPlanning.planningWaypointsProperty().removeListener(self.planningChangeListener);
@@ -70,8 +81,18 @@ public class MapCanvas extends Canvas {
             self.draw();
         });
 
+        /**Add an event handler class to the canvas in order to 
+         * @param mouseEvent
+         * @param 
+         */
         this.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
+            /**The handle method of the handler. Triggers event according to the type of the place the mouse has clicked.
+             * 
+             * @param e - The mouseEvent we handle : we get his coordinates and determines whether it is or not an intersection, 
+             * a warehouse or a delivery address. We need first to transform its coordinates according to the current size of the map, 
+             * the zoom factor and the translation she underwent.
+             */
             public void handle(MouseEvent e) {
                 double eventX = e.getX();
                 double eventY = e.getY();
@@ -79,47 +100,45 @@ public class MapCanvas extends Canvas {
                 eventY /= calZoom;
                 eventX += DEFAULT_OFFSET_X;
                 eventY += DEFAULT_OFFSET_Y;
-                DeliverySelectionEvent nullDeliverclear = new DeliverySelectionEvent(null, e.getX(), e.getY());
-                fireEvent(nullDeliverclear);
-                IntersectionSelectionEvent nullIntersectclear = new IntersectionSelectionEvent(null, e.getX(), e.getY());
-                fireEvent(nullIntersectclear);
-                WarehouseSelectionEvent nullWarehouseclear = new WarehouseSelectionEvent(null, e.getX(), e.getY());
-                fireEvent(nullWarehouseclear);
+                
+                //First check if it is the deliveryRequest has been loaded
                 if(getDeliveryRequest() != null){
+                	//First check if the location is the warehouse, if it is, make other tooltips disappear
                 	Warehouse warehouse = getDeliveryRequest().getWarehouse();
                 	if (eventX < warehouse.getX() + DEFAULT_DELIVERY_SIZE / 2 && eventX > warehouse.getX() - DEFAULT_DELIVERY_SIZE / 2
                             && eventY < warehouse.getY() + DEFAULT_DELIVERY_SIZE / 2 && eventY > warehouse.getY() - DEFAULT_DELIVERY_SIZE / 2){
                 		WarehouseSelectionEvent warehouseEvent = new WarehouseSelectionEvent(warehouse, e.getX(), e.getY());
                         fireEvent(warehouseEvent);
-                        DeliverySelectionEvent nullDeliver = new DeliverySelectionEvent(null, e.getX(), e.getY());
+                        DeliverySelectionEvent nullDeliver = new DeliverySelectionEvent(null, 0, 0);
                         fireEvent(nullDeliver);
-                        IntersectionSelectionEvent nullIntersect = new IntersectionSelectionEvent(null, e.getX(), e.getY());
+                        IntersectionSelectionEvent nullIntersect = new IntersectionSelectionEvent(null, 0, 0);
                         fireEvent(nullIntersect);
                         return;
                 	}
+                	//Then check if the location is a delivery Request, if it is, make other tooltips disappear
                     listDeliveryAddresses = getDeliveryRequest().getDeliveryAddresses();
                     for(DeliveryAddress delivery : listDeliveryAddresses){
                         if (eventX < delivery.getX() + DEFAULT_DELIVERY_SIZE / 2 && eventX > delivery.getX() - DEFAULT_DELIVERY_SIZE / 2
                             && eventY < delivery.getY() + DEFAULT_DELIVERY_SIZE / 2 && eventY > delivery.getY() - DEFAULT_DELIVERY_SIZE / 2) {
                             DeliverySelectionEvent deliver = new DeliverySelectionEvent(delivery, e.getX(), e.getY());
                             fireEvent(deliver);
-                            IntersectionSelectionEvent nullIntersect = new IntersectionSelectionEvent(null, e.getX(), e.getY());
+                            IntersectionSelectionEvent nullIntersect = new IntersectionSelectionEvent(null, 0, 0);
                             fireEvent(nullIntersect);
-                            WarehouseSelectionEvent nullWarehouse = new WarehouseSelectionEvent(null, e.getX(), e.getY());
+                            WarehouseSelectionEvent nullWarehouse = new WarehouseSelectionEvent(null, 0, 0);
                             fireEvent(nullWarehouse);
                             return;
                         }
                     }
                 }
-
+                //Finally, check if the location is an Intersection, if it is, make other tooltips disappear
                 for (Intersection inter : intersections) {
                     if (eventX < inter.getX() + DEFAULT_INTERSECTION_SIZE / 2 && eventX > inter.getX() - DEFAULT_INTERSECTION_SIZE / 2
                         && eventY < inter.getY() + DEFAULT_INTERSECTION_SIZE / 2 && eventY > inter.getY() - DEFAULT_INTERSECTION_SIZE / 2) {
                         IntersectionSelectionEvent intersect = new IntersectionSelectionEvent(inter, e.getX(), e.getY());
                         fireEvent(intersect);
-                        DeliverySelectionEvent nullDeliver = new DeliverySelectionEvent(null, e.getX(), e.getY());
+                        DeliverySelectionEvent nullDeliver = new DeliverySelectionEvent(null, 0, 0);
                         fireEvent(nullDeliver);
-                        WarehouseSelectionEvent nullWarehouse = new WarehouseSelectionEvent(null, e.getX(), e.getY());
+                        WarehouseSelectionEvent nullWarehouse = new WarehouseSelectionEvent(null, 0, 0);
                         fireEvent(nullWarehouse);
                         return;
                     }
@@ -131,6 +150,9 @@ public class MapCanvas extends Canvas {
     }
 
     @SuppressWarnings("restriction")
+    /**Clear the zone where the map is drawn.
+     * 
+     */
     private void clear() {
         double width = getWidth();
         double height = getHeight();
@@ -140,6 +162,10 @@ public class MapCanvas extends Canvas {
     }
 
     @SuppressWarnings("restriction")
+    /**Update the zoomfactor, the offset x and the offset y of the map, also resize the map in order 
+     * to fit it in the zone seen by the user.
+     * 
+     */
     private void updateTransform() {
         double width = getWidth();
         double height = getHeight();
@@ -178,6 +204,9 @@ public class MapCanvas extends Canvas {
 
 
     @SuppressWarnings("restriction")
+    /**Check if the deliveryRequest and the Planning are loaded and draw the in the canvas if so.
+     * 
+     */
     private void draw() {
         clear();
 
@@ -198,16 +227,27 @@ public class MapCanvas extends Canvas {
         }
     }
 
+    /**return if the map is resizable or not.
+     * @return isresizable a boolean (true if resizable and false if not).
+     */
     @Override
     public boolean isResizable() {
         return true;
     }
 
+    /**Get the preferred width of the mapscreen.
+     * 
+     * @return width
+     */
     @Override
     public double prefWidth(double width) {
         return width;
     }
 
+    /**Get the preferred Height of the mapscreen.
+     * 
+     * @return height
+     */
     @Override
     public double prefHeight(double height) {
         return height;
@@ -234,14 +274,18 @@ public class MapCanvas extends Canvas {
         cityMapProperty().setValue(value);
     }
 
+    /**
+     * 
+     * @return
+     */
     public final CityMap getCityMap() {
         return cityMap == null ? DEFAULT_CITY_MAP : cityMap.getValue();
     }
 
     /**
-     * The deliveryRequest with waypoints to display
+     * Get the deliveryRequest property of the map;
      *
-     * @return The cityMap property
+     * @return deliveryRequestproperty - The property of the current delivery request
      */
     public final SimpleObjectProperty<DeliveryRequest> deliveryRequestProperty() {
         if (deliveryRequest == null) {
@@ -251,22 +295,26 @@ public class MapCanvas extends Canvas {
     }
 
     /**
-     * Set the delivery request
+     * Set the current value of the delivery request.
      *
-     * @param value
+     * @param deliveryRequest - The new value of the delivery request. 
      */
     public final void setDeliveryRequest(DeliveryRequest value) {
         deliveryRequestProperty().setValue(value);
     }
 
+    /**Get the current deliveryRequest of the map. 
+     * 
+     * @return deliveryRequest - The delivery request currently loaded in the map
+     */
     public final DeliveryRequest getDeliveryRequest() {
         return deliveryRequest == null ? DEFAULT_DELIVERY_REQUEST : deliveryRequest.getValue();
     }
 
     /**
-     * The cityMap to display
+     * Get the current planningProperty of the map. 
      *
-     * @return The planning property
+     * @return planningProperty - The planning property
      */
     public final SimpleObjectProperty<Planning> planningProperty() {
         if (planning == null) {
@@ -276,14 +324,18 @@ public class MapCanvas extends Canvas {
     }
 
     /**
-     * Set the planning
+     * Set the value of the current Planning
      *
-     * @param value
+     * @param value - The new value of the planning.
      */
     public final void setPlanning(Planning value) {
         planningProperty().bind(new SimpleObjectProperty<Planning>(value));
     }
 
+    /**Get the currentPlanning contained by the map.
+     * 
+     * @return planning - The planning of the client's delivery.
+     */
     public final Planning getPlanning() {
         return planning == null ? DEFAULT_PLANNING : planning.getValue();
     }
@@ -291,7 +343,7 @@ public class MapCanvas extends Canvas {
     /**
      * The zoom factor to use.
      *
-     * @return The zoom property
+     * @return zoomProperty - The zoom property.
      */
     public final DoubleProperty zoomProperty() {
         if (zoom == null) {
@@ -303,20 +355,24 @@ public class MapCanvas extends Canvas {
     /**
      * Set the zoom factor of the map
      *
-     * @param value
+     * @param value the value of the zoom.
      */
     public final void setZoom(double value) {
         zoomProperty().bind(new SimpleDoubleProperty(value));
     }
 
+    /**Return the zoom factor of the map.
+     * 
+     * @return Value of the zoom.
+     */
     public final double getZoom() {
         return zoom == null ? DEFAULT_ZOOM : zoom.getValue();
     }
 
     /**
-     * The offsetX of the map
+     * Return the offsetX property of the map.
      *
-     * @return offsetX property
+     * @return offsetXProperty which enable dynamic modifications.
      */
     public final DoubleProperty offsetXProperty() {
         if (offsetX == null) {
@@ -328,12 +384,16 @@ public class MapCanvas extends Canvas {
     /**
      * Set the offset x of the map
      *
-     * @param value offsetX value
+     * @param offsetX : the translation along the x-axis the map undergo on the screen.
      */
     public final void setOffsetX(double value) {
         offsetXProperty().setValue(value);
     }
 
+    /**Return the offset x of the map
+ 	* 
+ 	* @return offsetX : the translation along the x-axis the map undergo on the screen.
+ 	*/
     public final double getOffsetX() {
         return offsetX == null ? DEFAULT_OFFSET_X : offsetX.getValue();
     }
@@ -341,7 +401,7 @@ public class MapCanvas extends Canvas {
     /**
      * The offset y of the map
      *
-     * @return offsetY property
+     * @return offsetY : the translation along the x-axis the map undergo on the screen.
      */
     public final DoubleProperty offsetYProperty() {
         if (offsetY == null) {
@@ -358,23 +418,45 @@ public class MapCanvas extends Canvas {
     public final void setOffsetY(double value) {
         offsetYProperty().setValue(value);
     }
-
+    
+    /**Return the offset x of the map
+ 	* 
+ 	* @return offset X
+ 	*/
     public final double getOffsetY() {
         return offsetY == null ? DEFAULT_OFFSET_Y : offsetY.getValue();
     }
-
+    
+    /**Return the property of the interface MapService
+     * 
+     * @return offset Y
+     */
     public SimpleObjectProperty<IMapService> mapServiceProperty() {
         return this.mapService;
     }
 
+    /** Return the interface of the serviceMap 
+     * 
+     * @return
+     */
     public IMapService getMapService() {
         return this.mapServiceProperty().getValue();
     }
 
+    /** Set the interface of the serviceMap
+     * 
+     * @param value the interface of the serviceMap
+     */
     public void setMapService(IMapService value) {
         this.mapServiceProperty().setValue(value);
     }
-
+    
+/** Receive the announce of the MapService changes and notify the event to the MapScreen
+ * 
+ * @param observable
+ * @param oldValue
+ * @param newValue
+ */
     protected void onMapServiceChange(ObservableValue<? extends IMapService> observable, IMapService oldValue, IMapService newValue) {
         if (oldValue == newValue) {
             return;
@@ -386,9 +468,14 @@ public class MapCanvas extends Canvas {
             newValue.activeWaypointProperty().addListener(this::onActiveWaypointChange);
         }
     }
-
+    
+    /** Receive the announce of the Waypoint changes and notify the event to the MapScreen
+     * 
+     * @param observable 
+     * @param oldValue
+     * @param newValue
+     */
     protected void onActiveWaypointChange(ObservableValue<? extends AbstractWaypoint> observable, AbstractWaypoint oldValue, AbstractWaypoint newValue) {
-    		System.out.println("heya : "+newValue.getId());
     		double eventX = newValue.getX() - DEFAULT_OFFSET_X ;
             double eventY = newValue.getY() - DEFAULT_OFFSET_Y ;
             eventX *= calZoom;
@@ -418,18 +505,4 @@ public class MapCanvas extends Canvas {
                 }
             }
     }
-
-    /*
-    public void mousePressed(MouseEvent mouseEvent) {
-        System.out.println("Start drag"+mouseEvent.getX()+" "+mouseEvent.getY());
-
-    }
-
-    public void mouseDragged(MouseEvent mouseEvent) {
-        System.out.println("dragged");
-    }
-
-    public void mouseReleased(MouseEvent mouseEvent) {
-        System.out.println("Released");
-    }*/
 }
