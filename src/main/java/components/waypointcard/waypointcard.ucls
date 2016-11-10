@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class-diagram version="1.1.11" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
-  associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+<class-diagram version="1.1.11" icons="true" automaticImage="PNG" always-add-relationships="false" 
+  generalizations="true" realizations="true" associations="true" dependencies="false" nesting-relationships="true" 
+  router="FAN">  
   <class id="1" language="java" name="components.waypointcard.WaypointCardBase" project="pld-agile" 
     file="/pld-agile/src/main/java/components/waypointcard/WaypointCardBase.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="269" width="191" x="341" y="5"/>    
@@ -58,25 +59,25 @@
     </display>  
   </class>  
   <generalization id="7">    
-    <end type="SOURCE" refId="3"/>    
+    <end type="SOURCE" refId="2"/>    
     <end type="TARGET" refId="1"/>  
   </generalization>  
   <generalization id="8">    
-    <end type="SOURCE" refId="2"/>    
+    <end type="SOURCE" refId="3"/>    
     <end type="TARGET" refId="1"/>  
   </generalization>  
   <realization id="9">    
     <end type="SOURCE" refId="6"/>    
     <end type="TARGET" refId="5"/>  
   </realization>  
-  <realization id="10">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="5"/>  
-  </realization>  
-  <generalization id="11">    
+  <generalization id="10">    
     <end type="SOURCE" refId="4"/>    
     <end type="TARGET" refId="1"/>  
   </generalization>  
+  <realization id="11">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="5"/>  
+  </realization>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="false" static="true"/>    

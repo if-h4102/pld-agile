@@ -1,0 +1,46 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[top=3cm, bottom=3cm, left=3cm, right=3cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[francais]{babel}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{eurosym}
+\usepackage{hyperref}
+\usepackage{csvsimple}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{placeins}
+
+\begin{document}
+
+\begin{titlepage}
+  \input{titlepage.tex}
+\end{titlepage}
+\tableofcontents
+\pagebreak
+
+
+
+\FloatBarrier
+\section{Description textuelle des cas d’utilisation}
+  \input{project/use-cases/add-delivery-address-in-delivery-request_fr_FR.tex}
+  \input{project/use-cases/remove-delivery-address-in-delivery-request_fr_FR.tex}
+  \input{project/use-cases/undo-modification-on-delivery-request_fr_FR.tex} 
+  \input{project/use-cases/redo-modification-on-delivery-request_fr_FR.tex} 
+  \input{project/use-cases/generate-itinerary-text_fr_FR.tex} 
+
+  
+%mettre à jour avec les donnée rétro générer  
+\FloatBarrier
+\input{retrogenerated_uml/uml.tex}
+
+
+%mettre à jour les planning des différentes itérations
+\FloatBarrier
+\section{Planning effectif de la première itération}
+  \input{charges/charges.tex}
+
+\end{document}
