@@ -39,7 +39,11 @@ public class DeliveryRequest {
         this.cityMap = cityMap;
         this.warehouse = warehouse;
         this.deliveryAddresses = new TreeSet<DeliveryAddress>();
-        this.deliveryAddresses.forEach(this::addDeliveryAddress);
+        //this.deliveryAddresses.forEach(this::addDeliveryAddress);
+        this.deliveryAddresses = new TreeSet<DeliveryAddress>();
+        for (DeliveryAddress deliveryAddress : deliveryAddresses) {
+            this.deliveryAddresses.add(deliveryAddress);
+        }
         this.startPlanningTimestamp = startPlanningTimestamp;
     }
 
