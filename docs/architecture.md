@@ -53,7 +53,7 @@ manière assez indépendante à condition de garder l'interface avec le noeud
 parent identique.
 
 
-La communication entre composants se fait de 3 manière:
+La communication entre composants se fait de 3 manières:
 - Un noeud parent peut fournir des données à un noeud enfant (cas classique
   pour l'affichage de données: le parent est un objet complexe et il passe un
   des attributs à un composant dédié à son affiche (ex: horaires))
