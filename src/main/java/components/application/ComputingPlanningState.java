@@ -1,13 +1,15 @@
 package components.application;
 
 
-import java.lang.management.PlatformLoggingMXBean;
 import models.DeliveryGraph;
 import models.DeliveryRequest;
 import models.Planning;
 import services.tsp.BasicBoundTspSolver;
 import services.tsp.TspSolver;
 
+/**
+ * This class represents the state of the application when the planning is computing.
+ */
 public class ComputingPlanningState extends WaitOpenDeliveryRequestState implements TspCompletedListener{
     private long beforeDijkstraTime;
     private long beforeTspTime;
@@ -33,16 +35,6 @@ public class ComputingPlanningState extends WaitOpenDeliveryRequestState impleme
         tspSolver.addListener(this);
         tspSolver.start();
         mainController.setTextToComputePlanningButton("Interrupt");
-        
-//        try {
-//            this.solverThread.join();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        Planning planning = tspSolver.getBestPlanning();
-//        mainController.setPlanning(planning);
-//
-//        mainController.applyState(new ComputedPlanningState(mainController));
     }
 
     @Override
@@ -56,6 +48,9 @@ public class ComputingPlanningState extends WaitOpenDeliveryRequestState impleme
     }
 
     @Override
+    /**
+     * When this method is called, the compute button has become "interrupt".
+     */
     public MainControllerState onComputePlanningButtonAction() {
         if (tspSolver != null)
             tspSolver.stopComputing();
