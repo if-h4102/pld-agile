@@ -3,7 +3,7 @@ package services.tsp;
 import models.*;
 import java.util.*;
 
-public class BasicTspSolver extends AbstractTspSolver {
+public class BasicTspSolver extends AbstractThreadedTspSolver {
 
     protected Warehouse startPoint;
 

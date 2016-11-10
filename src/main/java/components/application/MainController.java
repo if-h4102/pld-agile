@@ -1,5 +1,6 @@
 package components.application;
 
+import javafx.application.Platform;
 import components.events.RemoveWaypointAction;
 import components.events.SaveDeliveryAddress;
 import components.mapcanvas.IntersectionSelectionEvent;
@@ -135,7 +136,8 @@ public class MainController extends BorderPane {
     }
 
     public void setPlanning(Planning planning) {
-        planningProperty().setValue(planning);
+        //planningProperty().setValue(planning);
+        Platform.runLater(() -> this.planning.setValue(planning));
     }
 
     // mapZoom

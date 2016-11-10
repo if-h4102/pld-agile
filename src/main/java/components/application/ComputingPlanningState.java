@@ -1,15 +1,14 @@
 package components.application;
 
 
+import java.lang.management.PlatformLoggingMXBean;
 import models.DeliveryGraph;
 import models.DeliveryRequest;
 import models.Planning;
-import services.pdf.planningPrinter;
 import services.tsp.BasicBoundTspSolver;
-import services.tsp.ThreadedTspSolver;
+import services.tsp.TspSolver;
 
-public class ComputingPlanningState extends WaitOpenDeliveryRequestState {
-    private Thread solverThread;
+public class ComputingPlanningState extends WaitOpenDeliveryRequestState implements TspCompletedListener{
     private long beforeDijkstraTime;
     private long beforeTspTime;
     private long completionTime;
@@ -28,22 +27,20 @@ public class ComputingPlanningState extends WaitOpenDeliveryRequestState {
         DeliveryGraph deliveryGraph = deliveryRequest.computeDeliveryGraph();
 
         this.beforeTspTime = System.nanoTime();
-        ThreadedTspSolver tspSolver = new BasicBoundTspSolver();
+        TspSolver tspSolver = new BasicBoundTspSolver();
         tspSolver.setDeliveryGraph(deliveryGraph);
-        this.solverThread = new Thread(tspSolver);
-        this.solverThread.start();
-
-        try {
-            this.solverThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        Planning planning = tspSolver.getBestPlanning();
-        mainController.setPlanning(planning);
-
-        planningPrinter.generatePdfFromPlanning(planning,"planning.pdf");
-
-        mainController.applyState(new ComputedPlanningState(mainController));
+        tspSolver.addListener(this);
+        tspSolver.start();
+        
+//        try {
+//            this.solverThread.join();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        Planning planning = tspSolver.getBestPlanning();
+//        mainController.setPlanning(planning);
+//
+//        mainController.applyState(new ComputedPlanningState(mainController));
     }
 
     @Override
@@ -59,5 +56,12 @@ public class ComputingPlanningState extends WaitOpenDeliveryRequestState {
     public MainControllerState onComputePlanningButtonAction() {
         System.out.println("Computing");
         return this;
+    }
+
+
+    @Override
+    public void notifyOfTspComplete(Planning bestPlanning) {
+        mainController.setPlanning(bestPlanning);
+        mainController.applyState(new ComputedPlanningState(mainController));
     }
 }

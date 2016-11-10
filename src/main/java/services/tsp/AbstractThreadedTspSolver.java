@@ -5,11 +5,17 @@ import models.DeliveryGraph;
 import models.Planning;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+import components.application.TspCompletedListener;
 
-public abstract class AbstractTspSolver {
+public abstract class AbstractThreadedTspSolver extends Thread{
 
+    private Set<TspCompletedListener> listeners;
+    
     protected AbstractWaypoint[] bestSolution;
     protected Map<AbstractWaypoint, Integer> bestSolutionWaitingTime;
     protected int bestSolutionCost;
@@ -21,6 +27,10 @@ public abstract class AbstractTspSolver {
      * @return The delivery plan (Planning) associated to the given DeliveryGraph.
      */
     public abstract Planning solve(DeliveryGraph graph);
+    
+    public AbstractThreadedTspSolver() {
+        listeners = new HashSet<TspCompletedListener>();
+    }
 
     protected abstract Iterator<AbstractWaypoint> iterator(AbstractWaypoint lastSeenNode, ArrayList<AbstractWaypoint> unseen,
                                                            Map<AbstractWaypoint, Map<AbstractWaypoint, Integer>> costs,
@@ -30,4 +40,19 @@ public abstract class AbstractTspSolver {
     protected abstract int bound(AbstractWaypoint lastSeenNode, ArrayList<AbstractWaypoint> unseen,
                                  Map<AbstractWaypoint, Map<AbstractWaypoint, Integer>> costs, Map<AbstractWaypoint, Integer> deliveryDurations,
                                  int seenCost);
+    
+    public void addListener(TspCompletedListener listener) {
+        listeners.add(listener);
+    }
+    
+    public void removeListener(TspCompletedListener listener) {
+        listeners.remove(listener);
+    }
+    
+    protected void notifyListeners(Planning bestPlanning) {
+        for (TspCompletedListener listener : listeners) {
+            listener.notifyOfTspComplete(bestPlanning);
+        }
+    }
+
 }
