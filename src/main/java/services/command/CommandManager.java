@@ -38,7 +38,6 @@ public class CommandManager {
         this.done.push(command).execute();
         this.undone.clear();
         updateUndoableRedoable();
-        // TODO: add mechanism to tell if the command was successful or not ?
     }
 
     /**
@@ -67,6 +66,10 @@ public class CommandManager {
         return true;
     }
     
+    /**
+     * Update undoable et redoable attributes values checking if done
+     * and undone stacks are empties.
+     */
     private void updateUndoableRedoable() {
         if (this.undoable.getValue() == false && !this.done.isEmpty()) {
             this.undoable.setValue(true);
@@ -80,35 +83,77 @@ public class CommandManager {
         }
     }
 
+    /**
+     * Express the possibility to use the undo() method.
+     * @return A SimpleBooleanProperty whose value expresses the 
+     * possibility to use the undo() method.
+     */
     public SimpleBooleanProperty undoableProperty() {
         return this.undoable;
     }
 
+    /**
+     * Express the possibility to use the undo() method.
+     * @return A boolean which expresses the 
+     * possibility to use the undo() method.
+     */
     public boolean getUndoable() {
         return undoableProperty().getValue();
     }
 
+    /**
+     * Allows to modify the undoable attribute value which express
+     * the possibility to use the undo() method.
+     * @param value The new value of the undoable attribute.
+     */
     public void setUndoable(boolean value) {
         undoableProperty().setValue(value);
     }
     
+    /**
+     * Express the possibility to use the redo() method.
+     * @return A SimpleBooleanProperty whose value expresses the 
+     * possibility to use the redo() method.
+     */
     public SimpleBooleanProperty redoableProperty() {
         return this.redoable;
     }
 
+    /**
+     * Express the possibility to use the redo() method.
+     * @return A boolean which expresses the 
+     * possibility to use the redo() method.
+     */
     public boolean getRedoable() {
         return redoableProperty().getValue();
     }
 
+    /**
+     * Allows to modify the redoable attribute value which express
+     * the possibility to use the redo() method.
+     * @param value The new value of the redoable attribute
+     */
     public void setRedoable(boolean value) {
         redoableProperty().setValue(value);
     }
 
+    /**
+     * Express the possibility to use the undo() method  
+     * having updated the undoable attribute value.
+     * @return A SimpleBooleanProperty whose value expresses the 
+     * possibility to use the undo() method.
+     */
     public SimpleBooleanProperty isUndoable() {
         this.undoable.setValue(!this.done.isEmpty());
         return this.undoable;
     }
     
+    /**
+     * Express the possibility to use the redo() method  
+     * having updated the redoable attribute value.
+     * @return A SimpleBooleanProperty whose value expresses the 
+     * possibility to use the redo() method.
+     */
     public SimpleBooleanProperty isRedoable() {
         this.redoable.setValue(!this.undone.isEmpty());
         return this.redoable;
