@@ -77,18 +77,20 @@ public class Parser {
         }
 
         NodeList intersectionList = cityMapDocument.getElementsByTagName(INTERSECTION_NAME);
-        if (intersectionList.getLength() <= 1)
+        if (intersectionList.getLength() <= 1) {
             throw new ParserLowerBoundedNodesNumberException("There must be at least 2 intersections in a cityMap", 2,
                     intersectionList.getLength(), INTERSECTION_NAME);
+        }
 
         for (int i = 0; i < intersectionList.getLength(); i++) {
             addIntersection((Element) intersectionList.item(i), intersections);
         }
 
         NodeList streetSectionList = cityMapDocument.getElementsByTagName(STREET_SECTION_NAME);
-        if (streetSectionList.getLength() == 0)
+        if (streetSectionList.getLength() == 0) {
             throw new ParserLowerBoundedNodesNumberException("There must be at least 1 street section in a cityMap", 1, 0,
                     STREET_SECTION_NAME);
+        }
 
         for (int i = 0; i < streetSectionList.getLength(); i++) {
             streetSections.add(getStreetSection((Element) streetSectionList.item(i), intersections, streetSections));
@@ -109,8 +111,9 @@ public class Parser {
      */
     private void addIntersection(Element intersectionElement, Map<Integer, Intersection> intersections) throws ParserException {
         if (!attributeExist(intersectionElement, NAME_ATTRIBUTE_INTERSECTION_ID, NAME_ATTRIBUTE_INTERSECTION_X,
-                NAME_ATTRIBUTE_INTERSECTION_Y))
+                NAME_ATTRIBUTE_INTERSECTION_Y)) {
             throw new ParserMissingAttributeException("An attribute is missing to construct the intersection");
+        }
 
         int id;
         int x;
@@ -123,16 +126,20 @@ public class Parser {
             throw new ParserShouldBeIntegerValueException(e);
         }
 
-        if (x < 0)
+        if (x < 0) {
             throw new ParserIntegerValueException("The x value of an intersection must be positive", x);
-        if (y < 0)
+        }
+        if (y < 0) {
             throw new ParserIntegerValueException("The y value of an intersection must be positive", y);
-        if (id < 0)
+        }
+        if (id < 0) {
             throw new ParserIntegerValueException("The id of an intersection must be positive", id);
+        }
 
         Intersection intersection = new Intersection(id, x, y);
-        if (intersections.containsKey(id))
+        if (intersections.containsKey(id)) {
             throw new ParserDuplicateObjectException("Two intersections with the id " + id + " exist", intersection);
+        }
 
         intersections.put(id, intersection);
     }
@@ -154,8 +161,9 @@ public class Parser {
     private StreetSection getStreetSection(Element streetSectionElement, Map<Integer, Intersection> intersections,
             Collection<StreetSection> streetSections) throws ParserException {
         if (!attributeExist(streetSectionElement, NAME_ATTRIBUTE_STREET_SECTION_START, NAME_ATTRIBUTE_STREET_SECTION_END,
-                NAME_ATTRIBUTE_STREET_SECTION_LENGTH, NAME_ATTRIBUTE_STREET_SECTION_VELOCITY, NAME_ATTRIBUTE_STREET_SECTION_STREET_NAME))
+                NAME_ATTRIBUTE_STREET_SECTION_LENGTH, NAME_ATTRIBUTE_STREET_SECTION_VELOCITY, NAME_ATTRIBUTE_STREET_SECTION_STREET_NAME)) {
             throw new ParserMissingAttributeException("An attribute is missing to construct the street section");
+        }
 
         int idIntersectionStart;
         int idIntersectionEnd;
@@ -171,24 +179,30 @@ public class Parser {
         }
         String streetName = streetSectionElement.getAttribute(NAME_ATTRIBUTE_STREET_SECTION_STREET_NAME);
 
-        if (!intersections.containsKey(idIntersectionStart))
+        if (!intersections.containsKey(idIntersectionStart)) {
             throw new ParserInvalidIdException("The start of a street section must exist");
-        if (!intersections.containsKey(idIntersectionEnd))
+        }
+        if (!intersections.containsKey(idIntersectionEnd)) {
             throw new ParserInvalidIdException("The end of a street section must exist");
-        if (idIntersectionStart == idIntersectionEnd)
+        }
+        if (idIntersectionStart == idIntersectionEnd) {
             throw new ParserInvalidIdException("A street section can not begin and end at the same intersection");
-        if (length < 0)
+        }
+        if (length < 0) {
             throw new ParserIntegerValueException("The length of a street section must be positive", length);
-        if (speed < 0)
-            throw new ParserIntegerValueException("The speed of a street section must be positive", speed);
+        }
+        if (speed < 0) {
+            throw new ParserIntegerValueException("The speed of a street section must be positive", speed); 
+        }
 
         Intersection intersectionStart = intersections.get(idIntersectionStart);
         Intersection intersectionEnd = intersections.get(idIntersectionEnd);
 
         StreetSection streetSection = new StreetSection(length, speed, streetName, intersectionStart, intersectionEnd);
-        if (streetSections.contains(streetSection))
+        if (streetSections.contains(streetSection)) {
             throw new ParserDuplicateObjectException("Two street sections begin at the intersection " + idIntersectionStart
                     + " and end at the intersection " + idIntersectionEnd, streetSection);
+        }
 
         return streetSection;
     }
@@ -222,18 +236,20 @@ public class Parser {
         }
 
         NodeList warehouseNode = deliveryRequestDocument.getElementsByTagName(WAREHOUSE_NAME);
-        if (warehouseNode.getLength() != 1)
+        if (warehouseNode.getLength() != 1) {
             throw new ParserBoundedNodesNumberException("There must be exactly 1 warehouse in a delivery request", 1, 1,
                     warehouseNode.getLength(), WAREHOUSE_NAME);
+        }
 
         Element warehouseElement = (Element) (warehouseNode.item(0));
         warehouse = getWarehouse(warehouseElement, cityMap);
         startPlanningTimestamp = warehouse.getTimeStart();
 
         NodeList deliveryAddressesNodes = deliveryRequestDocument.getElementsByTagName(DELIVERY_ADDRESS_NAME);
-        if (deliveryAddressesNodes.getLength() < 1)
+        if (deliveryAddressesNodes.getLength() < 1) {
             throw new ParserLowerBoundedNodesNumberException("There must be at least 1 delivery address in a delivery request", 1, 0,
                     DELIVERY_ADDRESS_NAME);
+        }
 
         for (int i = 0; i < deliveryAddressesNodes.getLength(); i++) {
             deliveryAddresses.add(getDeliveryAddress((Element) deliveryAddressesNodes.item(i), cityMap, deliveryAddresses));
@@ -254,8 +270,9 @@ public class Parser {
      *             If the warehouse element is not correct.
      */
     private Warehouse getWarehouse(Element warehouseElement, CityMap cityMap) throws ParserException {
-        if (!attributeExist(warehouseElement, NAME_ATTRIBUTE_WAREHOUSE_ID, NAME_ATTRIBUTE_WAREHOUSE_START_PLANNING_TIME))
+        if (!attributeExist(warehouseElement, NAME_ATTRIBUTE_WAREHOUSE_ID, NAME_ATTRIBUTE_WAREHOUSE_START_PLANNING_TIME)) {
             throw new ParserMissingAttributeException("An attribute is missing to construct the warehouse");
+        }
 
         int startPlanningTime;
         int idIntersection;
@@ -268,8 +285,9 @@ public class Parser {
             throw new ParserTimeSyntaxException("The start planning time must be on the format hh:mm:ss", e);
         }
 
-        if (!cityMap.isIntersectionInCityMap(idIntersection))
+        if (!cityMap.isIntersectionInCityMap(idIntersection)) {
             throw new ParserInvalidIdException("The address of a warehouse must exist in the city map");
+        }
 
         return new Warehouse(cityMap.getIntersection(idIntersection), startPlanningTime);
     }
@@ -291,8 +309,9 @@ public class Parser {
      */
     private DeliveryAddress getDeliveryAddress(Element deliveryAddressElement, CityMap cityMap,
             Collection<DeliveryAddress> deliveryAddresses) throws ParserException {
-        if (!attributeExist(deliveryAddressElement, NAME_ATTRIBUTE_DELIVERY_REQUEST_DURATION, NAME_ATTRIBUTE_DELIVERY_REQUEST_ID))
+        if (!attributeExist(deliveryAddressElement, NAME_ATTRIBUTE_DELIVERY_REQUEST_DURATION, NAME_ATTRIBUTE_DELIVERY_REQUEST_ID)) {
             throw new ParserMissingAttributeException("An attribute is missing to construct the delivery addresss");
+        }
 
         int idIntersection;
         int deliveryDuration;
@@ -303,8 +322,9 @@ public class Parser {
             throw new ParserShouldBeIntegerValueException(e);
         }
 
-        if (!cityMap.isIntersectionInCityMap(idIntersection))
+        if (!cityMap.isIntersectionInCityMap(idIntersection)) {
             throw new ParserInvalidIdException("The address of a delivery request must exist in the city map");
+        }
 
         int[] timeConstraints;
         try {
@@ -315,9 +335,10 @@ public class Parser {
 
         DeliveryAddress deliveryAddress = new DeliveryAddress(cityMap.getIntersection(idIntersection), deliveryDuration, timeConstraints[0],
                 timeConstraints[1]);
-        if (deliveryAddresses.contains(deliveryAddress))
+        if (deliveryAddresses.contains(deliveryAddress)) {
             throw new ParserDuplicateObjectException("There are two delivery addresses with the address " + idIntersection,
                     deliveryAddress);
+        }
 
         return deliveryAddress;
     }
@@ -340,12 +361,15 @@ public class Parser {
         boolean isEndDeliveryTime = deliveryAddressElement.hasAttribute(NAME_ATTRIBUTE_DELIVERY_REQUEST_END_DELIVERY_TIME);
         int[] result = { 0, 86400 };
 
-        if (!isStartDeliveryTime && !isEndDeliveryTime)
+        if (!isStartDeliveryTime && !isEndDeliveryTime) {
             return result;
-        if (!isStartDeliveryTime)
+        }
+        if (!isStartDeliveryTime) {
             throw new ParserMissingAttributeException("The delivery time start must be present if the delivery time end is present");
-        if (!isEndDeliveryTime)
+        }
+        if (!isEndDeliveryTime) {
             throw new ParserMissingAttributeException("The delivery time end must be present if the delivery time start is present");
+        }
 
         try {
             result[0] = getTime(deliveryAddressElement.getAttribute(NAME_ATTRIBUTE_DELIVERY_REQUEST_START_DELIVERY_TIME));
@@ -354,11 +378,13 @@ public class Parser {
             throw new ParserTimeSyntaxException("The delivery time must be at the format hh:mm:ss", e);
         }
 
-        if (result[0] > result[1])
+        if (result[0] > result[1]) {
             throw new ParserTimeConstraintsException("The delivery time start must be before the delivery time end");
-        if (result[0] + deliveryDuration > result[1])
+        }
+        if (result[0] + deliveryDuration > result[1]) {
             throw new ParserTimeConstraintsException(
                     "The difference between delivery time start and delivery time end must be greater than the delivery duration");
+        }
 
         return result;
     }
@@ -377,8 +403,9 @@ public class Parser {
      */
     private boolean attributeExist(Element element, String... attributes) {
         for (String attribute : attributes) {
-            if (!element.hasAttribute(attribute))
+            if (!element.hasAttribute(attribute)) {
                 return false;
+            }
         }
         return true;
     }
@@ -396,8 +423,9 @@ public class Parser {
         String errorMessage = "The format of a time must be hh:mm:ss";
 
         String[] stringHoursMinutesSeconds = stringTime.split(":");
-        if (stringHoursMinutesSeconds.length != 3)
+        if (stringHoursMinutesSeconds.length != 3) {
             throw new ParserTimeSyntaxException(errorMessage);
+        }
 
         int hours;
         int minutes;
@@ -410,8 +438,9 @@ public class Parser {
             throw new ParserTimeSyntaxException(errorMessage, e);
         }
 
-        if (hours < 0 || hours >= 24 || minutes < 0 || minutes >= 60 || seconds < 0 || seconds >= 60)
+        if (hours < 0 || hours >= 24 || minutes < 0 || minutes >= 60 || seconds < 0 || seconds >= 60) {
             throw new ParserTimeSyntaxException(errorMessage);
+        }
 
         return hours * 3600 + minutes * 60 + seconds;
     }
