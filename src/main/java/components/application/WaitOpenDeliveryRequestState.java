@@ -34,7 +34,7 @@ public class WaitOpenDeliveryRequestState extends WaitOpenCityMapState {
         if (deliveryRequestFile == null) { // User cancelled operation
             return this;
         }
-
+        this.mainController.changeCommandManager();
         DeliveryRequest currentDeliveryRequest = null;
         try {
             currentDeliveryRequest = mainController.getParserService().getDeliveryRequest(deliveryRequestFile, mainController.getCityMap());

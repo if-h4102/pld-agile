@@ -33,7 +33,7 @@ public class WaitOpenCityMapState extends MainControllerState {
         if (cityMapFile == null) { // User cancelled operation
             return this;
         }
-
+        this.mainController.changeCommandManager();
         CityMap currentCityMap = null;
         try {
             currentCityMap = mainController.getParserService().getCityMap(cityMapFile);

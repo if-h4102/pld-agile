@@ -60,7 +60,7 @@ public class MainController extends BorderPane {
     final private SimpleDoubleProperty mapZoom = new SimpleDoubleProperty(1.0);
 
     final private Parser parserService = new Parser();
-    final private CommandManager commandManager = new CommandManager();
+    private CommandManager commandManager;
 
     final private SimpleObjectProperty<IMapService> mapService = new SimpleObjectProperty<>(this, "mapService", null);
 
@@ -79,8 +79,6 @@ public class MainController extends BorderPane {
         this.setState(new WaitOpenCityMapState(this));
         this.openDeliveryRequestButton.disableProperty().bind(this.cityMap.isNull());
         this.computePlanningButton.setDisable(true);        
-        this.undoButton.disableProperty().bind(this.commandManager.undoableProperty().not());
-        this.redoButton.disableProperty().bind(this.commandManager.redoableProperty().not());
         this.generateRoadmapButton.disableProperty().bind(this.planning.isNull());
 
         
@@ -250,5 +248,12 @@ public class MainController extends BorderPane {
         if (this.computePlanningButton.isDisable() != disable) {
             this.computePlanningButton.setDisable(disable);
         }
+    }
+    
+    // clear command stacks
+    public void changeCommandManager() {
+        this.commandManager = new CommandManager();
+        this.undoButton.disableProperty().bind(this.commandManager.undoableProperty().not());
+        this.redoButton.disableProperty().bind(this.commandManager.redoableProperty().not());
     }
 }
