@@ -8,35 +8,50 @@ import java.util.*;
 public class CityMap {
 
     /**
+     * All known intersections.
      * Key: `intersectionId` Value: The associated Intersection
      */
     private Map<Integer, Intersection> intersections;
 
     /**
+     * All known street sections.
      * Key: `startIntersectionId` Value: Map: - Key: `endIntersectionId` - Value: `StreetSection`, the StreetSection from the intersection
      * with the id `startIntersectionId` to the intersection with the id `endIntersectionId`
      */
     private Map<Integer, Map<Integer, StreetSection>> streetSections;
 
+    /**
+     * Instantiate a new CityMap, containing the given intersections and street sections.
+     * @param intersections an iterable of all intersections that the map must contain.
+     * @param streetSections an iterable of all street sections that the map must contain.
+     */
     public CityMap(Iterable<Intersection> intersections, Iterable<StreetSection> streetSections) {
         this.intersections = new TreeMap<Integer, Intersection>();
         this.streetSections = new TreeMap<Integer, Map<Integer, StreetSection>>();
 
         for (Intersection intersection : intersections) {
-            addIntersection(intersection);
+            this.addIntersection(intersection);
         }
         for (StreetSection streetSection : streetSections) {
-            addStreetSection(streetSection);
+            this.addStreetSection(streetSection);
         }
     }
 
+    /**
+     * Add the given intersection to the current city map.
+     * @param intersection the intersection to add.
+     */
     @Requires({"intersection != null", "!intersections.containsKey(intersection.getId())"})
     @Ensures({"intersections.containsKey(intersection.getId())", "intersections.containsValue(intersection)",
         "intersections.get(intersection.getId()) == intersection"})
     private void addIntersection(Intersection intersection) {
-        intersections.put(intersection.getId(), intersection);
+        this.intersections.put(intersection.getId(), intersection);
     }
 
+    /**
+     * Add the given street section to the current city map.
+     * @param streetSection the street section to add.
+     */
     @Requires({"streetSection != null", "intersections.containsKey(streetSection.getStartIntersection().getId())",
         "intersections.containsKey(streetSection.getEndIntersection().getId())"})
     private void addStreetSection(StreetSection streetSection) {
@@ -46,13 +61,27 @@ public class CityMap {
         }
 
         streetSectionsFromStartIntersection.put(streetSection.getEndIntersection().getId(), streetSection);
-        streetSections.put(streetSection.getStartIntersection().getId(), streetSectionsFromStartIntersection);
+        this.streetSections.put(streetSection.getStartIntersection().getId(), streetSectionsFromStartIntersection);
     }
 
+    /**
+     * Compute the shortest path between two abstract waypoints.
+     * @param startWaypoint the starting waypoint.
+     * @param endWaypoint the ending waypoint.
+     * @return the shortest path (i.e. a Route) between the tho given points.
+     */
     public Route shortestPath(AbstractWaypoint startWaypoint, AbstractWaypoint endWaypoint) {
         return this.shortestPath(startWaypoint, Collections.singletonList(endWaypoint)).get(0);
     }
 
+    /**
+     * Compute the shortest path between the given starting waypoint and all the given waypoints.
+     * @param startWaypoint the starting waypoint.
+     * @param endWaypoints the list of all ending waypoints.
+     * @return the shortest paths (i.e. a list of Routes) between the given starting point
+     * and all ending points.
+     * TODO(Ceyb) Comment this
+     */
     // TODO Complexity to improve by using a min-heap for the greys intersections
     @Requires({"startWaypoint != null", "endWaypoints != null",
         "intersections.containsValue(startWaypoint.getIntersection())"})
@@ -95,6 +124,14 @@ public class CityMap {
         return computeReturn(index, predecessors, startWaypoint, endWaypoints);
     }
 
+    /**
+     *
+     * @param index
+     * @param greys
+     * @param durations
+     * @return
+     * TODO(Ceyb) Comment this
+     */
     // TODO Improve complexity
     @Requires({"greys != null", "durations != null", "greys.size() <= durations.length"})
     @Ensures({"greys.contains(result)"})
@@ -111,6 +148,14 @@ public class CityMap {
         return minimalGreyIntersection;
     }
 
+    /**
+     *
+     * @param index
+     * @param streetSection
+     * @param predecessors
+     * @param durations
+     * TODO(Ceyb) Comment this
+     */
     @Requires({
         "streetSection != null",
         "predecessors != null",
@@ -128,6 +173,15 @@ public class CityMap {
         }
     }
 
+    /**
+     *
+     * @param index
+     * @param predecessors
+     * @param startWaypoint
+     * @param endWaypoints
+     * @return
+     * TODO(Ceyb) Comment this
+     */
     @Requires({"endWaypoints != null", "startWaypoint != null"})
     private List<Route> computeReturn(Map<Integer, Integer> index, Intersection[] predecessors, AbstractWaypoint startWaypoint, List<AbstractWaypoint> endWaypoints) {
         List<Route> result = new ArrayList<Route>();
@@ -148,6 +202,12 @@ public class CityMap {
         return result;
     }
 
+    /**
+     *
+     * @param intersection
+     * @return
+     * TODO(Ceyb) Comment this
+     */
     @Requires({"intersections.containsValue(intersection)"})
     private Collection<Intersection> getNeighbourIntersection(Intersection intersection) {
         Map<Integer, StreetSection> outStreetSections = streetSections.get(intersection.getId());
@@ -161,6 +221,12 @@ public class CityMap {
         return neighbourIntersections;
     }
 
+    /**
+     *
+     * @param request
+     * @return
+     * TODO(Ceyb) Comment this
+     */
     @Requires({"request != null", "request.getWarehouse() != null", "request.getDeliveryAddresses() != null"})
     public DeliveryGraph computeDeliveryGraph(DeliveryRequest request) {
         List<AbstractWaypoint> pointsContainedInRequest = new LinkedList<AbstractWaypoint>();
@@ -189,49 +255,69 @@ public class CityMap {
         return new DeliveryGraph(request.getCityMap(), mappedRoutes);
     }
 
+    /**
+     * Get all intersections known by the city map.
+     * @return a list of all known intersections.
+     */
     public List<Intersection> getIntersections() {
         List<Intersection> listIntersection = new ArrayList<Intersection>();
-        for (Intersection value : intersections.values()) {
-            listIntersection.add(value);
-        }
+        listIntersection.addAll(this.intersections.values());
         return listIntersection;
     }
 
+    /**
+     * Get all known street sections known by the city map.
+     * @return a list of all known street sections.
+     */
     public List<StreetSection> getStreetSections() {
         List<StreetSection> listStreetSection = new ArrayList<StreetSection>();
-        for (Map<Integer, StreetSection> value : streetSections.values()) {
-            for (StreetSection section : value.values())
-                listStreetSection.add(section);
+        for (Map<Integer, StreetSection> value : this.streetSections.values()) {
+            listStreetSection.addAll(value.values());
         }
         return listStreetSection;
     }
 
     /**
-     * Returns the intersection with the supplied id.
-     *
-     * @param idIntersection The id of intersection to retrieve. The id must be in the map.
-     * @return The intersection with the supplied id
+     * Get the intersection with the supplied id.
+     * @param idIntersection the id of intersection to retrieve. The id must be in the map.
+     * @return the intersection with the supplied id.
      */
     @Requires({"intersections.containsKey(idIntersection)"})
     public Intersection getIntersection(int idIntersection) {
-        return intersections.get(idIntersection);
+        return this.intersections.get(idIntersection);
     }
 
+    /**
+     * Whether or not the intersection identified by the given ID is known by the current city map.
+     * @param idIntersection the id of the intersection to check.
+     * @return true only if the intersection is known by the current city map.
+     */
     public boolean isIntersectionInCityMap(int idIntersection) {
-        return intersections.containsKey(idIntersection);
+        return this.intersections.containsKey(idIntersection);
     }
 
+    /**
+     * Get the street section between the two given intersections, if it exists.
+     * @param startIntersection the starting intersection.
+     * @param endIntersection the ending intersection.
+     * @return the street section between the two given intersections if it exists,
+     * or null otherwise.
+     */
     @Requires({"intersections.containsValue(startIntersection)", "intersections.containsValue(endIntersection)"})
     @Ensures({"result.getStartIntersection().equals(startIntersection)", "result.getEndIntersection().equals(endIntersection)"})
     private StreetSection getStreetSection(Intersection startIntersection, Intersection endIntersection) {
-        Map<Integer, StreetSection> outStreetSections = streetSections.get(startIntersection.getId());
+        Map<Integer, StreetSection> outStreetSections = this.streetSections.get(startIntersection.getId());
         if (outStreetSections != null) {
             return outStreetSections.get(endIntersection.getId());
         }
-
         return null;
     }
 
+    /**
+     * Whether or not the given object is the same that the curent one.
+     * @param obj the object to check.
+     * @return true only if the two objects are the same.
+     */
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof CityMap)) {
