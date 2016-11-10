@@ -4,6 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import components.timefield.TimeField?>
 <fx:root fx:id="root" prefHeight="50.0" prefWidth="200.0"
          stylesheets="/components/planningdetails/PlanningDetailsItem.css"
          type="AnchorPane"
@@ -17,10 +18,16 @@
       </AnchorPane>
       <VBox fx:id="dataBefore">
         <AnchorPane fx:id="pathDuration">
-          <Label text="Travel: ...min"/>
+          <HBox>
+            <TimeField time="${controller.item.startMovingTime}" disable="true" />
+            <Label text="Travel"/>
+          </HBox>
         </AnchorPane>
         <AnchorPane fx:id="waitDuration">
-          <Label text="Wait: ...min"/>
+          <HBox>
+            <TimeField time="${controller.item.startWaitingTime}" disable="true" />
+            <Label text="Wait for the opening"/>
+          </HBox>
         </AnchorPane>
       </VBox>
       <Button styleClass="flatButton" fx:id="addButton" graphicTextGap="2.0"
@@ -40,7 +47,7 @@
         </graphic>
       </Button>
     </StackPane>
-    <WaypointCard waypoint="${controller.item.startWaypoint}">
+    <WaypointCard waypoint="${controller.item.targetWaypoint}">
       <cornerControls>
         <Button styleClass="flatButton" fx:id="removeButton"
                 graphicTextGap="2.0" mnemonicParsing="false"
@@ -58,8 +65,11 @@
                     AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="8"/>
       </AnchorPane>
       <VBox fx:id="dataAfter">
-        <AnchorPane fx:id="deliveryDuration">
-          <Label text="Deliver: ...min"/>
+        <AnchorPane fx:id="unloadTime">
+          <HBox>
+            <TimeField time="${controller.item.startUnloadingTime}" disable="true" />
+            <Label text="Load/unload"/>
+          </HBox>
         </AnchorPane>
       </VBox>
     </StackPane>

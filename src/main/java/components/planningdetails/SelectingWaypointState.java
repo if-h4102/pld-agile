@@ -38,7 +38,7 @@ public class SelectingWaypointState extends PlanningDetailsState {
 
     @Override
     @NotNull
-    public IPlanningDetailsState onPlanningWaypointsChange(ListChangeListener.Change<? extends AbstractWaypoint> listChange) {
+    public IPlanningDetailsState onPlanningWaypointsChange(ListChangeListener.Change<? extends PlanningWaypoint> listChange) {
         // Prevent
         return this;
     }

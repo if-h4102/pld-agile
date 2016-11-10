@@ -1,9 +1,11 @@
 package models;
 
 import com.google.java.contract.Requires;
-import javafx.beans.property.*;
+import javafx.beans.property.ReadOnlyListProperty;
+import javafx.beans.property.ReadOnlyListWrapper;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.TransformationList;
 import java.util.*;
@@ -25,6 +27,11 @@ public class Planning {
      */
     final private ReadOnlyListWrapper<Route> routes = new ReadOnlyListWrapper<>(this, "routes");
 
+    /**
+     * The circular list of waypoints + metadata of the current planning. Contains the warehouse twice.
+     */
+    final private ReadOnlyListWrapper<PlanningWaypoint> planningWaypoints = new ReadOnlyListWrapper<>(this, "planningWaypoints");
+
     final private Map<AbstractWaypoint, Integer> waypointWaitingTime;
 
     private int fullTime;
@@ -41,6 +48,7 @@ public class Planning {
         this.waypointWaitingTime = waitingTimes;
         this.fullTime = fullTime;
         this.updateRoutes();
+        this.updatePlanningWaypoints();
     }
 
     public ReadOnlyObjectProperty<CityMap> cityMapProperty() {
@@ -69,6 +77,7 @@ public class Planning {
         return fullTime;
     }
 
+
     /**
      * Get the time that the delivery man must wait at the given waypoint
      *
@@ -77,8 +86,11 @@ public class Planning {
      * @return The waiting time of the delivery man
      */
     public int getWaitingTimeAtWaypoint(AbstractWaypoint waypoint) {
-        if (waypointWaitingTime.containsKey(waypoint)) // Avoid the nullPointerException if the waypoint is not in the map
+        if (waypointWaitingTime.containsKey(waypoint)) {
+            // Avoid the nullPointerException if the waypoint is not in the map
             return waypointWaitingTime.get(waypoint);
+        }
+
         return 0;
     }
 
@@ -107,6 +119,19 @@ public class Planning {
      */
     public ReadOnlyListProperty<Route> routesProperty() {
         return this.routes.getReadOnlyProperty();
+    }
+
+    /**
+     * Get all the waypoints with metadata of the current planning
+     *
+     * @return the current sorted list of routes.
+     */
+    public ReadOnlyListProperty<PlanningWaypoint> planningWaypointsProperty() {
+        return this.planningWaypoints.getReadOnlyProperty();
+    }
+
+    public ObservableList<PlanningWaypoint> getPlanningWaypoints() {
+        return this.planningWaypointsProperty().getValue();
     }
 
     /**
@@ -165,6 +190,7 @@ public class Planning {
     public void addWaypoint(AbstractWaypoint waypoint, int index) {
         this.waypoints.add(index, waypoint);
         this.updateRoutes();
+        this.updatePlanningWaypoints();
     }
 
     /**
@@ -181,6 +207,7 @@ public class Planning {
         int index = this.waypoints.indexOf(afterWaypoint) + 1;
         this.addWaypoint(waypoint, index);
         this.updateRoutes();
+        this.updatePlanningWaypoints();
     }
 
     /**
@@ -198,6 +225,7 @@ public class Planning {
         this.routes.remove(index - 1);
         this.routes.add(index - 1, this.getCityMap().shortestPath(this.getWaypoint(index - 1), this.getWaypoint(index)));
         this.waypoints.remove(waypoint);
+        this.updatePlanningWaypoints();
         // this.updateRoutes();
     }
 
@@ -220,7 +248,45 @@ public class Planning {
         this.routes.setValue(FXCollections.observableArrayList(computeRoutes()));
     }
 
+    protected List<PlanningWaypoint> computePlanningWaypoints() {
+        List<PlanningWaypoint> result = new ArrayList<>();
+
+        Warehouse warehouse = this.getWarehouse();
+        int time = warehouse.getTimeStart();
+
+        result.add(new PlanningWaypoint(time, time, warehouse, time, time, true));
+
+        for (int i = 0; i < this.routes.size(); i++) {
+            Route route = this.routes.get(i);
+            AbstractWaypoint target = route.getEndWaypoint();
+            int startTime = time;
+            time += route.getDuration();
+
+            if (time + target.getDuration() > target.getTimeEnd()) {
+                result.add(new PlanningWaypoint(startTime, time, target, time, time, false));
+            } else {
+                int startWaitingTime = time;
+                if (time < target.getTimeStart()) {
+                    time = target.getTimeStart();
+                }
+                int startUnloadingTime = time;
+                time += target.getDuration();
+                int endUnloadingTime = time;
+                result.add(new PlanningWaypoint(startTime, startWaitingTime, target, startUnloadingTime, endUnloadingTime, true));
+            }
+        }
+        return result;
+    }
+
+    protected void updatePlanningWaypoints() {
+        this.updatePlanningWaypoints(0);
+    }
+
+    protected void updatePlanningWaypoints(int startIndex) {
+        this.planningWaypoints.setValue(FXCollections.observableArrayList(this.computePlanningWaypoints()));
+    }
+
     public Warehouse getWarehouse() {
-        return (Warehouse) waypoints.get(0);
+        return (Warehouse) this.getWaypoint(0);
     }
 }
