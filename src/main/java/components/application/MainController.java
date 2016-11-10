@@ -22,6 +22,7 @@ import models.Intersection;
 import models.Planning;
 import services.command.AddWaypointAfterCommand;
 import services.command.CommandManager;
+import services.command.RemoveWaypointAfterCommand;
 import services.command.RemoveWaypointCommand;
 import services.map.IMapService;
 import services.pdf.planningPrinter;
@@ -87,7 +88,8 @@ public class MainController extends BorderPane {
         });
         
         this.root.addEventHandler(RemoveWaypointAction.TYPE, removeWaypointAction -> {
-            RemoveWaypointCommand removeWaypointAfterCommand = new RemoveWaypointCommand(removeWaypointAction.getWaypoint(),this.planning.getValue(),this.cityMap.getValue());
+            AbstractWaypoint abstractWaypoint = removeWaypointAction.getWaypoint();
+            RemoveWaypointAfterCommand removeWaypointAfterCommand = new RemoveWaypointAfterCommand(abstractWaypoint,this.planning.getValue(),this.cityMap.getValue());
             this.commandManager.execute(removeWaypointAfterCommand);
             modifyComputePlanningButtonDisabledProperty(true);
         });

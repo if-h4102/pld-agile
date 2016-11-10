@@ -8,6 +8,11 @@ public class RemoveWaypointAfterCommand extends RemoveWaypointCommand {
 
     private int index;
 
+    public RemoveWaypointAfterCommand(AbstractWaypoint waypointToAdd, Planning planning, CityMap map) {
+        super(waypointToAdd, planning, map);
+        this.index = planning.getWaypoints().indexOf(waypointToAdd);
+    }
+    
     public RemoveWaypointAfterCommand(AbstractWaypoint waypointToAdd, int index, Planning planning, CityMap map) {
         super(waypointToAdd, planning, map);
         this.index = index;
