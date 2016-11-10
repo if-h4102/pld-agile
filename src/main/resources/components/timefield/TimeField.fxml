@@ -3,8 +3,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.HBox?>
 <fx:root xmlns:fx="http://javafx.com/fxml/1" fx:id="root"
-         prefWidth="200.0" type="HBox"
-         xmlns="http://javafx.com/javafx/8.0.102-ea">
+         minWidth="60"
+         prefWidth="60"
+         maxWidth="60"
+         stylesheets="/components/timefield/TimeField.css"
+         type="HBox"
+         xmlns="http://javafx.com/javafx/8.0.102-ea"
+>
   <TextField fx:id="hoursField" promptText="HH"/>
   <Label text=":"/>
   <TextField fx:id="minutesField" promptText="mm"/>

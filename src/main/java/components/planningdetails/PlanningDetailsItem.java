@@ -86,6 +86,7 @@ public class PlanningDetailsItem extends AnchorPane {
         this.addButton.visibleProperty().bindBidirectional(this.displayAddButtonProperty());
         this.cancelAddButton.visibleProperty().bindBidirectional(this.displayCancelAddButtonProperty());
         this.removeButton.visibleProperty().bindBidirectional(this.displayRemoveButtonProperty());
+        this.itemProperty().addListener(this::onItemChange);
     }
 
     /**
@@ -226,6 +227,20 @@ public class PlanningDetailsItem extends AnchorPane {
 
     public final boolean getDisplayRemoveButton() {
         return this.displayRemoveButtonProperty().getValue();
+    }
+
+
+    protected void onItemChange(ObservableValue<? extends PlanningWaypoint> observable, PlanningWaypoint oldValue, PlanningWaypoint newValue) {
+        if (newValue == oldValue) {
+            return;
+        }
+        if (newValue != null) {
+            if (!newValue.getIsPossible()) {
+                this.getStyleClass().add("invalid");
+            } else {
+                this.getStyleClass().remove("invalid");
+            }
+        }
     }
 
     public void onRemoveButtonAction(@NotNull ActionEvent actionEvent) {

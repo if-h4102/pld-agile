@@ -1,8 +1,8 @@
 package components.application;
 
-public class ReadyState extends WaitOpenDeliveryRequestState {
+public class ReadyToComputeState extends WaitOpenDeliveryRequestState {
 
-    public ReadyState(MainController mainController) {
+    public ReadyToComputeState(MainController mainController) {
         super(mainController);
     }
 

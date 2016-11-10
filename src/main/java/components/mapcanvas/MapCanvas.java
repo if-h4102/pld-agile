@@ -42,8 +42,8 @@ public class MapCanvas extends Canvas {
     private List<Intersection> intersections;
     private Iterable<DeliveryAddress> listDeliveryAddresses;
     private double calZoom;
-    private final ListChangeListener<Route> planningChangeListener;
     private final SimpleObjectProperty<IMapService> mapService = new SimpleObjectProperty<>(this, "mapService", null);
+    private final ListChangeListener<PlanningWaypoint> planningChangeListener;
 
     @SuppressWarnings("restriction")
     public MapCanvas() {
@@ -62,10 +62,10 @@ public class MapCanvas extends Canvas {
 
         planningProperty().addListener((observableValue, oldPlanning, newPlanning) -> {
             if (oldPlanning != null) {
-                oldPlanning.routesProperty().removeListener(self.planningChangeListener);
+                oldPlanning.planningWaypointsProperty().removeListener(self.planningChangeListener);
             }
             if (newPlanning != null) {
-                newPlanning.routesProperty().addListener(self.planningChangeListener);
+                newPlanning.planningWaypointsProperty().addListener(self.planningChangeListener);
             }
             self.draw();
         });

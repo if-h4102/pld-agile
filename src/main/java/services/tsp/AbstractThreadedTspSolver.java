@@ -19,6 +19,7 @@ public abstract class AbstractThreadedTspSolver extends Thread{
     protected AbstractWaypoint[] bestSolution;
     protected Map<AbstractWaypoint, Integer> bestSolutionWaitingTime;
     protected int bestSolutionCost;
+    protected boolean stop;
 
     /**
      * Solve the TSP problem for the given DeliveryGraph.
@@ -30,6 +31,7 @@ public abstract class AbstractThreadedTspSolver extends Thread{
     
     public AbstractThreadedTspSolver() {
         listeners = new HashSet<TspCompletedListener>();
+        stop = false;
     }
 
     protected abstract Iterator<AbstractWaypoint> iterator(AbstractWaypoint lastSeenNode, ArrayList<AbstractWaypoint> unseen,
@@ -53,6 +55,11 @@ public abstract class AbstractThreadedTspSolver extends Thread{
         for (TspCompletedListener listener : listeners) {
             listener.notifyOfTspComplete(bestPlanning);
         }
+        System.out.println(bestPlanning);
+    }
+    
+    public void stopComputing() {
+        stop = true;
     }
 
 }
